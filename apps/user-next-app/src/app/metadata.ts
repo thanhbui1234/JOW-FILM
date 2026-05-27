@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
 
-// ---------------------------------------------------------------------------
-// SEO Config — single source of truth for all SEO-related constants
-// Update these values when deploying to production.
-// ---------------------------------------------------------------------------
 export const SEO_CONFIG = {
   SITE_URL: "https://holte-platform.com",
   SITE_NAME: "Holte Platform",
@@ -18,34 +14,15 @@ export const SEO_CONFIG = {
   } as Record<string, string>,
 } as const;
 
-// ---------------------------------------------------------------------------
-// MetadataOptions
-// ---------------------------------------------------------------------------
 interface MetadataOptions {
   title?: string;
   description?: string;
   keywords?: string[];
   canonical?: string;
   openGraphImage?: string;
-  /** Set to false to prevent indexing (e.g. staging, private pages) */
   noIndex?: boolean;
 }
 
-/**
- * generateMetadata
- *
- * Reusable function to generate Next.js Metadata for any page.
- * Provides sensible defaults with per-page overrides.
- *
- * @example
- * ```ts
- * export const metadata = generateMetadata({
- *   title: "Features",
- *   description: "Explore our powerful features...",
- *   canonical: "/features",
- * });
- * ```
- */
 export function generateMetadata({
   title = SEO_CONFIG.SITE_NAME,
   description = SEO_CONFIG.DEFAULT_DESCRIPTION,
@@ -73,12 +50,7 @@ export function generateMetadata({
     authors: [{ name: "Holte Team" }],
     creator: "Holte Team",
     publisher: "Holte",
-    formatDetection: {
-      email: false,
-      address: false,
-      telephone: false,
-    },
-    // Canonical URL + hreflang for multi-language (PRO)
+    formatDetection: { email: false, address: false, telephone: false },
     alternates: {
       canonical: canonicalUrl,
       languages: {
@@ -86,7 +58,6 @@ export function generateMetadata({
         "vi-VN": `${SEO_CONFIG.SITE_URL}/vi${canonical}`,
       },
     },
-    // Open Graph / Facebook
     openGraph: {
       type: "website",
       locale: "en_US",
@@ -101,7 +72,6 @@ export function generateMetadata({
         },
       ],
     },
-    // Twitter Card
     twitter: {
       card: "summary_large_image",
       title,
@@ -109,7 +79,6 @@ export function generateMetadata({
       images: [openGraphImage],
       creator: SEO_CONFIG.TWITTER_HANDLE,
     },
-    // Robots
     robots: noIndex
       ? { index: false, follow: false }
       : {
@@ -126,15 +95,8 @@ export function generateMetadata({
   };
 }
 
-// ---------------------------------------------------------------------------
-// Structured Data (JSON-LD) Generators
-// @see https://schema.org/
-// ---------------------------------------------------------------------------
+// --- Structured Data (JSON-LD) ---
 
-/**
- * Organization schema
- * Used in root layout to identify the company behind the website.
- */
 export function getOrganizationSchema() {
   return {
     "@context": "https://schema.org",
@@ -156,10 +118,6 @@ export function getOrganizationSchema() {
   };
 }
 
-/**
- * WebSite schema
- * Enables Google's Sitelinks Searchbox and identifies the site.
- */
 export function getWebsiteSchema() {
   return {
     "@context": "https://schema.org",
@@ -174,28 +132,11 @@ export function getWebsiteSchema() {
   };
 }
 
-// ---------------------------------------------------------------------------
-// BreadcrumbList schema
-// ---------------------------------------------------------------------------
 interface BreadcrumbItem {
   name: string;
   url: string;
 }
 
-/**
- * getBreadcrumbSchema
- *
- * Generates a BreadcrumbList schema from a dynamic array of items.
- * Home is always prepended automatically.
- *
- * @example
- * ```ts
- * getBreadcrumbSchema([
- *   { name: "Blog", url: "/blog" },
- *   { name: "My Post", url: "/blog/my-post" },
- * ])
- * ```
- */
 export function getBreadcrumbSchema(items: BreadcrumbItem[] = []) {
   const allItems = [
     { name: "Home", url: SEO_CONFIG.SITE_URL },
@@ -219,26 +160,11 @@ export function getBreadcrumbSchema(items: BreadcrumbItem[] = []) {
   };
 }
 
-// ---------------------------------------------------------------------------
-// FAQ schema (SHOULD HAVE)
-// ---------------------------------------------------------------------------
 interface FAQItem {
   question: string;
   answer: string;
 }
 
-/**
- * getFAQSchema
- *
- * Generates a FAQPage schema for rich results (expandable FAQ in SERPs).
- *
- * @example
- * ```ts
- * getFAQSchema([
- *   { question: "What is Holte?", answer: "A modern platform..." },
- * ])
- * ```
- */
 export function getFAQSchema(faqs: FAQItem[]) {
   return {
     "@context": "https://schema.org",
@@ -251,118 +177,5 @@ export function getFAQSchema(faqs: FAQItem[]) {
         text: faq.answer,
       },
     })),
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Product schema (MUST HAVE — PRO)
-// ---------------------------------------------------------------------------
-interface ProductSchemaOptions {
-  name: string;
-  description: string;
-  image: string;
-  url: string;
-  ratingValue?: number;
-  reviewCount?: number;
-  priceCurrency?: string;
-  price?: string;
-  priceValidUntil?: string;
-  availability?: "InStock" | "OutOfStock" | "PreOrder";
-}
-
-/**
- * getProductSchema
- *
- * Generates a Product schema for ecommerce or SaaS product pages.
- * Enables price, rating, and availability rich results.
- */
-export function getProductSchema({
-  name,
-  description,
-  image,
-  url,
-  ratingValue = 4.8,
-  reviewCount = 124,
-  priceCurrency = "USD",
-  price = "0",
-  priceValidUntil = "2026-12-31",
-  availability = "InStock",
-}: ProductSchemaOptions) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name,
-    description,
-    image,
-    url: url.startsWith("http") ? url : `${SEO_CONFIG.SITE_URL}${url}`,
-    brand: {
-      "@type": "Brand",
-      name: SEO_CONFIG.SITE_NAME,
-    },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue,
-      reviewCount,
-    },
-    offers: {
-      "@type": "Offer",
-      priceCurrency,
-      price,
-      priceValidUntil,
-      availability: `https://schema.org/${availability}`,
-      url: url.startsWith("http") ? url : `${SEO_CONFIG.SITE_URL}${url}`,
-    },
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Blog / Article schema (SHOULD HAVE)
-// ---------------------------------------------------------------------------
-interface BlogPostSchemaOptions {
-  title: string;
-  description: string;
-  url: string;
-  image: string;
-  datePublished: string;
-  dateModified?: string;
-  authorName: string;
-}
-
-/**
- * getBlogPostSchema
- *
- * Generates an Article schema for blog posts.
- * Enables Google's article rich results (headline, image, date).
- */
-export function getBlogPostSchema({
-  title,
-  description,
-  url,
-  image,
-  datePublished,
-  dateModified,
-  authorName,
-}: BlogPostSchemaOptions) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: title,
-    description,
-    image,
-    url: url.startsWith("http") ? url : `${SEO_CONFIG.SITE_URL}${url}`,
-    datePublished,
-    dateModified: dateModified ?? datePublished,
-    author: {
-      "@type": "Person",
-      name: authorName,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: SEO_CONFIG.SITE_NAME,
-      logo: {
-        "@type": "ImageObject",
-        url: SEO_CONFIG.LOGO_URL,
-      },
-    },
   };
 }

@@ -10,8 +10,11 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.75.0",
+    "@tanstack/react-query-devtools": "^5.75.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "shared-api": "workspace:*",
     "shared-ui": "workspace:*"
   },
   "devDependencies": {

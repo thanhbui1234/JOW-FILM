@@ -1,22 +1,22 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import {
   getOrganizationSchema,
   getWebsiteSchema,
   SEO_CONFIG,
 } from "./metadata";
+import { Providers } from "./providers";
 
-/**
- * Root Layout
- *
- * Wraps all pages. Injects:
- * - Global SEO metadata (title template, description, robots)
- * - JSON-LD: Organization + WebSite via @graph (single <script> tag)
- *
- * @see https://nextjs.org/docs/app/api-reference/file-conventions/layout
- */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
+};
 
-// Default metadata for pages that don't export their own
 export const metadata: Metadata = {
   metadataBase: new URL(SEO_CONFIG.SITE_URL),
   title: {
@@ -73,27 +73,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  // Add your verification codes from Google Search Console, Bing, etc.
-  verification: {
-    google: "your-google-verification-code",
-    yandex: "your-yandex-verification-code",
-    other: {
-      "msvalidate.01": "your-bing-verification-code",
-    },
-  },
+  // verification: {},
 };
 
-/**
- * SiteStructuredData
- *
- * Injects Organization + WebSite JSON-LD in a single <script> tag using
- * @graph — best practice per Google's documentation.
- *
- * Placed in <head> of root layout so it applies to every page.
- *
- * @see https://schema.org/
- * @see https://developers.google.com/search/docs/guides/intro-structured-data
- */
 const SiteStructuredData = () => {
   const graph = {
     "@context": "https://schema.org",
@@ -108,11 +90,6 @@ const SiteStructuredData = () => {
   );
 };
 
-/**
- * RootLayout
- *
- * Required Next.js App Router layout. Must include <html> and <body>.
- */
 export default function RootLayout({
   children,
 }: {
@@ -121,10 +98,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Site-level structured data: Organization + WebSite */}
+        <link rel="preconnect" href="https://cdn.holte-platform.com" />
+        <link rel="dns-prefetch" href="https://cdn.holte-platform.com" />
         <SiteStructuredData />
       </head>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
