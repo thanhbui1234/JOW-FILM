@@ -1,11 +1,25 @@
 import type { Metadata } from "next";
 
+// Resolve site URL: env var > Vercel auto URL > localhost fallback
+function getSiteUrl(): string {
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
+  }
+  // Vercel automatically sets VERCEL_URL (without protocol)
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return "http://localhost:3000";
+}
+
 export const SEO_CONFIG = {
-  SITE_URL: "https://jowfilm.vn",
+  get SITE_URL() {
+    return getSiteUrl();
+  },
   SITE_NAME: "JOW Film",
   TWITTER_HANDLE: "@jowfilm",
   LOGO_URL: "https://jowfilm.vn/logo.png",
-  DEFAULT_OG_IMAGE: "/opengraph-image",
+  DEFAULT_OG_IMAGE: "/images/og-image.png",
   DEFAULT_DESCRIPTION:
     "JOW Film — A cinematic wedding film studio crafting timeless love stories. Discover our portfolio of wedding highlights, traditional films, and short reels.",
   SUPPORTED_LOCALES: {
@@ -45,6 +59,10 @@ export function generateMetadata({
   noIndex = false,
 }: MetadataOptions = {}): Metadata {
   const canonicalUrl = `${SEO_CONFIG.SITE_URL}${canonical}`;
+  // Facebook requires an absolute URL to resolve og:image:width / og:image:height
+  const absoluteOgImage = openGraphImage.startsWith("http")
+    ? openGraphImage
+    : `${SEO_CONFIG.SITE_URL}${openGraphImage}`;
 
   return {
     metadataBase: new URL(SEO_CONFIG.SITE_URL),
@@ -75,9 +93,10 @@ export function generateMetadata({
       description,
       images: [
         {
-          url: openGraphImage,
+          url: absoluteOgImage,
+          secureUrl: absoluteOgImage,
           width: 1200,
-          height: 630,
+          height: 293,
           alt: `${SEO_CONFIG.SITE_NAME} — Cinematic Wedding Films`,
           type: "image/png",
         },
@@ -87,7 +106,7 @@ export function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: [`${SEO_CONFIG.SITE_URL}${openGraphImage}`],
+      images: [absoluteOgImage],
       creator: SEO_CONFIG.TWITTER_HANDLE,
     },
     robots: noIndex

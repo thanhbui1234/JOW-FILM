@@ -50,7 +50,7 @@ export const metadata: Metadata = {
       {
         url: SEO_CONFIG.DEFAULT_OG_IMAGE,
         width: 1200,
-        height: 630,
+        height: 293,
         alt: SEO_CONFIG.SITE_NAME,
       },
     ],
