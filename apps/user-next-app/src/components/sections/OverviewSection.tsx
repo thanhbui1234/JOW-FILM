@@ -1,0 +1,174 @@
+"use client";
+
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+
+const OVERVIEW_ITEMS = [
+  {
+    index: "01",
+    title: "Wedding Highlight",
+    subtitle: "Your love story, condensed into a cinematic masterpiece.",
+    description:
+      "Thường là bản dựng từ 3–5 phút, chắt lọc những khoảnh khắc đặt giá và cảm xúc nhất của buổi lễ.",
+    href: "#wedding-highlight",
+    imageLabel: "Highlight reel preview",
+  },
+  {
+    index: "02",
+    title: "Traditional Film",
+    subtitle: "Preserving every precious second of your big day.",
+    description:
+      "Bản dựng đầy đủ, trình bày chi tiết toàn bộ quá trình diễn ra lễ cưới theo trình tự thời gian.",
+    href: "#traditional-film",
+    imageLabel: "Traditional film preview",
+  },
+  {
+    index: "03",
+    title: "Wedding Reels",
+    subtitle: "Trendy moments for your social media.",
+    description:
+      "Các clip ngắn đình dạng dọc, được tối ưu hóa để chia sẻ trên TikTok, Facebook Reels hoặc Instagram.",
+    href: "#wedding-reels",
+    imageLabel: "Reels preview",
+  },
+];
+
+export function OverviewSection() {
+  const [headerRef, headerVisible] = useScrollAnimation({ threshold: 0.1 });
+
+  return (
+    <section
+      id="overview"
+      className="bg-stone-50 px-6 py-24 md:px-16 lg:px-24"
+    >
+      <div className="mx-auto max-w-6xl">
+        {/* Header */}
+        <div
+          ref={headerRef as React.RefObject<HTMLDivElement>}
+          className="mb-16 border-b border-stone-200 pb-10"
+          style={{
+            transform: headerVisible ? "translateY(0)" : "translateY(-30px)",
+            opacity: headerVisible ? 1 : 0,
+            transition:
+              "transform 700ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 700ms ease",
+          }}
+        >
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">
+            Our Services
+          </p>
+          <h2 className="text-4xl font-light tracking-wide text-stone-900 md:text-5xl">
+            What we <em className="font-extralight italic">offer</em>
+          </h2>
+        </div>
+
+        {/* Items */}
+        <div className="divide-y divide-stone-200">
+          {OVERVIEW_ITEMS.map((item, index) => (
+            <OverviewRow key={item.index} item={item} index={index} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+interface OverviewRowProps {
+  item: (typeof OVERVIEW_ITEMS)[number];
+  index: number;
+}
+
+function OverviewRow({ item, index }: OverviewRowProps) {
+  const [ref, visible] = useScrollAnimation({ threshold: 0.15 });
+
+  return (
+    <div
+      ref={ref as React.RefObject<HTMLDivElement>}
+      className="group grid cursor-pointer items-center gap-8 py-10 transition-colors duration-300 hover:bg-stone-100 md:grid-cols-[80px_1fr_auto_280px] md:gap-10 md:px-4"
+      style={{
+        transform: visible ? "translateX(0)" : "translateX(-40px)",
+        opacity: visible ? 1 : 0,
+        transition: `transform 700ms cubic-bezier(0.25,0.46,0.45,0.94) ${index * 120}ms, opacity 700ms ease ${index * 120}ms`,
+      }}
+      onClick={() => {
+        const el = document.querySelector(item.href);
+        el?.scrollIntoView({ behavior: "smooth" });
+      }}
+    >
+      {/* Number */}
+      <span className="hidden text-sm font-light tabular-nums text-stone-400 md:block">
+        {item.index}
+      </span>
+
+      {/* Text */}
+      <div>
+        <h3 className="mb-1 text-2xl font-light tracking-wide text-stone-900 transition-colors duration-200 group-hover:text-amber-700 md:text-3xl">
+          {item.title}
+        </h3>
+        <p className="mb-2 text-sm font-medium italic text-stone-600">
+          {item.subtitle}
+        </p>
+        <p className="max-w-md text-sm leading-relaxed text-stone-500">
+          {item.description}
+        </p>
+
+        {/* View all link */}
+        <div className="mt-4 flex items-center gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <span className="text-xs font-semibold uppercase tracking-widest text-amber-600">
+            View all
+          </span>
+          <svg
+            className="h-3.5 w-3.5 translate-x-0 text-amber-600 transition-transform duration-200 group-hover:translate-x-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </div>
+      </div>
+
+      {/* Divider line — visible on md+ between text and thumbnail */}
+      <div className="hidden h-px w-12 bg-stone-300 transition-colors duration-300 group-hover:bg-amber-400 md:block" />
+
+      {/* Thumbnail */}
+      <div className="relative h-44 overflow-hidden rounded-xl bg-stone-200 md:h-36">
+        {/* Placeholder */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-stone-400 transition-transform duration-500 group-hover:scale-105">
+          <svg
+            className="h-8 w-8"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={0.8}
+              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
+          <span className="text-xs uppercase tracking-widest">
+            {item.imageLabel}
+          </span>
+        </div>
+
+        {/* Hover play overlay */}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 shadow-md backdrop-blur-sm">
+            <svg
+              className="h-4 w-4 translate-x-0.5 text-stone-900"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

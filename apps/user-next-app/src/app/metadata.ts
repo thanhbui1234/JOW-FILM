@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 export const SEO_CONFIG = {
-  SITE_URL: "https://holte-platform.com",
-  SITE_NAME: "Holte Platform",
-  TWITTER_HANDLE: "@holteplatform",
-  LOGO_URL: "https://holte-platform.com/logo.png",
+  SITE_URL: "https://jowfilm.vn",
+  SITE_NAME: "JOW Film",
+  TWITTER_HANDLE: "@jowfilm",
+  LOGO_URL: "https://jowfilm.vn/logo.png",
   DEFAULT_OG_IMAGE: "/og-image.png",
   DEFAULT_DESCRIPTION:
-    "A modern, scalable platform built for developers and businesses. Experience seamless integration, powerful features, and exceptional performance.",
+    "JOW Film — A cinematic wedding film studio crafting timeless love stories. Discover our portfolio of wedding highlights, traditional films, and short reels.",
   SUPPORTED_LOCALES: {
     "en-US": "en",
     "vi-VN": "vi",
@@ -27,11 +27,12 @@ export function generateMetadata({
   title = SEO_CONFIG.SITE_NAME,
   description = SEO_CONFIG.DEFAULT_DESCRIPTION,
   keywords = [
-    "developer platform",
-    "cloud deployment",
-    "scalable applications",
-    "modern development",
-    "enterprise solution",
+    "wedding film",
+    "wedding cinematography",
+    "wedding highlight",
+    "traditional film",
+    "wedding reels",
+    "JOW Film Vietnam",
   ],
   canonical = "/",
   openGraphImage = SEO_CONFIG.DEFAULT_OG_IMAGE,
@@ -47,9 +48,9 @@ export function generateMetadata({
     },
     description,
     keywords,
-    authors: [{ name: "Holte Team" }],
-    creator: "Holte Team",
-    publisher: "Holte",
+    authors: [{ name: "JOW Film" }],
+    creator: "JOW Film",
+    publisher: "JOW Film",
     formatDetection: { email: false, address: false, telephone: false },
     alternates: {
       canonical: canonicalUrl,
@@ -107,13 +108,13 @@ export function getOrganizationSchema() {
     description: SEO_CONFIG.DEFAULT_DESCRIPTION,
     sameAs: [
       `https://twitter.com/${SEO_CONFIG.TWITTER_HANDLE.replace("@", "")}`,
-      "https://github.com/holte-platform",
-      "https://linkedin.com/company/holte-platform",
+      "https://facebook.com/jowfilm",
+      "https://instagram.com/jowfilm",
     ],
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer support",
-      email: "support@holte-platform.com",
+      email: "hello@jowfilm.vn",
     },
   };
 }

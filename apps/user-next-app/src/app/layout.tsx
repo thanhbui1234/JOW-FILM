@@ -25,17 +25,17 @@ export const metadata: Metadata = {
   },
   description: SEO_CONFIG.DEFAULT_DESCRIPTION,
   keywords: [
-    "developer platform",
-    "cloud deployment",
-    "scalable applications",
-    "modern development",
-    "enterprise solution",
-    "API integration",
-    "team collaboration",
+    "wedding film",
+    "wedding cinematography",
+    "wedding highlight",
+    "traditional film",
+    "wedding reels Vietnam",
+    "JOW Film",
+    "phim cưới",
   ],
-  authors: [{ name: "Holte Team" }],
-  creator: "Holte Team",
-  publisher: "Holte",
+  authors: [{ name: "JOW Film" }],
+  creator: "JOW Film",
+  publisher: "JOW Film",
   formatDetection: {
     email: false,
     address: false,
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SEO_CONFIG.SITE_NAME} – Modern Development Platform`,
+    title: `${SEO_CONFIG.SITE_NAME} – Cinematic Wedding Films`,
     description: SEO_CONFIG.DEFAULT_DESCRIPTION,
     images: [SEO_CONFIG.DEFAULT_OG_IMAGE],
     creator: SEO_CONFIG.TWITTER_HANDLE,
@@ -98,8 +98,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="preconnect" href="https://cdn.holte-platform.com" />
-        <link rel="dns-prefetch" href="https://cdn.holte-platform.com" />
+        <link rel="preconnect" href="https://jowfilm.vn" />
+        <link rel="dns-prefetch" href="https://jowfilm.vn" />
         <SiteStructuredData />
       </head>
       <body>
