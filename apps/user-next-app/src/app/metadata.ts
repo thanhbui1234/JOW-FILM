@@ -19,7 +19,7 @@ export const SEO_CONFIG = {
   SITE_NAME: "JOW Film",
   TWITTER_HANDLE: "@jowfilm",
   LOGO_URL: "https://jowfilm.vn/logo.png",
-  DEFAULT_OG_IMAGE: "/opengraph-image",
+  DEFAULT_OG_IMAGE: "/images/og-image.png",
   DEFAULT_DESCRIPTION:
     "JOW Film — A cinematic wedding film studio crafting timeless love stories. Discover our portfolio of wedding highlights, traditional films, and short reels.",
   SUPPORTED_LOCALES: {
@@ -96,7 +96,7 @@ export function generateMetadata({
           url: absoluteOgImage,
           secureUrl: absoluteOgImage,
           width: 1200,
-          height: 630,
+          height: 293,
           alt: `${SEO_CONFIG.SITE_NAME} — Cinematic Wedding Films`,
           type: "image/png",
         },
