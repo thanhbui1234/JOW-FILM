@@ -5,7 +5,7 @@ export const SEO_CONFIG = {
   SITE_NAME: "JOW Film",
   TWITTER_HANDLE: "@jowfilm",
   LOGO_URL: "https://jowfilm.vn/logo.png",
-  DEFAULT_OG_IMAGE: "/og-image.png",
+  DEFAULT_OG_IMAGE: "/opengraph-image",
   DEFAULT_DESCRIPTION:
     "JOW Film — A cinematic wedding film studio crafting timeless love stories. Discover our portfolio of wedding highlights, traditional films, and short reels.",
   SUPPORTED_LOCALES: {
@@ -87,7 +87,7 @@ export function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: [openGraphImage],
+      images: [`${SEO_CONFIG.SITE_URL}${openGraphImage}`],
       creator: SEO_CONFIG.TWITTER_HANDLE,
     },
     robots: noIndex
