@@ -9,7 +9,7 @@ import { ContactSection } from "@/components/sections/ContactSection";
 import { generateMetadata } from "./metadata";
 
 export const metadata = generateMetadata({
-  title: "Home",
+  title: "JOW Film",
   description:
     "JOW Film — A cinematic wedding film studio. Discover our portfolio of timeless love stories.",
   canonical: "/",
