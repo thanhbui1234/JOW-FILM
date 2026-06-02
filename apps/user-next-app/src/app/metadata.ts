@@ -93,16 +93,16 @@ export function generateMetadata({
     robots: noIndex
       ? { index: false, follow: false }
       : {
+        index: true,
+        follow: true,
+        googleBot: {
           index: true,
           follow: true,
-          googleBot: {
-            index: true,
-            follow: true,
-            "max-video-preview": -1,
-            "max-image-preview": "large",
-            "max-snippet": -1,
-          },
+          "max-video-preview": -1,
+          "max-image-preview": "large",
+          "max-snippet": -1,
         },
+      },
   };
 }
 
@@ -150,7 +150,7 @@ interface BreadcrumbItem {
 
 export function getBreadcrumbSchema(items: BreadcrumbItem[] = []) {
   const allItems = [
-    { name: "Home", url: SEO_CONFIG.SITE_URL },
+    { name: "JOW FILM", url: SEO_CONFIG.SITE_URL },
     ...items.map((item) => ({
       ...item,
       url: item.url.startsWith("http")
