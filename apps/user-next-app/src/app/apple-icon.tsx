@@ -7,7 +7,7 @@ export const contentType = "image/png";
 
 export default async function AppleIcon() {
   const logoData = await readFile(
-    join(process.cwd(), "public/images/Logo_Logo_trắng.png")
+    join(process.cwd(), "public/images/logo-white.png")
   );
   const logoBase64 = `data:image/png;base64,${logoData.toString("base64")}`;
 
