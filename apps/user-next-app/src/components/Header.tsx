@@ -6,7 +6,7 @@ import { SlideMenu } from "./SlideMenu";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [showLogo, setShowLogo] = useState(false);
   const [isDarkSection, setIsDarkSection] = useState(true);
 
   const updateTheme = useCallback(() => {
@@ -24,13 +24,33 @@ export function Header() {
   }, []);
 
   useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let hideTimer: ReturnType<typeof setTimeout>;
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 80);
+      const currentScrollY = window.scrollY;
+      const isScrollingUp = currentScrollY < lastScrollY;
+      const pastThreshold = currentScrollY > 80;
+
+      clearTimeout(hideTimer);
+
+      if (pastThreshold && isScrollingUp) {
+        setShowLogo(true);
+        hideTimer = setTimeout(() => setShowLogo(false), 1500);
+      } else {
+        setShowLogo(false);
+      }
+
+      lastScrollY = currentScrollY;
       updateTheme();
     };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(hideTimer);
+    };
   }, [updateTheme]);
 
   const textColor = isDarkSection
@@ -52,10 +72,11 @@ export function Header() {
           </span>
         </button>
 
-        {/* Center: Logo — appears on scroll */}
-        <div
+        {/* Center: Logo — appears on scroll up */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className={`absolute left-1/2 -translate-x-1/2 transition-all duration-700 ease-out ${
-            scrolled
+            showLogo
               ? "translate-y-0 opacity-100"
               : "-translate-y-2 opacity-0 pointer-events-none"
           }`}
@@ -65,7 +86,7 @@ export function Header() {
           >
             JOW Film
           </span>
-        </div>
+        </button>
 
         {/* Right: Social icons */}
         <div className="flex items-center gap-4">
