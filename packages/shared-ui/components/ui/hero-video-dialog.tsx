@@ -21,6 +21,7 @@ interface HeroVideoProps {
   thumbnailSrc: string
   thumbnailAlt?: string
   className?: string
+  onOpenChange?: (open: boolean) => void
 }
 
 const animationVariants = {
@@ -72,9 +73,20 @@ export function HeroVideoDialog({
   thumbnailSrc,
   thumbnailAlt = "Video thumbnail",
   className,
+  onOpenChange,
 }: HeroVideoProps) {
   const [isVideoOpen, setIsVideoOpen] = useState(false)
   const selectedAnimation = animationVariants[animationStyle]
+
+  const handleOpen = () => {
+    setIsVideoOpen(true)
+    onOpenChange?.(true)
+  }
+
+  const handleClose = () => {
+    setIsVideoOpen(false)
+    onOpenChange?.(false)
+  }
 
   return (
     <div className={cn("relative", className)}>
@@ -82,7 +94,7 @@ export function HeroVideoDialog({
         type="button"
         aria-label="Play video"
         className="group relative cursor-pointer border-0 bg-transparent p-0"
-        onClick={() => setIsVideoOpen(true)}
+        onClick={() => handleOpen()}
       >
         <img
           src={thumbnailSrc}
@@ -118,10 +130,10 @@ export function HeroVideoDialog({
               tabIndex={0}
               onKeyDown={(e) => {
                 if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
-                  setIsVideoOpen(false)
+                  handleClose()
                 }
               }}
-              onClick={() => setIsVideoOpen(false)}
+              onClick={() => handleClose()}
               className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md"
             >
               <motion.div

@@ -1,5 +1,8 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { BlurFade, HeroVideoDialog } from "shared-ui";
 
@@ -53,8 +56,39 @@ function getYouTubeEmbedUrl(videoId: string): string {
 export function WeddingHighlightSection() {
   const [headerRef, headerVisible] = useScrollAnimation({ threshold: 0.1 });
 
-  const featured = HIGHLIGHT_VIDEOS[0];
-  const grid = HIGHLIGHT_VIDEOS.slice(1);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    {
+      loop: true,
+      align: "start",
+      slidesToScroll: 1,
+    },
+    [Autoplay({ delay: 1500, stopOnInteraction: false, stopOnMouseEnter: true })]
+  );
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const handleVideoOpenChange = useCallback((open: boolean) => {
+    if (!emblaApi) return;
+    const autoplay = emblaApi.plugins().autoplay;
+    if (!autoplay) return;
+    if (open) {
+      autoplay.stop();
+    } else {
+      autoplay.play();
+    }
+  }, [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+    return () => { emblaApi.off("select", onSelect); };
+  }, [emblaApi, onSelect]);
 
   return (
     <section
@@ -92,44 +126,69 @@ export function WeddingHighlightSection() {
           </BlurFade>
         </div>
 
-        {/* Featured hero video */}
-        <BlurFade delay={0.3} inView>
-          <div className="relative mb-4 overflow-hidden rounded-2xl md:mb-6">
-            <HeroVideoDialog
-              videoSrc={getYouTubeEmbedUrl(featured.id)}
-              thumbnailSrc={getYouTubeThumbnail(featured.id)}
-              thumbnailAlt={featured.title}
-              animationStyle="from-center"
-              className="[&>button]:w-full [&_img]:aspect-video [&_img]:w-full [&_img]:object-cover [&_img]:rounded-2xl [&_img]:border-0 [&_img]:shadow-none"
-            />
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 md:p-8">
-              <h3 className="text-lg font-medium text-white md:text-2xl">
-                {featured.title}
-              </h3>
-              <p className="text-sm text-white/70">{featured.subtitle}</p>
+        {/* Desktop: Embla Carousel */}
+        <div className="hidden md:block">
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex gap-4">
+              {HIGHLIGHT_VIDEOS.map((video) => (
+                <div
+                  key={video.id}
+                  className="relative min-w-0 flex-[0_0_42%] lg:flex-[0_0_38%]"
+                >
+                  <div className="group relative overflow-hidden rounded-2xl">
+                    <HeroVideoDialog
+                      videoSrc={getYouTubeEmbedUrl(video.id)}
+                      thumbnailSrc={getYouTubeThumbnail(video.id)}
+                      thumbnailAlt={video.title}
+                      animationStyle="from-center"
+                      onOpenChange={handleVideoOpenChange}
+                      className="[&>button]:w-full [&_img]:aspect-video [&_img]:w-full [&_img]:object-cover [&_img]:rounded-2xl [&_img]:border-0 [&_img]:shadow-none"
+                    />
+                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-5">
+                      <h3 className="text-base font-medium text-white lg:text-lg">
+                        {video.title}
+                      </h3>
+                      <p className="text-sm text-white/70">{video.subtitle}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        </BlurFade>
 
-        {/* Grid of remaining videos */}
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:gap-5">
-          {grid.map((video, index) => (
-            <BlurFade key={video.id} delay={0.35 + index * 0.08} inView>
-              <div className="group relative overflow-hidden rounded-xl md:rounded-2xl">
+          {/* Dots */}
+          <div className="mt-6 flex justify-center gap-2">
+            {HIGHLIGHT_VIDEOS.map((_, index) => (
+              <button
+                key={index}
+                aria-label={`Go to slide ${index + 1}`}
+                onClick={() => emblaApi?.scrollTo(index)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${index === selectedIndex
+                  ? "w-6 bg-amber-500"
+                  : "w-1.5 bg-stone-300 dark:bg-stone-600"
+                  }`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile: Grid fallback */}
+        <div className="grid grid-cols-2 gap-3 md:hidden">
+          {HIGHLIGHT_VIDEOS.map((video, index) => (
+            <BlurFade key={video.id} delay={0.3 + index * 0.08} inView>
+              <div className="group relative overflow-hidden rounded-xl">
                 <HeroVideoDialog
                   videoSrc={getYouTubeEmbedUrl(video.id)}
                   thumbnailSrc={getYouTubeThumbnail(video.id)}
                   thumbnailAlt={video.title}
                   animationStyle="from-center"
-                  className="[&>button]:w-full [&_img]:aspect-[4/5] [&_img]:w-full [&_img]:object-cover [&_img]:rounded-xl [&_img]:md:rounded-2xl [&_img]:border-0 [&_img]:shadow-none [&>button>div]:scale-75 [&>button>div_div:first-child]:size-16 [&>button>div_div:first-child_div]:size-10 [&>button>div_div:first-child_div_svg]:size-5"
+                  className="[&>button]:w-full [&_img]:aspect-[4/5] [&_img]:w-full [&_img]:object-cover [&_img]:rounded-xl [&_img]:border-0 [&_img]:shadow-none [&>button>div]:scale-75 [&>button>div_div:first-child]:size-16 [&>button>div_div:first-child_div]:size-10 [&>button>div_div:first-child_div_svg]:size-5"
                 />
-                <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3 md:p-5">
-                  <h3 className="text-sm font-medium text-white md:text-base">
+                <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
+                  <h3 className="text-sm font-medium text-white">
                     {video.title}
                   </h3>
-                  <p className="text-xs text-white/60 md:text-sm">
-                    {video.subtitle}
-                  </p>
+                  <p className="text-xs text-white/60">{video.subtitle}</p>
                 </div>
               </div>
             </BlurFade>
