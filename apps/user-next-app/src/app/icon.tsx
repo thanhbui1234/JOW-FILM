@@ -1,10 +1,16 @@
 import { ImageResponse } from "next/og";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
-// Favicon 32×32 — chữ "J" trên nền đen với điểm nhấn amber
-export default function Icon() {
+export default async function Icon() {
+  const logoData = await readFile(
+    join(process.cwd(), "public/images/Logo_Logo_trắng.png")
+  );
+  const logoBase64 = `data:image/png;base64,${logoData.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -16,32 +22,14 @@ export default function Icon() {
           justifyContent: "center",
           background: "#0c0c0c",
           borderRadius: "6px",
-          position: "relative",
         }}
       >
-        {/* Amber dot accent */}
-        <div
-          style={{
-            position: "absolute",
-            top: "4px",
-            right: "4px",
-            width: "6px",
-            height: "6px",
-            borderRadius: "50%",
-            background: "#d97706",
-          }}
+        <img
+          src={logoBase64}
+          width="26"
+          height="26"
+          style={{ objectFit: "contain" }}
         />
-        <span
-          style={{
-            fontSize: "18px",
-            fontWeight: 700,
-            color: "white",
-            fontFamily: "serif",
-            letterSpacing: "-0.5px",
-          }}
-        >
-          J
-        </span>
       </div>
     ),
     { ...size }

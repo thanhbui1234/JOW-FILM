@@ -1,10 +1,16 @@
 import { ImageResponse } from "next/og";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
-// Apple touch icon 180×180 — dùng cho iOS home screen
-export default function AppleIcon() {
+export default async function AppleIcon() {
+  const logoData = await readFile(
+    join(process.cwd(), "public/images/Logo_Logo_trắng.png")
+  );
+  const logoBase64 = `data:image/png;base64,${logoData.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -16,54 +22,14 @@ export default function AppleIcon() {
           justifyContent: "center",
           background: "#0c0c0c",
           borderRadius: "40px",
-          position: "relative",
         }}
       >
-        {/* Amber accent dot */}
-        <div
-          style={{
-            position: "absolute",
-            top: "22px",
-            right: "24px",
-            width: "18px",
-            height: "18px",
-            borderRadius: "50%",
-            background: "#d97706",
-          }}
+        <img
+          src={logoBase64}
+          width="140"
+          height="140"
+          style={{ objectFit: "contain" }}
         />
-        {/* JOW text */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "4px",
-          }}
-        >
-          <span
-            style={{
-              fontSize: "80px",
-              fontWeight: 700,
-              color: "white",
-              fontFamily: "serif",
-              lineHeight: 1,
-              letterSpacing: "-2px",
-            }}
-          >
-            JOW
-          </span>
-          <span
-            style={{
-              fontSize: "18px",
-              fontWeight: 300,
-              color: "#d97706",
-              letterSpacing: "8px",
-              textTransform: "uppercase",
-            }}
-          >
-            FILM
-          </span>
-        </div>
       </div>
     ),
     { ...size }
