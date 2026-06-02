@@ -7,6 +7,7 @@ export function VideoBanner() {
   return (
     <section
       id="home"
+      data-header-theme="dark"
       className="relative w-full overflow-hidden"
       style={{ height: "100dvh" }}
     >

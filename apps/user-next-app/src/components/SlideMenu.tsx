@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { X, Facebook, Instagram, Mail } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 
 const NAV_ITEMS = [
   { index: "01", label: "About JOW Film", href: "#about" },
@@ -71,10 +72,12 @@ export function SlideMenu({ open, onClose }: SlideMenuProps) {
                 onClick={() => handleNavClick(item.href)}
                 className="group flex w-full items-center gap-4 rounded-lg px-2 py-4 text-left transition-all duration-200 hover:bg-stone-800/50"
                 style={{
-                  transitionDelay: open ? `${80 + i * 50}ms` : "0ms",
                   transform: open ? "translateX(0)" : "translateX(-16px)",
                   opacity: open ? 1 : 0,
-                  transition: `transform 500ms cubic-bezier(0.25,0.46,0.45,0.94) ${80 + i * 50}ms, opacity 400ms ease ${80 + i * 50}ms, background-color 200ms ease`,
+                  transitionProperty: "transform, opacity, background-color",
+                  transitionDuration: "500ms, 400ms, 200ms",
+                  transitionTimingFunction: "cubic-bezier(0.25,0.46,0.45,0.94), ease, ease",
+                  transitionDelay: open ? `${80 + i * 50}ms, ${80 + i * 50}ms, 0ms` : "0ms, 0ms, 0ms",
                 }}
               >
                 {/* Number */}
@@ -115,10 +118,16 @@ export function SlideMenu({ open, onClose }: SlideMenuProps) {
             transition: "opacity 500ms ease 400ms, transform 500ms ease 400ms",
           }}
         >
-          <p className="mb-5 text-xs leading-relaxed text-stone-600">
+          <p className="mb-4 text-xs leading-relaxed text-stone-600">
             Crafting timeless wedding films <br />
             across Vietnam.
           </p>
+
+          {/* Theme Toggle */}
+          <div className="mb-4">
+            <ThemeToggle />
+          </div>
+
           <div className="flex items-center gap-4">
             <a
               href="https://facebook.com"

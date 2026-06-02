@@ -1,6 +1,7 @@
 "use client";
 
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { BlurFade, Skeleton } from "shared-ui";
 
 const HIGHLIGHT_ITEMS = [
   {
@@ -41,7 +42,8 @@ export function WeddingHighlightSection() {
   return (
     <section
       id="wedding-highlight"
-      className="min-h-screen bg-stone-100 px-6 py-24 md:px-16 lg:px-24"
+      data-header-theme="light"
+      className="min-h-screen bg-stone-100 px-6 py-24 md:px-16 lg:px-24 dark:bg-stone-900"
     >
       <div className="mx-auto max-w-6xl">
         {/* Section header */}
@@ -56,18 +58,24 @@ export function WeddingHighlightSection() {
           }}
         >
           <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">
-              Featured Works
-            </p>
-            <h2 className="text-5xl font-light tracking-wide text-stone-900 md:text-6xl">
-              Wedding <br />
-              <em className="font-extralight italic">Highlight</em>
-            </h2>
+            <BlurFade delay={0.05} inView>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
+                Featured Works
+              </p>
+            </BlurFade>
+            <BlurFade delay={0.15} inView>
+              <h2 className="text-5xl font-light tracking-wide text-stone-900 md:text-6xl dark:text-stone-100">
+                Wedding <br />
+                <em className="font-extralight italic">Highlight</em>
+              </h2>
+            </BlurFade>
           </div>
-          <p className="hidden max-w-xs text-right text-sm leading-relaxed text-stone-500 md:block">
-            Each film is a chapter of a love story — crafted with care, told
-            with emotion.
-          </p>
+          <BlurFade delay={0.25} inView>
+            <p className="hidden max-w-xs text-right text-sm leading-relaxed text-stone-500 md:block dark:text-stone-400">
+              Each film is a chapter of a love story — crafted with care, told
+              with emotion.
+            </p>
+          </BlurFade>
         </div>
 
         {/* Grid */}
@@ -101,7 +109,7 @@ function HighlightCard({ item, fromLeft, delay }: HighlightCardProps) {
   return (
     <div
       ref={ref as React.RefObject<HTMLDivElement>}
-      className="group relative overflow-hidden rounded-xl bg-stone-300"
+      className="group relative overflow-hidden rounded-xl text-stone-300"
       style={{
         aspectRatio: item.aspect.includes("4/5") ? "4/5" : "4/3",
         transform: visible
@@ -111,10 +119,13 @@ function HighlightCard({ item, fromLeft, delay }: HighlightCardProps) {
         transition: `transform 700ms cubic-bezier(0.25,0.46,0.45,0.94) ${delay}ms, opacity 700ms ease ${delay}ms`,
       }}
     >
-      {/* Placeholder bg */}
-      <div className="absolute inset-0 flex items-center justify-center bg-stone-200">
+      {/* Skeleton background */}
+      <Skeleton className="absolute inset-0 rounded-none" variant="rectangular" />
+
+      {/* Placeholder icon */}
+      <div className="absolute inset-0 flex items-center justify-center">
         <svg
-          className="h-12 w-12 text-stone-400"
+          className="h-12 w-12 text-stone-400/60"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

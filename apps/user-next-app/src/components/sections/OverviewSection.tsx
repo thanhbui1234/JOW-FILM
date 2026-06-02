@@ -1,6 +1,7 @@
 "use client";
 
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { BlurFade, Skeleton } from "shared-ui";
 
 const OVERVIEW_ITEMS = [
   {
@@ -38,13 +39,14 @@ export function OverviewSection() {
   return (
     <section
       id="overview"
-      className="bg-stone-50 px-6 py-24 md:px-16 lg:px-24"
+      data-header-theme="light"
+      className="bg-stone-50 px-6 py-24 md:px-16 lg:px-24 dark:bg-stone-900"
     >
       <div className="mx-auto max-w-6xl">
         {/* Header */}
         <div
           ref={headerRef as React.RefObject<HTMLDivElement>}
-          className="mb-16 border-b border-stone-200 pb-10"
+          className="mb-16 border-b border-stone-200 pb-10 dark:border-stone-700"
           style={{
             transform: headerVisible ? "translateY(0)" : "translateY(-30px)",
             opacity: headerVisible ? 1 : 0,
@@ -52,16 +54,20 @@ export function OverviewSection() {
               "transform 700ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 700ms ease",
           }}
         >
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">
-            Our Services
-          </p>
-          <h2 className="text-4xl font-light tracking-wide text-stone-900 md:text-5xl">
-            What we <em className="font-extralight italic">offer</em>
-          </h2>
+          <BlurFade delay={0.05} inView>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
+              Our Services
+            </p>
+          </BlurFade>
+          <BlurFade delay={0.15} inView>
+            <h2 className="text-4xl font-light tracking-wide text-stone-900 md:text-5xl dark:text-stone-100">
+              What we <em className="font-extralight italic">offer</em>
+            </h2>
+          </BlurFade>
         </div>
 
         {/* Items */}
-        <div className="divide-y divide-stone-200">
+        <div className="divide-y divide-stone-200 dark:divide-stone-700">
           {OVERVIEW_ITEMS.map((item, index) => (
             <OverviewRow key={item.index} item={item} index={index} />
           ))}
@@ -82,7 +88,7 @@ function OverviewRow({ item, index }: OverviewRowProps) {
   return (
     <div
       ref={ref as React.RefObject<HTMLDivElement>}
-      className="group grid cursor-pointer items-center gap-8 py-10 transition-colors duration-300 hover:bg-stone-100 md:grid-cols-[80px_1fr_auto_280px] md:gap-10 md:px-4"
+      className="group grid cursor-pointer items-center gap-8 py-10 transition-colors duration-300 hover:bg-stone-100 md:grid-cols-[80px_1fr_auto_280px] md:gap-10 md:px-4 dark:hover:bg-stone-800"
       style={{
         transform: visible ? "translateX(0)" : "translateX(-40px)",
         opacity: visible ? 1 : 0,
@@ -94,29 +100,37 @@ function OverviewRow({ item, index }: OverviewRowProps) {
       }}
     >
       {/* Number */}
-      <span className="hidden text-sm font-light tabular-nums text-stone-400 md:block">
-        {item.index}
-      </span>
+      <BlurFade delay={0.05 + index * 0.1} inView>
+        <span className="hidden text-sm font-light tabular-nums text-stone-400 md:block dark:text-stone-500">
+          {item.index}
+        </span>
+      </BlurFade>
 
       {/* Text */}
       <div>
-        <h3 className="mb-1 text-2xl font-light tracking-wide text-stone-900 transition-colors duration-200 group-hover:text-amber-700 md:text-3xl">
-          {item.title}
-        </h3>
-        <p className="mb-2 text-sm font-medium italic text-stone-600">
-          {item.subtitle}
-        </p>
-        <p className="max-w-md text-sm leading-relaxed text-stone-500">
-          {item.description}
-        </p>
+        <BlurFade delay={0.1 + index * 0.1} inView>
+          <h3 className="mb-1 text-2xl font-light tracking-wide text-stone-900 transition-colors duration-200 group-hover:text-amber-700 md:text-3xl dark:text-stone-100 dark:group-hover:text-amber-400">
+            {item.title}
+          </h3>
+        </BlurFade>
+        <BlurFade delay={0.18 + index * 0.1} inView>
+          <p className="mb-2 text-sm font-medium italic text-stone-600 dark:text-stone-400">
+            {item.subtitle}
+          </p>
+        </BlurFade>
+        <BlurFade delay={0.24 + index * 0.1} inView>
+          <p className="max-w-md text-sm leading-relaxed text-stone-500 dark:text-stone-400">
+            {item.description}
+          </p>
+        </BlurFade>
 
         {/* View all link */}
         <div className="mt-4 flex items-center gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <span className="text-xs font-semibold uppercase tracking-widest text-amber-600">
+          <span className="text-xs font-semibold uppercase tracking-widest text-amber-600 dark:text-amber-400">
             View all
           </span>
           <svg
-            className="h-3.5 w-3.5 translate-x-0 text-amber-600 transition-transform duration-200 group-hover:translate-x-1"
+            className="h-3.5 w-3.5 translate-x-0 text-amber-600 transition-transform duration-200 group-hover:translate-x-1 dark:text-amber-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -131,13 +145,13 @@ function OverviewRow({ item, index }: OverviewRowProps) {
         </div>
       </div>
 
-      {/* Divider line — visible on md+ between text and thumbnail */}
-      <div className="hidden h-px w-12 bg-stone-300 transition-colors duration-300 group-hover:bg-amber-400 md:block" />
+      {/* Divider line */}
+      <div className="hidden h-px w-12 bg-stone-300 transition-colors duration-300 group-hover:bg-amber-400 md:block dark:bg-stone-600" />
 
-      {/* Thumbnail */}
-      <div className="relative h-44 overflow-hidden rounded-xl bg-stone-200 md:h-36">
-        {/* Placeholder */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-stone-400 transition-transform duration-500 group-hover:scale-105">
+      {/* Thumbnail — Skeleton */}
+      <div className="relative h-44 overflow-hidden rounded-xl text-stone-300 md:h-36 dark:text-stone-600">
+        <Skeleton className="h-full w-full" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-stone-400 transition-transform duration-500 group-hover:scale-105 dark:text-stone-500">
           <svg
             className="h-8 w-8"
             fill="none"

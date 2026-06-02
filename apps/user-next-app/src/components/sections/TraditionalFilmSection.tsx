@@ -1,6 +1,7 @@
 "use client";
 
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { BlurFade, Skeleton } from "shared-ui";
 
 const FILMS = [
   {
@@ -35,6 +36,7 @@ export function TraditionalFilmSection() {
   return (
     <section
       id="traditional-film"
+      data-header-theme="dark"
       className="min-h-screen bg-amber-950 px-6 py-24 md:px-16 lg:px-24"
     >
       <div className="mx-auto max-w-6xl">
@@ -49,12 +51,16 @@ export function TraditionalFilmSection() {
               "transform 700ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 700ms ease",
           }}
         >
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
-            Heritage & Culture
-          </p>
-          <h2 className="text-5xl font-light tracking-wide text-amber-50 md:text-6xl">
-            Traditional <em className="font-extralight italic">Film</em>
-          </h2>
+          <BlurFade delay={0.05} inView>
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
+              Heritage &amp; Culture
+            </p>
+          </BlurFade>
+          <BlurFade delay={0.15} inView>
+            <h2 className="text-5xl font-light tracking-wide text-amber-50 md:text-6xl">
+              Traditional <em className="font-extralight italic">Film</em>
+            </h2>
+          </BlurFade>
         </div>
 
         {/* Alternating rows */}
@@ -99,32 +105,40 @@ function TraditionalFilmRow({ film, imageLeft }: TraditionalFilmRowProps) {
           "transform 800ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 800ms ease",
       }}
     >
-      <p className="mb-3 text-xs uppercase tracking-[0.3em] text-amber-500">
-        {film.subtitle}
-      </p>
-      <h3 className="mb-5 text-3xl font-light text-amber-50 md:text-4xl">
-        {film.title}
-      </h3>
-      <p className="mb-7 text-sm leading-relaxed text-amber-200/70">
-        {film.description}
-      </p>
-      <div className="flex flex-wrap gap-2">
-        {film.tags.map((tag) => (
-          <span
-            key={tag}
-            className="rounded-full border border-amber-700/50 px-3 py-1 text-xs uppercase tracking-wider text-amber-400"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
+      <BlurFade delay={0.05} inView>
+        <p className="mb-3 text-xs uppercase tracking-[0.3em] text-amber-500">
+          {film.subtitle}
+        </p>
+      </BlurFade>
+      <BlurFade delay={0.15} inView>
+        <h3 className="mb-5 text-3xl font-light text-amber-50 md:text-4xl">
+          {film.title}
+        </h3>
+      </BlurFade>
+      <BlurFade delay={0.25} inView>
+        <p className="mb-7 text-sm leading-relaxed text-amber-200/70">
+          {film.description}
+        </p>
+      </BlurFade>
+      <BlurFade delay={0.35} inView>
+        <div className="flex flex-wrap gap-2">
+          {film.tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full border border-amber-700/50 px-3 py-1 text-xs uppercase tracking-wider text-amber-400"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </BlurFade>
     </div>
   );
 
   const imageContent = (
     <div
       ref={imgRef as React.RefObject<HTMLDivElement>}
-      className="relative h-72 overflow-hidden rounded-2xl bg-amber-900/40 md:h-96"
+      className="relative h-72 overflow-hidden rounded-2xl text-amber-800 md:h-96"
       style={{
         transform: imgVisible
           ? "translateX(0)"
@@ -134,7 +148,8 @@ function TraditionalFilmRow({ film, imageLeft }: TraditionalFilmRowProps) {
           "transform 800ms cubic-bezier(0.25,0.46,0.45,0.94) 150ms, opacity 800ms ease 150ms",
       }}
     >
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-amber-800">
+      <Skeleton className="absolute inset-0 rounded-2xl" />
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-amber-800/60">
         <svg
           className="h-14 w-14"
           fill="none"
