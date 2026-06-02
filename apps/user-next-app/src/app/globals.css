@@ -45,23 +45,16 @@
   font-display: swap;
 }
 
-html {
-  scroll-behavior: smooth;
+html,
+body {
+  overflow-x: clip;
   overscroll-behavior: none;
 }
 
-@media (min-width: 1024px) {
-  html {
-    scroll-snap-type: y proximity;
-  }
-
-  main > section {
-    scroll-snap-align: start;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   font-family: "Geomanist", system-ui, sans-serif;
-  overflow-x: hidden;
-  overscroll-behavior: none;
 }
