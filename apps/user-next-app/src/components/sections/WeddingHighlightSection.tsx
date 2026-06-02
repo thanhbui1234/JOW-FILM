@@ -1,40 +1,67 @@
 "use client";
 
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { BlurFade, Skeleton } from "shared-ui";
+import { BlurFade, BentoGrid, HeroVideoDialog } from "shared-ui";
 
-const HIGHLIGHT_ITEMS = [
+interface HighlightVideo {
+  id: string;
+  title: string;
+  subtitle: string;
+  className: string;
+}
+
+const HIGHLIGHT_VIDEOS: HighlightVideo[] = [
   {
+    id: "SlQR9iu09bQ",
     title: "Eternal Vows",
     subtitle: "Đà Lạt · Spring 2024",
-    aspect: "aspect-[4/5]",
+    className: "col-span-1 md:row-span-2",
   },
   {
+    id: "abPmZCZZrFA",
     title: "Golden Hour",
     subtitle: "Hội An · Summer 2024",
-    aspect: "aspect-[4/5]",
+    className: "col-span-1 md:row-span-1",
   },
   {
+    id: "zoEtcR5EW08",
     title: "Garden of Love",
     subtitle: "Hà Nội · Autumn 2023",
-    aspect: "aspect-[4/3]",
+    className: "col-span-1 md:row-span-1",
   },
   {
+    id: "LggaymnzDjc",
     title: "Into the Wild",
     subtitle: "Phú Quốc · Winter 2024",
-    aspect: "aspect-[4/3]",
+    className: "col-span-1 md:row-span-1",
   },
   {
+    id: "psZ1g9fMfeo",
     title: "Blossom",
     subtitle: "Đà Nẵng · Spring 2023",
-    aspect: "aspect-[4/5]",
+    className: "col-span-1 md:row-span-2",
   },
   {
+    id: "32sYGCOYJUM",
     title: "Midnight Blue",
     subtitle: "TP.HCM · Summer 2023",
-    aspect: "aspect-[4/5]",
+    className: "col-span-1 md:row-span-1",
+  },
+  {
+    id: "PdbsnGuduvo",
+    title: "Sunset Promise",
+    subtitle: "Nha Trang · Winter 2023",
+    className: "col-span-1 md:row-span-1",
   },
 ];
+
+function getYouTubeThumbnail(videoId: string): string {
+  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+}
+
+function getYouTubeEmbedUrl(videoId: string): string {
+  return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+}
 
 export function WeddingHighlightSection() {
   const [headerRef, headerVisible] = useScrollAnimation({ threshold: 0.1 });
@@ -78,80 +105,24 @@ export function WeddingHighlightSection() {
           </BlurFade>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-          {HIGHLIGHT_ITEMS.map((item, index) => {
-            const fromLeft = index % 2 === 0;
-            return (
-              <HighlightCard
-                key={item.title}
-                item={item}
-                fromLeft={fromLeft}
-                delay={index * 80}
+        {/* Bento Grid — Instagram-style staggered layout */}
+        <BentoGrid className="auto-rows-[14rem] grid-cols-1 gap-3 [grid-auto-flow:dense] md:grid-cols-3">
+          {HIGHLIGHT_VIDEOS.map((video) => (
+            <div
+              key={video.id}
+              className={`group relative overflow-hidden rounded-xl ${video.className}`}
+            >
+              <HeroVideoDialog
+                videoSrc={getYouTubeEmbedUrl(video.id)}
+                thumbnailSrc={getYouTubeThumbnail(video.id)}
+                thumbnailAlt={video.title}
+                animationStyle="from-center"
+                className="h-full [&>button]:h-full [&>button]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:rounded-xl [&_img]:border-0 [&_img]:shadow-none [&>button>div]:hidden"
               />
-            );
-          })}
-        </div>
+            </div>
+          ))}
+        </BentoGrid>
       </div>
     </section>
-  );
-}
-
-interface HighlightCardProps {
-  item: (typeof HIGHLIGHT_ITEMS)[number];
-  fromLeft: boolean;
-  delay: number;
-}
-
-function HighlightCard({ item, fromLeft, delay }: HighlightCardProps) {
-  const [ref, visible] = useScrollAnimation({ threshold: 0.1 });
-
-  return (
-    <div
-      ref={ref as React.RefObject<HTMLDivElement>}
-      className="group relative overflow-hidden rounded-xl text-stone-300"
-      style={{
-        aspectRatio: item.aspect.includes("4/5") ? "4/5" : "4/3",
-        transform: visible
-          ? "translate(0, 0)"
-          : `translate(${fromLeft ? "-50px" : "50px"}, 20px)`,
-        opacity: visible ? 1 : 0,
-        transition: `transform 700ms cubic-bezier(0.25,0.46,0.45,0.94) ${delay}ms, opacity 700ms ease ${delay}ms`,
-      }}
-    >
-      {/* Skeleton background */}
-      <Skeleton className="absolute inset-0 rounded-none" variant="rectangular" />
-
-      {/* Placeholder icon */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <svg
-          className="h-12 w-12 text-stone-400/60"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={0.8}
-            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
-        </svg>
-      </div>
-
-      {/* Hover overlay */}
-      <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/70 via-transparent to-transparent p-5 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-        <h3 className="text-lg font-light text-white">{item.title}</h3>
-        <p className="mt-1 text-xs uppercase tracking-widest text-stone-300">
-          {item.subtitle}
-        </p>
-        {/* Play icon */}
-        <div className="mt-3 flex h-10 w-10 items-center justify-center rounded-full border border-white/50 backdrop-blur-sm">
-          <svg className="h-4 w-4 translate-x-0.5 text-white" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M8 5v14l11-7z" />
-          </svg>
-        </div>
-      </div>
-    </div>
   );
 }
