@@ -2,14 +2,66 @@
 @source "../../src";
 @source "../../../../packages/shared-ui/components";
 
-html {
-  scroll-behavior: smooth;
-  /* proximity: chỉ snap khi gần snap point — scroll chậm vẫn hoạt động bình thường */
-  scroll-snap-type: y proximity;
+@font-face {
+  font-family: "Geomanist";
+  src: url("/fonts/Geomanist-Thin.otf") format("opentype");
+  font-weight: 100;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geomanist";
+  src: url("/fonts/Geomanist-Light.otf") format("opentype");
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geomanist";
+  src: url("/fonts/Geomanist-Book.otf") format("opentype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geomanist";
+  src: url("/fonts/Geomanist-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geomanist";
+  src: url("/fonts/Geomanist-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geomanist";
+  src: url("/fonts/Geomanist-Black.otf") format("opentype");
+  font-weight: 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geomanist";
+  src: url("/fonts/Geomanist-Ultra.otf") format("opentype");
+  font-weight: 950;
+  font-display: swap;
 }
 
-/* Mỗi section full-screen sẽ là snap point */
-main > section {
-  scroll-snap-align: start;
-  /* Không để scroll-snap-stop: always — giúp user scroll qua nhiều section nếu muốn */
+html {
+  scroll-behavior: smooth;
+  overscroll-behavior: none;
+}
+
+@media (min-width: 1024px) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+
+  main > section {
+    scroll-snap-align: start;
+  }
+}
+
+body {
+  font-family: "Geomanist", system-ui, sans-serif;
+  overflow-x: hidden;
+  overscroll-behavior: none;
 }

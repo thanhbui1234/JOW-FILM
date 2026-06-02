@@ -11,8 +11,9 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: light)", color: "#0c0c0c" },
     { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
   ],
 };
@@ -98,18 +99,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&display=swap"
-          rel="stylesheet"
-        />
-        <link rel="preconnect" href="https://jowfilm.vn" />
-        <link rel="dns-prefetch" href="https://jowfilm.vn" />
         <SiteStructuredData />
       </head>
       <body>

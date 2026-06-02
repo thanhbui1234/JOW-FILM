@@ -62,7 +62,6 @@ export function Header() {
         >
           <span
             className={`text-sm font-light tracking-[0.35em] uppercase transition-colors duration-500 ${textColor}`}
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
             JOW Film
           </span>

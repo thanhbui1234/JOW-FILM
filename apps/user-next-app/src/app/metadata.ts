@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 
 export const SEO_CONFIG = {
-  SITE_URL: "https://jowfilm.vn",
+  SITE_URL: "https://holte-pro-user-next-app.vercel.app",
   SITE_NAME: "JOW Film",
   TWITTER_HANDLE: "@jowfilm",
-  LOGO_URL: "https://jowfilm.vn/logo.png",
+  LOGO_URL: "https://holte-pro-user-next-app.vercel.app/images/logo-white.png",
   DEFAULT_OG_IMAGE: "/opengraph-image",
   DEFAULT_DESCRIPTION:
     "JOW Film — A cinematic wedding film studio crafting timeless love stories. Discover our portfolio of wedding highlights, traditional films, and short reels.",
