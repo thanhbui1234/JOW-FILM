@@ -47,7 +47,7 @@ export function VideoBanner() {
       {/* Logo */}
       <div className="absolute inset-0 flex items-center justify-center px-6">
         <Image
-          src="/images/Logo_Logo_trắng_có slogan.png"
+          src="/images/logo-white-slogan.png"
           alt="JOW Film"
           width={400}
           height={200}
