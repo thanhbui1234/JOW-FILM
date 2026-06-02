@@ -57,9 +57,13 @@ export function VideoBanner() {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <button
+        onClick={() => document.querySelector("#about")?.scrollIntoView({ behavior: "smooth" })}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce"
+        aria-label="Scroll to about section"
+      >
         <ChevronDown className="h-7 w-7 text-white/60 sm:h-8 sm:w-8" />
-      </div>
+      </button>
     </section>
   );
 }
