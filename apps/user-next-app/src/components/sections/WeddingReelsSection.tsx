@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { BlurFade, Skeleton } from "shared-ui";
 
 const REELS = [
   { title: "First Look", duration: "0:45", location: "Đà Lạt" },
@@ -29,6 +30,7 @@ export function WeddingReelsSection() {
   return (
     <section
       id="wedding-reels"
+      data-header-theme="dark"
       className="min-h-screen overflow-hidden bg-stone-950 px-6 py-24"
     >
       <div className="mx-auto max-w-6xl">
@@ -44,12 +46,16 @@ export function WeddingReelsSection() {
           }}
         >
           <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
-              Short Films
-            </p>
-            <h2 className="text-5xl font-light tracking-wide text-white md:text-6xl">
-              Wedding <em className="font-extralight italic">Reels</em>
-            </h2>
+            <BlurFade delay={0.05} inView>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
+                Short Films
+              </p>
+            </BlurFade>
+            <BlurFade delay={0.15} inView>
+              <h2 className="text-5xl font-light tracking-wide text-white md:text-6xl">
+                Wedding <em className="font-extralight italic">Reels</em>
+              </h2>
+            </BlurFade>
           </div>
 
           {/* Scroll controls */}
@@ -117,7 +123,7 @@ function ReelCard({ reel, index }: ReelCardProps) {
   return (
     <div
       ref={ref as React.RefObject<HTMLDivElement>}
-      className="group relative flex-shrink-0 cursor-pointer overflow-hidden rounded-2xl bg-stone-800"
+      className="group relative flex-shrink-0 cursor-pointer overflow-hidden rounded-2xl text-stone-700"
       style={{
         width: "220px",
         aspectRatio: "9/16",
@@ -126,10 +132,13 @@ function ReelCard({ reel, index }: ReelCardProps) {
         transition: `transform 700ms cubic-bezier(0.25,0.46,0.45,0.94) ${index * 60}ms, opacity 700ms ease ${index * 60}ms`,
       }}
     >
-      {/* Placeholder background */}
-      <div className="absolute inset-0 flex items-center justify-center bg-stone-800">
+      {/* Skeleton background */}
+      <Skeleton className="absolute inset-0 rounded-2xl" />
+
+      {/* Placeholder icon */}
+      <div className="absolute inset-0 flex items-center justify-center">
         <svg
-          className="h-10 w-10 text-stone-600"
+          className="h-10 w-10 text-stone-600/60"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -145,10 +154,12 @@ function ReelCard({ reel, index }: ReelCardProps) {
 
       {/* Always visible bottom info */}
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 to-transparent p-4">
-        <p className="text-xs uppercase tracking-widest text-stone-400">
-          {reel.location}
-        </p>
-        <p className="mt-1 text-sm font-light text-white">{reel.title}</p>
+        <BlurFade delay={0.05 + index * 0.04} inView>
+          <p className="text-xs uppercase tracking-widest text-stone-400">
+            {reel.location}
+          </p>
+          <p className="mt-1 text-sm font-light text-white">{reel.title}</p>
+        </BlurFade>
       </div>
 
       {/* Duration badge */}

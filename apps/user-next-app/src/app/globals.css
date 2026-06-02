@@ -1,3 +1,15 @@
 @import "../../../../packages/shared-ui/styles/globals.css";
 @source "../../src";
 @source "../../../../packages/shared-ui/components";
+
+html {
+  scroll-behavior: smooth;
+  /* proximity: chỉ snap khi gần snap point — scroll chậm vẫn hoạt động bình thường */
+  scroll-snap-type: y proximity;
+}
+
+/* Mỗi section full-screen sẽ là snap point */
+main > section {
+  scroll-snap-align: start;
+  /* Không để scroll-snap-stop: always — giúp user scroll qua nhiều section nếu muốn */
+}

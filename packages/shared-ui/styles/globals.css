@@ -120,6 +120,11 @@
   --animate-marquee: marquee var(--duration) infinite linear;
   --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite
 ;
+  --animate-shimmer-sweep: shimmer-sweep 1.6s ease-in-out infinite;
+  @keyframes shimmer-sweep {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+  }
   @keyframes marquee {
   from {
     transform: translateX(0);

@@ -4,3 +4,7 @@ export * from "./ui/blur-fade";
 export * from "./ui/shimmer-button";
 export * from "./ui/marquee";
 export * from "./ui/text-reveal";
+export * from "./ui/highlighter";
+export * from "./ui/hyper-text";
+export * from "./ui/sparkles-text";
+export * from "./ui/skeleton";
