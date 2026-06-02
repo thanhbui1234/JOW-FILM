@@ -4,6 +4,22 @@ import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 
 export function VideoBanner() {
+  const videoId = "9kzE8isXlQY";
+
+  const playerVars = [
+    "autoplay=1",
+    "mute=1",
+    "controls=0",
+    "showinfo=0",
+    "rel=0",
+    "loop=1",
+    `playlist=${videoId}`,
+    "modestbranding=1",
+    "iv_load_policy=3",
+    "disablekb=1",
+    "playsinline=1",
+  ].join("&");
+
   return (
     <section
       id="home"
@@ -11,47 +27,17 @@ export function VideoBanner() {
       className="relative w-full overflow-hidden"
       style={{ height: "100dvh" }}
     >
-      {/* YouTube Background Video */}
-      <div className="absolute inset-0">
-        <iframe
-          src="https://www.youtube.com/embed/9kzE8isXlQY?autoplay=1&mute=1&loop=1&playlist=9kzE8isXlQY&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
-          title="Background video"
-          allow="autoplay; encrypted-media"
-          style={{
-            border: 0,
-            position: "absolute",
-            /*
-             * Cover trick for iframes (no object-fit support):
-             * On landscape (wide): make width = 100%, height auto from aspect ratio → too short, so override height to 100% and let width overflow.
-             * On portrait (tall): 16:9 means width = height * (16/9).
-             * We set both dimensions to cover using the "padding-box" technique via inline calc.
-             * Simpler reliable approach: always use a size that overflows in both axes.
-             */
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            /* Ensure video covers regardless of orientation:
-               - minWidth covers landscape: video height ≥ 100vh → width ≥ 100vw automatically
-               - minHeight covers portrait: video width ≥ 100vw → height ≥ 56.25vw, but we need ≥ 100vh
-               We use the larger of the two: max(100vw, 177.78vh) × max(100vh, 56.25vw) */
-            width: "max(100vw, 177.78dvh)",
-            height: "max(100dvh, 56.25vw)",
-            pointerEvents: "none",
-          }}
-        />
-      </div>
+      {/* Interaction blocker — prevents hover/click from triggering YT controls */}
+      <div className="pointer-events-auto absolute inset-0 z-10 bg-transparent" />
 
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black/40" />
-
-      {/* Logo */}
-      <div className="absolute inset-0 flex items-center justify-center px-6">
+      {/* Dark Overlay + Logo */}
+      <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 px-6">
         <Image
           src="/images/logo-white-slogan.png"
           alt="JOW Film"
           width={400}
           height={200}
-          className="w-[70vw] max-w-[300px] object-contain sm:max-w-[320px] md:max-w-[380px] lg:max-w-[440px]"
+          className="w-[80vw] max-w-[360px] object-contain sm:max-w-[420px] md:max-w-[500px] lg:max-w-[580px]"
           priority
         />
       </div>
@@ -59,11 +45,20 @@ export function VideoBanner() {
       {/* Scroll Indicator */}
       <button
         onClick={() => document.querySelector("#about")?.scrollIntoView({ behavior: "smooth" })}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce"
+        className="absolute bottom-8 left-1/2 z-20 -translate-x-1/2 animate-bounce"
         aria-label="Scroll to about section"
       >
         <ChevronDown className="h-7 w-7 text-white/60 sm:h-8 sm:w-8" />
       </button>
+
+      {/* YouTube Background */}
+      <iframe
+        src={`https://www.youtube.com/embed/${videoId}?${playerVars}`}
+        title="Background video"
+        allow="autoplay; encrypted-media"
+        className="pointer-events-none absolute top-1/2 left-1/2 h-[56.25vw] min-h-[100dvh] w-[100vw] min-w-[177.78dvh] -translate-x-1/2 -translate-y-1/2 scale-105"
+        style={{ border: 0 }}
+      />
     </section>
   );
 }
