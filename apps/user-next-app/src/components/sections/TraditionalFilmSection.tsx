@@ -1,7 +1,8 @@
 "use client";
 
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { BlurFade, Highlighter, Skeleton } from "shared-ui";
+import { BlurFade, Highlighter } from "shared-ui";
+import Image from "next/image";
 
 const FILMS = [
   {
@@ -10,7 +11,7 @@ const FILMS = [
     description:
       "Lễ cưới truyền thống với nghi thức gia lễ trang nghiêm, tà áo dài đỏ thắm và những khoảnh khắc gia đình sum họp ấm áp.",
     tags: ["Áo dài", "Lễ gia tiên", "Family"],
-    imageLabel: "Traditional ceremony",
+    image: "/images/demo/a7.jpg",
   },
   {
     title: "Hương Vị Quê Hương",
@@ -18,7 +19,7 @@ const FILMS = [
     description:
       "Đám cưới cố đô mang đậm hồn Huế — từ bộ khăn áo cung đình đến không gian sân vườn cổ kính rêu phong.",
     tags: ["Áo ngũ thân", "Huế cổ", "Heritage"],
-    imageLabel: "Royal Hue style",
+    image: "/images/demo/a8.jpg",
   },
   {
     title: "Nam Bộ Rực Rỡ",
@@ -26,7 +27,7 @@ const FILMS = [
     description:
       "Nét đẹp miền Tây với đám cưới trên sông, hoa súng nở rộ và những chiếc xuồng trang trí rực rỡ sắc màu.",
     tags: ["Mekong", "Riverside", "Traditional"],
-    imageLabel: "Mekong Delta wedding",
+    image: "/images/demo/a9.jpg",
   },
 ];
 
@@ -141,7 +142,7 @@ function TraditionalFilmRow({ film, imageLeft }: TraditionalFilmRowProps) {
   const imageContent = (
     <div
       ref={imgRef as React.RefObject<HTMLDivElement>}
-      className="relative h-72 overflow-hidden rounded-2xl text-amber-800 md:h-96"
+      className="relative h-72 overflow-hidden rounded-2xl md:h-96"
       style={{
         transform: imgVisible
           ? "translateX(0)"
@@ -151,30 +152,31 @@ function TraditionalFilmRow({ film, imageLeft }: TraditionalFilmRowProps) {
           "transform 800ms cubic-bezier(0.25,0.46,0.45,0.94) 150ms, opacity 800ms ease 150ms",
       }}
     >
-      <Skeleton className="absolute inset-0 rounded-2xl" />
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-amber-800/60">
-        <svg
-          className="h-14 w-14"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={0.8}
-            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
-        </svg>
-        <span className="text-xs uppercase tracking-widest">{film.imageLabel}</span>
-      </div>
+      <Image
+        src={film.image}
+        alt={film.title}
+        fill
+        sizes="(max-width: 768px) 100vw, 50vw"
+        className="object-cover"
+        loading="lazy"
+      />
+      <div className="absolute inset-0 bg-black/10" />
     </div>
   );
 
   return (
     <div className="grid items-center gap-10 md:grid-cols-2">
-      {imageLeft ? imageContent : textContent}
-      {imageLeft ? textContent : imageContent}
+      {imageLeft ? (
+        <>
+          <div className="order-2 md:order-1">{imageContent}</div>
+          <div className="order-1 md:order-2">{textContent}</div>
+        </>
+      ) : (
+        <>
+          {textContent}
+          {imageContent}
+        </>
+      )}
     </div>
   );
 }

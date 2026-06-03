@@ -1,7 +1,8 @@
 "use client";
 
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { BlurFade, Highlighter, Skeleton } from "shared-ui";
+import { BlurFade, Highlighter } from "shared-ui";
+import Image from "next/image";
 
 const OVERVIEW_ITEMS = [
   {
@@ -11,7 +12,7 @@ const OVERVIEW_ITEMS = [
     description:
       "Thường là bản dựng từ 3–5 phút, chắt lọc những khoảnh khắc đặt giá và cảm xúc nhất của buổi lễ.",
     href: "#wedding-highlight",
-    imageLabel: "Highlight reel preview",
+    image: "/images/demo/a4.jpg",
   },
   {
     index: "02",
@@ -20,7 +21,7 @@ const OVERVIEW_ITEMS = [
     description:
       "Bản dựng đầy đủ, trình bày chi tiết toàn bộ quá trình diễn ra lễ cưới theo trình tự thời gian.",
     href: "#traditional-film",
-    imageLabel: "Traditional film preview",
+    image: "/images/demo/a5.jpg",
   },
   {
     index: "03",
@@ -29,7 +30,7 @@ const OVERVIEW_ITEMS = [
     description:
       "Các clip ngắn đình dạng dọc, được tối ưu hóa để chia sẻ trên TikTok, Facebook Reels hoặc Instagram.",
     href: "#wedding-reels",
-    imageLabel: "Reels preview",
+    image: "/images/demo/a6.jpg",
   },
 ];
 
@@ -151,30 +152,20 @@ function OverviewRow({ item, index }: OverviewRowProps) {
       {/* Divider line */}
       <div className="hidden h-px w-12 bg-stone-300 transition-colors duration-300 group-hover:bg-amber-400 md:block dark:bg-stone-600" />
 
-      {/* Thumbnail — Skeleton */}
-      <div className="relative h-44 overflow-hidden rounded-xl text-stone-300 md:h-36 dark:text-stone-600">
-        <Skeleton className="h-full w-full" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-stone-400 transition-transform duration-500 group-hover:scale-105 dark:text-stone-500">
-          <svg
-            className="h-8 w-8"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={0.8}
-              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
-          <span className="text-xs uppercase tracking-widest">
-            {item.imageLabel}
-          </span>
-        </div>
+      {/* Thumbnail */}
+      <div className="relative h-44 overflow-hidden rounded-xl md:h-36">
+        <Image
+          src={item.image}
+          alt={item.title}
+          fill
+          sizes="(max-width: 768px) 100vw, 280px"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-black/10 transition-colors duration-300 group-hover:bg-black/20" />
 
         {/* Hover play overlay */}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 shadow-md backdrop-blur-sm">
             <svg
               className="h-4 w-4 translate-x-0.5 text-stone-900"

@@ -33,11 +33,11 @@ export function VideoBanner() {
       {/* Dark Overlay + Logo */}
       <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 px-6">
         <Image
-          src="/images/logo-white-slogan.png"
+          src="/images/logo-dark-slogan.png"
           alt="JOW Film"
-          width={400}
+          width={800}
           height={200}
-          className="w-[80vw] max-w-[360px] object-contain sm:max-w-[420px] md:max-w-[500px] lg:max-w-[580px]"
+          className="w-[92vw] max-w-[600px] object-contain sm:max-w-[700px] md:max-w-[850px] lg:max-w-[1000px]"
           priority
         />
       </div>

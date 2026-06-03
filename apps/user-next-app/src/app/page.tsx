@@ -1,12 +1,29 @@
+import dynamic from "next/dynamic";
 import { Header } from "@/components/Header";
-import { VideoBanner } from "@/components/VideoBanner";
+import { VideoBannerLocal } from "@/components/VideoBannerLocal";
 import { AboutSection } from "@/components/sections/AboutSection";
-import { OverviewSection } from "@/components/sections/OverviewSection";
-import { WeddingHighlightSection } from "@/components/sections/WeddingHighlightSection";
-import { TraditionalFilmSection } from "@/components/sections/TraditionalFilmSection";
-import { WeddingReelsSection } from "@/components/sections/WeddingReelsSection";
-import { ContactSection } from "@/components/sections/ContactSection";
 import { generateMetadata } from "./metadata";
+
+const OverviewSection = dynamic(
+  () => import("@/components/sections/OverviewSection").then((m) => m.OverviewSection),
+  { ssr: true }
+);
+const WeddingHighlightSection = dynamic(
+  () => import("@/components/sections/WeddingHighlightSection").then((m) => m.WeddingHighlightSection),
+  { ssr: true }
+);
+const TraditionalFilmSection = dynamic(
+  () => import("@/components/sections/TraditionalFilmSection").then((m) => m.TraditionalFilmSection),
+  { ssr: true }
+);
+const WeddingReelsSection = dynamic(
+  () => import("@/components/sections/WeddingReelsSection").then((m) => m.WeddingReelsSection),
+  { ssr: true }
+);
+const ContactSection = dynamic(
+  () => import("@/components/sections/ContactSection").then((m) => m.ContactSection),
+  { ssr: true }
+);
 
 export const metadata = generateMetadata({
   title: "JOW Film",
@@ -19,7 +36,7 @@ export default function Home() {
   return (
     <main>
       <Header />
-      <VideoBanner />
+      <VideoBannerLocal />
       <AboutSection />
       <OverviewSection />
       <WeddingHighlightSection />
