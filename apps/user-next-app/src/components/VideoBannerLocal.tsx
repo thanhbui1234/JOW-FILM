@@ -18,7 +18,7 @@ export function VideoBannerLocal() {
           alt="JOW Film"
           width={400}
           height={200}
-          className="w-[80vw] max-w-[360px] object-contain sm:max-w-[420px] md:max-w-[500px] lg:max-w-[580px]"
+          className="w-[80vw] max-w-[360px] object-contain sm:max-w-[420px] md:max-w-[500px] lg:max-w-[1000px]"
           priority
         />
       </div>

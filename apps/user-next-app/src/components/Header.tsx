@@ -29,14 +29,13 @@ export function Header() {
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const isScrollingUp = currentScrollY < lastScrollY;
       const pastThreshold = currentScrollY > 80;
 
       clearTimeout(hideTimer);
 
-      if (pastThreshold && isScrollingUp) {
+      if (pastThreshold) {
         setShowLogo(true);
-        hideTimer = setTimeout(() => setShowLogo(false), 1500);
+        hideTimer = setTimeout(() => setShowLogo(false), 2000);
       } else {
         setShowLogo(false);
       }
@@ -75,14 +74,13 @@ export function Header() {
         {/* Center: Logo — appears on scroll up */}
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className={`absolute left-1/2 -translate-x-1/2 transition-all duration-700 ease-out ${
-            showLogo
-              ? "translate-y-0 opacity-100"
-              : "-translate-y-2 opacity-0 pointer-events-none"
-          }`}
+          className={`absolute left-1/2 -translate-x-1/2 transition-all duration-700 ease-out ${showLogo
+            ? "translate-y-0 opacity-100"
+            : "-translate-y-2 opacity-0 pointer-events-none"
+            }`}
         >
           <span
-            className={`text-sm font-light tracking-[0.35em] uppercase transition-colors duration-500 ${textColor}`}
+            className={`text-2xl font-light tracking-[0.35em] uppercase transition-colors duration-500 ${textColor}`}
           >
             JOW Film
           </span>
