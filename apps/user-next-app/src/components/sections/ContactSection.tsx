@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { BlurFade } from "shared-ui";
+import { BlurFade, Highlighter } from "shared-ui";
 import { Facebook, Instagram, Youtube, Phone, Mail, MapPin } from "lucide-react";
 
 interface FormState {
@@ -58,9 +58,11 @@ export function ContactSection() {
               </p>
             </BlurFade>
             <BlurFade delay={0.15} inView>
-              <h2 className="text-4xl font-light tracking-wide text-stone-900 md:text-5xl dark:text-white">
+              <h2 className="text-5xl font-light tracking-wide text-stone-900 md:text-6xl dark:text-white">
                 Begin your legacy{" "}
-                <em className="font-extralight italic">with us</em>
+                <Highlighter action="underline" color="#d97706" strokeWidth={2} animationDuration={800} isView>
+                  <em className="font-extralight italic">with us</em>
+                </Highlighter>
               </h2>
             </BlurFade>
             <BlurFade delay={0.25} inView>

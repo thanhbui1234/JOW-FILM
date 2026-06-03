@@ -44,9 +44,11 @@ export function AboutSection() {
           </BlurFade>
 
           <BlurFade delay={0.2} inView>
-            <h2 className="mb-8 text-4xl font-light leading-snug tracking-wide text-white md:text-5xl">
+            <h2 className="mb-8 text-5xl font-light leading-snug tracking-wide text-white md:text-6xl">
               At JOW Film, we go beyond{" "}
-              <em className="font-extralight italic text-amber-300">filming.</em>
+              <Highlighter action="underline" color="#fbbf24" strokeWidth={2} animationDuration={800} isView>
+                <em className="font-extralight italic text-amber-300">filming.</em>
+              </Highlighter>
             </h2>
           </BlurFade>
 

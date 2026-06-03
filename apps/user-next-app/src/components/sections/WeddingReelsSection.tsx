@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { BlurFade, Skeleton } from "shared-ui";
+import { BlurFade, Highlighter, Skeleton } from "shared-ui";
 
 const REELS = [
   { title: "First Look", duration: "0:45", location: "Đà Lạt" },
@@ -52,8 +52,11 @@ export function WeddingReelsSection() {
               </p>
             </BlurFade>
             <BlurFade delay={0.15} inView>
-              <h2 className="text-5xl font-light tracking-wide text-white md:text-6xl">
-                Wedding <em className="font-extralight italic">Reels</em>
+              <h2 className="text-5xl font-light tracking-wide text-white md:text-7xl">
+                Wedding{" "}
+                <Highlighter action="underline" color="#fbbf24" strokeWidth={2} animationDuration={800} isView>
+                  <em className="font-extralight italic">Reels</em>
+                </Highlighter>
               </h2>
             </BlurFade>
           </div>

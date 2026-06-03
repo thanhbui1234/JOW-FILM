@@ -1,7 +1,7 @@
 "use client";
 
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { BlurFade, Skeleton } from "shared-ui";
+import { BlurFade, Highlighter, Skeleton } from "shared-ui";
 
 const FILMS = [
   {
@@ -57,8 +57,11 @@ export function TraditionalFilmSection() {
             </p>
           </BlurFade>
           <BlurFade delay={0.15} inView>
-            <h2 className="text-5xl font-light tracking-wide text-amber-50 md:text-6xl">
-              Traditional <em className="font-extralight italic">Film</em>
+            <h2 className="text-5xl font-light tracking-wide text-amber-50 md:text-7xl">
+              Traditional{" "}
+              <Highlighter action="underline" color="#fbbf24" strokeWidth={2} animationDuration={800} isView>
+                <em className="font-extralight italic">Film</em>
+              </Highlighter>
             </h2>
           </BlurFade>
         </div>

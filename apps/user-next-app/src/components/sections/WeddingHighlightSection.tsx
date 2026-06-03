@@ -1,7 +1,7 @@
 "use client";
 
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { BlurFade, HeroVideoDialog } from "shared-ui";
+import { BlurFade, HeroVideoDialog, Highlighter } from "shared-ui";
 
 interface HighlightVideo {
   id: string;
@@ -79,9 +79,11 @@ export function WeddingHighlightSection() {
             </p>
           </BlurFade>
           <BlurFade delay={0.15} inView>
-            <h2 className="text-4xl font-light tracking-wide text-stone-900 md:text-6xl dark:text-stone-100">
+            <h2 className="text-5xl font-light tracking-wide text-stone-900 md:text-7xl dark:text-stone-100">
               Wedding{" "}
-              <em className="font-extralight italic">Highlight</em>
+              <Highlighter action="underline" color="#d97706" strokeWidth={2} animationDuration={800} isView>
+                <em className="font-extralight italic">Highlight</em>
+              </Highlighter>
             </h2>
           </BlurFade>
           <BlurFade delay={0.25} inView>
