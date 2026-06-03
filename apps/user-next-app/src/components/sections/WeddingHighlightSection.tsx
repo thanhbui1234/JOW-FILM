@@ -44,7 +44,7 @@ const HIGHLIGHT_VIDEOS: HighlightVideo[] = [
 ];
 
 function getYouTubeThumbnail(videoId: string): string {
-  return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 }
 
 function getYouTubeEmbedUrl(videoId: string): string {
@@ -208,26 +208,24 @@ export function WeddingHighlightSection() {
           </div>
         </div>
 
-        {/* Mobile: Grid fallback */}
+        {/* Mobile: Grid */}
         <div className="grid grid-cols-2 gap-3 md:hidden">
-          {HIGHLIGHT_VIDEOS.map((video, index) => (
-            <BlurFade key={video.id} delay={0.3 + index * 0.08} inView>
-              <div className="group relative overflow-hidden rounded-xl">
-                <HeroVideoDialog
-                  videoSrc={getYouTubeEmbedUrl(video.id)}
-                  thumbnailSrc={getYouTubeThumbnail(video.id)}
-                  thumbnailAlt={video.title}
-                  animationStyle="from-center"
-                  className="[&>button]:w-full [&_img]:aspect-[4/5] [&_img]:w-full [&_img]:object-cover [&_img]:rounded-xl [&_img]:border-0 [&_img]:shadow-none [&>button>div]:scale-75 [&>button>div_div:first-child]:size-16 [&>button>div_div:first-child_div]:size-10 [&>button>div_div:first-child_div_svg]:size-5"
-                />
-                <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
-                  <h3 className="text-sm font-medium text-white">
-                    {video.title}
-                  </h3>
-                  <p className="text-xs text-white/60">{video.subtitle}</p>
-                </div>
+          {HIGHLIGHT_VIDEOS.map((video) => (
+            <div key={video.id} className="group relative overflow-hidden rounded-xl">
+              <HeroVideoDialog
+                videoSrc={getYouTubeEmbedUrl(video.id)}
+                thumbnailSrc={getYouTubeThumbnail(video.id)}
+                thumbnailAlt={video.title}
+                animationStyle="from-center"
+                className="[&>button]:w-full [&_img]:aspect-[4/5] [&_img]:w-full [&_img]:object-cover [&_img]:rounded-xl [&_img]:border-0 [&_img]:shadow-none [&>button>div]:scale-75 [&>button>div_div:first-child]:size-16 [&>button>div_div:first-child_div]:size-10 [&>button>div_div:first-child_div_svg]:size-5"
+              />
+              <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
+                <h3 className="text-sm font-medium text-white">
+                  {video.title}
+                </h3>
+                <p className="text-xs text-white/60">{video.subtitle}</p>
               </div>
-            </BlurFade>
+            </div>
           ))}
         </div>
       </div>

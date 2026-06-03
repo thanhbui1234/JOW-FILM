@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { BlurFade, Highlighter, HyperText, Skeleton, SparklesText } from "shared-ui";
+import { BlurFade, Highlighter, HyperText, SparklesText } from "shared-ui";
 
 const ABOUT_STATS = [
   { value: "200+", label: "Wedding Films" },
@@ -123,7 +124,7 @@ export function AboutSection() {
           </div>
         </div>
 
-        {/* Right — Image skeleton grid */}
+        {/* Right — Image grid */}
         <div
           ref={imageRef as React.RefObject<HTMLDivElement>}
           className="grid grid-cols-2 gap-3"
@@ -133,29 +134,43 @@ export function AboutSection() {
             transition: "transform 800ms cubic-bezier(0.25,0.46,0.45,0.94) 150ms, opacity 800ms ease 150ms",
           }}
         >
-          {/* Large skeleton */}
-          <div className="relative col-span-2 h-64 overflow-hidden rounded-xl text-stone-700">
-            <Skeleton className="h-full w-full" />
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-stone-600">
-              <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M4 8h11a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z" />
-              </svg>
-              <span className="text-xs tracking-widest uppercase">Behind the lens</span>
-            </div>
+          {/* Large image */}
+          <div className="relative col-span-2 h-64 overflow-hidden rounded-xl">
+            <Image
+              src="/images/demo/a1.jpg"
+              alt="Behind the lens"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            <span className="absolute bottom-3 left-3 text-xs uppercase tracking-widest text-white/80">
+              Behind the lens
+            </span>
           </div>
 
-          {/* Two small skeletons */}
-          {["Studio life", "On location"].map((label) => (
+          {/* Two small images */}
+          {[
+            { src: "/images/demo/a2.jpg", label: "Studio life" },
+            { src: "/images/demo/a3.jpg", label: "On location" },
+          ].map((item) => (
             <div
-              key={label}
-              className="relative h-36 overflow-hidden rounded-xl text-stone-700"
+              key={item.label}
+              className="relative h-36 overflow-hidden rounded-xl"
             >
-              <Skeleton className="h-full w-full" />
-              <div className="absolute inset-0 flex items-end p-3">
-                <span className="text-xs uppercase tracking-wider text-stone-600">
-                  {label}
-                </span>
-              </div>
+              <Image
+                src={item.src}
+                alt={item.label}
+                fill
+                sizes="(max-width: 1024px) 50vw, 25vw"
+                className="object-cover"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+              <span className="absolute bottom-3 left-3 text-xs uppercase tracking-wider text-white/80">
+                {item.label}
+              </span>
             </div>
           ))}
         </div>
