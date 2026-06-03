@@ -1,8 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
+import { useEffect, useRef, useState } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { BlurFade, HeroVideoDialog, Highlighter } from "shared-ui";
 
@@ -55,51 +53,46 @@ function getYouTubeEmbedUrl(videoId: string): string {
 
 export function WeddingHighlightSection() {
   const [headerRef, headerVisible] = useScrollAnimation({ threshold: 0.1 });
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const isPausedRef = useRef(false);
+  const totalSlides = HIGHLIGHT_VIDEOS.length;
 
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    {
-      loop: true,
-      align: "start",
-      slidesToScroll: 1,
-    },
-    [Autoplay({ delay: 1500, stopOnInteraction: false, stopOnMouseEnter: true })]
-  );
-
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
-  const handleVideoOpenChange = useCallback((open: boolean) => {
-    if (!emblaApi) return;
-    const autoplay = emblaApi.plugins().autoplay;
-    if (!autoplay) return;
-    if (open) {
-      autoplay.stop();
-    } else {
-      autoplay.play();
-    }
-  }, [emblaApi]);
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
+  // Desktop autoplay
+  useEffect(() => {
+    isPausedRef.current = isPaused;
+  }, [isPaused]);
 
   useEffect(() => {
-    if (!emblaApi) return;
-    onSelect();
-    emblaApi.on("select", onSelect);
-    return () => { emblaApi.off("select", onSelect); };
-  }, [emblaApi, onSelect]);
+    const interval = setInterval(() => {
+      if (!isPausedRef.current) {
+        setActiveIndex((prev) => (prev + 1) % totalSlides);
+      }
+    }, 1500);
+    return () => clearInterval(interval);
+  }, [totalSlides]);
+
+  const goTo = (index: number) => {
+    setActiveIndex(((index % totalSlides) + totalSlides) % totalSlides);
+  };
+
+  const getDiff = (index: number) => {
+    let diff = index - activeIndex;
+    if (diff > totalSlides / 2) diff -= totalSlides;
+    if (diff < -totalSlides / 2) diff += totalSlides;
+    return diff;
+  };
 
   return (
     <section
       id="wedding-highlight"
       data-header-theme="light"
-      className="min-h-screen bg-stone-50 px-5 py-20 md:px-12 lg:px-24 dark:bg-stone-900"
+      className="min-h-screen bg-stone-50 px-5 py-20 dark:bg-stone-900"
     >
       <div className="mx-auto max-w-7xl">
         <div
           ref={headerRef as React.RefObject<HTMLDivElement>}
-          className="mb-12 md:mb-16"
+          className="mb-12 px-5 md:mb-16 md:px-12 lg:px-24"
           style={{
             transform: headerVisible ? "translateY(0)" : "translateY(-30px)",
             opacity: headerVisible ? 1 : 0,
@@ -128,46 +121,87 @@ export function WeddingHighlightSection() {
           </BlurFade>
         </div>
 
-        {/* Desktop: Embla Carousel */}
+        {/* Desktop: Card Stack Carousel */}
         <div className="hidden md:block">
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex gap-4">
-              {HIGHLIGHT_VIDEOS.map((video) => (
+          <div className="relative mx-auto" style={{ maxWidth: "900px", height: "560px" }}>
+            {HIGHLIGHT_VIDEOS.map((video, index) => {
+              const diff = getDiff(index);
+              const absDiff = Math.abs(diff);
+              const scale = 1 - absDiff * 0.05;
+              const translateX = diff * 140;
+              const zIndex = 20 - Math.round(absDiff * 5);
+              const rotate = diff * -1.5;
+
+              return (
                 <div
                   key={video.id}
-                  className="relative min-w-0 flex-[0_0_42%] lg:flex-[0_0_38%]"
+                  className="absolute inset-0 flex items-center justify-center"
+                  style={{
+                    zIndex,
+                    pointerEvents: absDiff < 0.5 ? "auto" : "none",
+                  }}
                 >
-                  <div className="group relative overflow-hidden rounded-2xl">
+                  <div
+                    className="group relative w-full overflow-hidden rounded-2xl shadow-2xl"
+                    style={{
+                      transform: `translateX(${translateX}px) scale(${scale}) rotate(${rotate}deg)`,
+                      opacity: absDiff > 2.5 ? 0 : 1,
+                      transition: "transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.4s ease",
+                    }}
+                  >
                     <HeroVideoDialog
                       videoSrc={getYouTubeEmbedUrl(video.id)}
                       thumbnailSrc={getYouTubeThumbnail(video.id)}
                       thumbnailAlt={video.title}
                       animationStyle="from-center"
-                      onOpenChange={handleVideoOpenChange}
-                      className="[&>button]:w-full [&_img]:aspect-video [&_img]:w-full [&_img]:object-cover [&_img]:rounded-2xl [&_img]:border-0 [&_img]:shadow-none"
+                      onOpenChange={setIsPaused}
+                      className="[&>button]:w-full [&_img]:aspect-[16/10] [&_img]:w-full [&_img]:object-cover [&_img]:rounded-2xl [&_img]:border-0 [&_img]:shadow-none"
                     />
-                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-5">
-                      <h3 className="text-base font-medium text-white lg:text-lg">
+                    <div
+                      className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-6 md:p-8"
+                      style={{ opacity: absDiff < 0.5 ? 1 : 0, transition: "opacity 0.4s ease" }}
+                    >
+                      <h3 className="text-lg font-medium text-white lg:text-2xl">
                         {video.title}
                       </h3>
                       <p className="text-sm text-white/70">{video.subtitle}</p>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
+              );
+            })}
+
+            {/* Navigation arrows */}
+            <button
+              onClick={() => goTo(activeIndex - 1)}
+              className="absolute left-4 top-1/2 z-30 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-sm transition-transform hover:scale-110 dark:bg-stone-800/80"
+              aria-label="Previous slide"
+            >
+              <svg className="h-5 w-5 text-stone-700 dark:text-stone-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={() => goTo(activeIndex + 1)}
+              className="absolute right-4 top-1/2 z-30 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-sm transition-transform hover:scale-110 dark:bg-stone-800/80"
+              aria-label="Next slide"
+            >
+              <svg className="h-5 w-5 text-stone-700 dark:text-stone-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
 
           {/* Dots */}
-          <div className="mt-6 flex justify-center gap-2">
+          <div className="mt-8 flex justify-center gap-2">
             {HIGHLIGHT_VIDEOS.map((_, index) => (
               <button
                 key={index}
                 aria-label={`Go to slide ${index + 1}`}
-                onClick={() => emblaApi?.scrollTo(index)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${index === selectedIndex
-                  ? "w-6 bg-amber-500"
-                  : "w-1.5 bg-stone-300 dark:bg-stone-600"
+                onClick={() => goTo(index)}
+                className={`h-1.5 rounded-full transition-all duration-500 ${index === activeIndex
+                    ? "w-8 bg-amber-500"
+                    : "w-1.5 bg-stone-300 dark:bg-stone-600"
                   }`}
               />
             ))}
