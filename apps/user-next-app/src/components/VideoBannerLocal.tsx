@@ -14,7 +14,7 @@ export function VideoBannerLocal() {
       {/* Dark Overlay + Logo */}
       <div className="absolute inset-0 z-20 flex items-center justify-center  px-6">
         <Image
-          src="/images/logo-dark-slogan.png"
+          src="/images/logo-white-slogan.png"
           alt="JOW Film"
           width={400}
           height={200}

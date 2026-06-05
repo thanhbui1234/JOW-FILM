@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 import { Facebook, Instagram, Mail, Menu } from "lucide-react";
 import { SlideMenu } from "./SlideMenu";
 
@@ -65,8 +66,8 @@ export function Header() {
           className={`flex items-center gap-2 transition-colors duration-500 hover:opacity-70 ${textColor}`}
           aria-label="Open menu"
         >
-          <Menu className="h-5 w-5" />
-          <span className="text-xs font-medium tracking-[0.2em] uppercase">
+          <Menu className="h-5 w-5 md:h-8 md:w-8" />
+          <span className="text-xs md:text-xl font-medium tracking-[0.2em] uppercase">
             Menu
           </span>
         </button>
@@ -79,11 +80,24 @@ export function Header() {
             : "-translate-y-2 opacity-0 pointer-events-none"
             }`}
         >
-          <span
-            className={`text-2xl font-light tracking-[0.35em] uppercase transition-colors duration-500 ${textColor}`}
-          >
-            JOW Film
-          </span>
+          <div className="relative h-10 w-32">
+            <Image
+              src="/images/logo-white.png"
+              alt="JOW Film"
+              fill
+              className={`object-contain transition-opacity duration-500 ${
+                isDarkSection ? "opacity-100" : "opacity-0"
+              }`}
+            />
+            <Image
+              src="/images/logo-dark.png"
+              alt="JOW Film"
+              fill
+              className={`object-contain transition-opacity duration-500 ${
+                isDarkSection ? "opacity-0" : "opacity-100"
+              }`}
+            />
+          </div>
         </button>
 
         {/* Right: Social icons */}

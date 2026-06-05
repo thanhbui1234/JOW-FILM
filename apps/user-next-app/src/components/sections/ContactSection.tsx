@@ -210,18 +210,18 @@ export function ContactSection() {
                 Get in Touch
               </h4>
               <a
-                href="tel:+84900000000"
+                href="tel:+84944229875"
                 className="flex items-center gap-2.5 text-sm text-stone-500 transition-colors hover:text-amber-600 dark:text-stone-400 dark:hover:text-amber-400"
               >
                 <Phone className="h-4 w-4" />
-                +84 90 000 0000
+                0944 229 875
               </a>
               <a
-                href="mailto:hello@jowfilm.vn"
+                href="mailto:jowfilm.vn@gmail.com"
                 className="flex items-center gap-2.5 text-sm text-stone-500 transition-colors hover:text-amber-600 dark:text-stone-400 dark:hover:text-amber-400"
               >
                 <Mail className="h-4 w-4" />
-                hello@jowfilm.vn
+                jowfilm.vn@gmail.com
               </a>
               <div className="flex items-center gap-2.5 text-sm text-stone-500 dark:text-stone-400">
                 <MapPin className="h-4 w-4 flex-shrink-0" />
@@ -236,7 +236,7 @@ export function ContactSection() {
               </h4>
               <div className="flex items-center gap-3">
                 <a
-                  href="https://facebook.com"
+                  href="https://www.facebook.com/profile.php?id=61556675978184"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
@@ -245,7 +245,7 @@ export function ContactSection() {
                   <Facebook className="h-4 w-4" />
                 </a>
                 <a
-                  href="https://instagram.com"
+                  href="https://www.instagram.com/jow_film"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"

@@ -83,16 +83,6 @@ export function AboutSection() {
             </p>
           </BlurFade>
 
-          {/* Author */}
-          <BlurFade delay={0.5} inView>
-            <div className="mb-10 flex items-center gap-3">
-              <div className="h-px w-8 bg-amber-400" />
-              <SparklesText className="text-sm font-light italic tracking-wider text-amber-300">
-                Hồng Mai — Founder, JOW Film
-              </SparklesText>
-            </div>
-          </BlurFade>
-
           {/* Stats */}
           <div className="grid grid-cols-3 gap-6 border-t border-stone-800 pt-10">
             {ABOUT_STATS.map((stat, i) => (

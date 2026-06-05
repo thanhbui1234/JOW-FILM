@@ -38,10 +38,10 @@ export default function Home() {
       <Header />
       <VideoBannerLocal />
       <AboutSection />
-      <OverviewSection />
+      {/* <OverviewSection /> */}
       <WeddingHighlightSection />
-      <TraditionalFilmSection />
       <WeddingReelsSection />
+      <TraditionalFilmSection />
       <ContactSection />
     </main>
   );
