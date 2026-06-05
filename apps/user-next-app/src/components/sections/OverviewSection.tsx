@@ -61,10 +61,13 @@ export function OverviewSection() {
             </p>
           </BlurFade>
           <BlurFade delay={0.15} inView>
-            <h2 className="text-5xl font-light tracking-wide text-stone-900 md:text-6xl dark:text-stone-100">
+            <h2
+              className="text-5xl font-light tracking-wide text-stone-900 md:text-6xl dark:text-stone-100"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            >
               What we{" "}
               <Highlighter action="underline" color="#d97706" strokeWidth={2} animationDuration={800} isView>
-                <em className="font-extralight italic">offer</em>
+                <em className="not-italic font-normal italic">offer</em>
               </Highlighter>
             </h2>
           </BlurFade>

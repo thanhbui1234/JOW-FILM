@@ -58,10 +58,13 @@ export function ContactSection() {
               </p>
             </BlurFade>
             <BlurFade delay={0.15} inView>
-              <h2 className="text-5xl font-light tracking-wide text-stone-900 md:text-6xl dark:text-white">
+              <h2
+                className="text-5xl font-light tracking-wide text-stone-900 md:text-6xl dark:text-white"
+                style={{ fontFamily: "'Cormorant Garamond', serif" }}
+              >
                 Begin your legacy{" "}
                 <Highlighter action="underline" color="#d97706" strokeWidth={2} animationDuration={800} isView>
-                  <em className="font-extralight italic">with us</em>
+                  <em className="not-italic font-normal italic">with us</em>
                 </Highlighter>
               </h2>
             </BlurFade>

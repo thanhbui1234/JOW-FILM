@@ -66,7 +66,10 @@ export function TraditionalFilmSection() {
             </p>
           </BlurFade>
           <BlurFade delay={0.15} inView>
-            <h2 className="text-5xl font-light tracking-wide text-amber-50 md:text-7xl">
+            <h2
+              className="text-5xl font-light tracking-wide text-amber-50 md:text-7xl"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            >
               Traditional{" "}
               <Highlighter
                 action="underline"
@@ -75,16 +78,7 @@ export function TraditionalFilmSection() {
                 animationDuration={800}
                 isView
               >
-                <em
-                  className="not-italic"
-                  style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontWeight: 400,
-                    fontStyle: "italic",
-                  }}
-                >
-                  Film
-                </em>
+                <em className="not-italic font-normal italic">Film</em>
               </Highlighter>
             </h2>
           </BlurFade>

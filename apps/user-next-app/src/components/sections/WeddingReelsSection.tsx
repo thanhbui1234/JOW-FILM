@@ -52,10 +52,13 @@ export function WeddingReelsSection() {
               </p>
             </BlurFade>
             <BlurFade delay={0.15} inView>
-              <h2 className="text-5xl font-light tracking-wide text-white md:text-7xl">
+              <h2
+                className="text-5xl font-light tracking-wide text-white md:text-7xl"
+                style={{ fontFamily: "'Cormorant Garamond', serif" }}
+              >
                 Wedding{" "}
                 <Highlighter action="underline" color="#fbbf24" strokeWidth={2} animationDuration={800} isView>
-                  <em className="font-extralight italic">Reels</em>
+                  <em className="not-italic font-normal italic">Reels</em>
                 </Highlighter>
               </h2>
             </BlurFade>
