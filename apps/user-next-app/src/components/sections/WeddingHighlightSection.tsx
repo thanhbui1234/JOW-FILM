@@ -118,8 +118,7 @@ export function WeddingHighlightSection() {
           </BlurFade>
           <BlurFade delay={0.25} inView>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-stone-500 dark:text-stone-400">
-              Each film is a chapter of a love story — crafted with care, told
-              with emotion.
+              Your love story, distilled into a cinematic masterpiece
             </p>
           </BlurFade>
         </div>
@@ -203,8 +202,8 @@ export function WeddingHighlightSection() {
                 aria-label={`Go to slide ${index + 1}`}
                 onClick={() => goTo(index)}
                 className={`h-1.5 rounded-full transition-all duration-500 ${index === activeIndex
-                    ? "w-8 bg-amber-500"
-                    : "w-1.5 bg-stone-300 dark:bg-stone-600"
+                  ? "w-8 bg-amber-500"
+                  : "w-1.5 bg-stone-300 dark:bg-stone-600"
                   }`}
               />
             ))}

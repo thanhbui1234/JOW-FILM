@@ -57,35 +57,28 @@ export function AboutSection() {
           </BlurFade>
 
           <BlurFade delay={0.3} inView>
-            <p className="mb-6 text-base leading-relaxed text-stone-400">
+            <p className="mb-4 text-base leading-relaxed text-stone-200">
               We translate your love story into a cinematic masterpiece. Driven by
               our three core pillars:{" "}
               <Highlighter action="circle" color="#FFD700">
-                <span className="font-medium text-stone-200">Dedication</span>,{" "}
+                <span className="font-medium text-stone-100">Dedication</span>,{" "}
               </Highlighter>{" "}
               <Highlighter action="circle" color="#FFD700">
-                <span className="font-medium text-stone-200">Creativity</span>,{" "}
+                <span className="font-medium text-stone-100">Creativity</span>,{" "}
               </Highlighter>{" "}
               <span>and</span>{" "}
               <Highlighter color="#FFD700" action="circle">
-                <span className="font-medium text-stone-200">Authenticity</span>
+                <span className="font-medium text-stone-100">Authenticity</span>
               </Highlighter>{" "}
-              , we
-              strive to preserve your most precious moments as a timeless{" "}
+              , we strive to preserve your most precious moments as a timeless{" "}
               <Highlighter color="#FFD700" action="underline">
                 <span className="italic text-amber-300">&ldquo;Legacy of Love.&rdquo;</span>
               </Highlighter>
             </p>
-          </BlurFade>
-
-          <BlurFade delay={0.4} inView>
-            <p className="mb-10 text-base leading-relaxed text-stone-400">
-              By harmonizing cutting-edge technology with sophisticated artistry,
-              we create unique works of art that truly reflect your personality and
-              the profound essence of your journey together.
+            <p className="mb-6 text-sm italic leading-relaxed text-stone-500 border-l border-stone-800 pl-4">
+              Chúng mình kể lại câu chuyện tình yêu của bạn bằng ngôn ngữ điện ảnh. Với ba giá trị cốt lõi Tận tâm, Sáng tạo và Chân thực, mỗi thước phim được tạo nên không chỉ để lưu giữ khoảnh khắc, mà còn để trở thành một &ldquo;Di sản tình yêu&rdquo; trường tồn theo năm tháng.
             </p>
           </BlurFade>
-
           {/* Stats */}
           <div className="grid grid-cols-3 gap-6 border-t border-stone-800 pt-10">
             {ABOUT_STATS.map((stat, i) => (
