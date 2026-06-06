@@ -62,6 +62,11 @@ export function WeddingReelsSection() {
                 </Highlighter>
               </h2>
             </BlurFade>
+            <BlurFade delay={0.25} inView>
+              <p className="mt-4 max-w-md text-sm leading-relaxed text-stone-400">
+                Short-form wedding content crafted for effortless sharing across social media
+              </p>
+            </BlurFade>
           </div>
 
           {/* Scroll controls */}

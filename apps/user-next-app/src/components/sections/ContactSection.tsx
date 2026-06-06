@@ -228,7 +228,7 @@ export function ContactSection() {
               </a>
               <div className="flex items-center gap-2.5 text-sm text-stone-500 dark:text-stone-400">
                 <MapPin className="h-4 w-4 flex-shrink-0" />
-                TP. Hồ Chí Minh, Việt Nam
+                Hà Nội, Việt Nam
               </div>
             </div>
 

@@ -46,7 +46,7 @@ export function TraditionalFilmSection() {
     <section
       id="traditional-film"
       data-header-theme="dark"
-      className="bg-amber-950 px-6 py-20 md:px-16 md:py-24 lg:px-24"
+      className="bg-[#293629] px-6 py-20 md:px-16 md:py-24 lg:px-24"
     >
       <div className="mx-auto max-w-6xl">
         {/* Header — sans + serif combo */}
@@ -70,7 +70,6 @@ export function TraditionalFilmSection() {
               className="text-5xl font-light tracking-wide text-amber-50 md:text-7xl"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              Traditional{" "}
               <Highlighter
                 action="underline"
                 color="#fbbf24"
@@ -78,14 +77,14 @@ export function TraditionalFilmSection() {
                 animationDuration={800}
                 isView
               >
+                Traditional{" "}
                 <em className="not-italic font-normal italic">Film</em>
               </Highlighter>
             </h2>
           </BlurFade>
           <BlurFade delay={0.25} inView>
             <p className="mx-auto mt-5 max-w-lg text-sm leading-relaxed text-amber-200/60">
-              Gìn giữ nét đẹp truyền thống qua từng thước phim — nơi văn hoá
-              hoà quyện cùng cảm xúc.
+              A long-form wedding film that follows the complete timelione of your wedding day.
             </p>
           </BlurFade>
         </div>
