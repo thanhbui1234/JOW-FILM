@@ -92,6 +92,9 @@ const SiteStructuredData = () => {
   );
 };
 
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+
 export default function RootLayout({
   children,
 }: {
@@ -103,7 +106,11 @@ export default function RootLayout({
         <SiteStructuredData />
       </head>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <Header />
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
