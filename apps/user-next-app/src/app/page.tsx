@@ -1,13 +1,8 @@
 import dynamic from "next/dynamic";
-import { Header } from "@/components/Header";
 import { VideoBannerLocal } from "@/components/VideoBannerLocal";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { generateMetadata } from "./metadata";
 
-const OverviewSection = dynamic(
-  () => import("@/components/sections/OverviewSection").then((m) => m.OverviewSection),
-  { ssr: true }
-);
 const WeddingHighlightSection = dynamic(
   () => import("@/components/sections/WeddingHighlightSection").then((m) => m.WeddingHighlightSection),
   { ssr: true }
@@ -20,8 +15,8 @@ const WeddingReelsSection = dynamic(
   () => import("@/components/sections/WeddingReelsSection").then((m) => m.WeddingReelsSection),
   { ssr: true }
 );
-const ContactSection = dynamic(
-  () => import("@/components/sections/ContactSection").then((m) => m.ContactSection),
+const ContactPreview = dynamic(
+  () => import("@/components/sections/ContactPreview").then((m) => m.ContactPreview),
   { ssr: true }
 );
 
@@ -35,14 +30,12 @@ export const metadata = generateMetadata({
 export default function Home() {
   return (
     <main>
-      <Header />
       <VideoBannerLocal />
       <AboutSection />
-      {/* <OverviewSection /> */}
       <WeddingHighlightSection />
       <WeddingReelsSection />
       <TraditionalFilmSection />
-      <ContactSection />
+      <ContactPreview />
     </main>
   );
 }

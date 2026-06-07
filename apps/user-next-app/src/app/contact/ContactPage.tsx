@@ -1,0 +1,196 @@
+"use client";
+
+import { useState } from "react";
+import { PageTitleBar } from "@/components/PageTitleBar";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { BlurFade } from "shared-ui";
+
+interface FormState {
+  name: string;
+  email: string;
+  date: string;
+  message: string;
+}
+
+const INITIAL_FORM: FormState = { name: "", email: "", date: "", message: "" };
+
+export function ContactPage() {
+  const [form, setForm] = useState<FormState>(INITIAL_FORM);
+  const [submitted, setSubmitted] = useState(false);
+  const [formRef, formVisible] = useScrollAnimation({ threshold: 0.1 });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
+  return (
+    <main>
+      <PageTitleBar
+        label="Contact Us"
+        title="Begin your legacy"
+        highlightWord="with us"
+      />
+
+      <section
+        data-header-theme="light"
+        className="relative bg-stone-100 px-5 py-10 md:px-12 md:py-14 lg:px-24 dark:bg-stone-900"
+      >
+        <div className="mx-auto max-w-2xl">
+          <div
+            ref={formRef as React.RefObject<HTMLDivElement>}
+            style={{
+              transform: formVisible ? "translateY(0)" : "translateY(40px)",
+              opacity: formVisible ? 1 : 0,
+              transition:
+                "transform 800ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 800ms ease",
+            }}
+          >
+            {submitted ? (
+              <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-stone-200 bg-white p-10 text-center dark:border-stone-700 dark:bg-stone-800/50 dark:backdrop-blur-sm">
+                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-500/10">
+                  <svg
+                    className="h-7 w-7 text-amber-600 dark:text-amber-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <h3 className="mb-2 text-xl font-light text-stone-900 dark:text-white">
+                  Message Received
+                </h3>
+                <p className="text-sm text-stone-500 dark:text-stone-400">
+                  Thank you! We&apos;ll get back to you within 24 hours.
+                </p>
+              </div>
+            ) : (
+              <BlurFade delay={0.1} inView>
+                <form
+                  onSubmit={handleSubmit}
+                  className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm md:p-8 dark:border-stone-700 dark:bg-stone-800/50 dark:shadow-none dark:backdrop-blur-sm"
+                >
+                  <div className="mb-4 grid gap-4 md:grid-cols-2">
+                    <FormField
+                      label="Your Name"
+                      id="contact-name"
+                      name="name"
+                      type="text"
+                      placeholder="Nguyễn Văn A"
+                      value={form.name}
+                      onChange={handleChange}
+                      required
+                    />
+                    <FormField
+                      label="Email"
+                      id="contact-email"
+                      name="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={form.email}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <FormField
+                      label="Wedding Date"
+                      id="contact-date"
+                      name="date"
+                      type="date"
+                      placeholder=""
+                      value={form.date}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="mb-6">
+                    <label
+                      htmlFor="contact-message"
+                      className="mb-2 block text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-400"
+                    >
+                      Tell us about your day
+                    </label>
+                    <textarea
+                      id="contact-message"
+                      name="message"
+                      rows={4}
+                      placeholder="Share your vision, venue, and any special moments..."
+                      value={form.message}
+                      onChange={handleChange}
+                      className="w-full resize-none rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-900 placeholder-stone-400 outline-none transition-all duration-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 dark:border-stone-600 dark:bg-stone-700/50 dark:text-white dark:placeholder-stone-500"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    id="contact-submit"
+                    className="w-full rounded-xl bg-amber-500 py-3.5 text-sm font-medium uppercase tracking-widest text-stone-900 transition-all duration-300 hover:bg-amber-400 hover:shadow-lg hover:shadow-amber-500/20 active:scale-[0.98]"
+                  >
+                    Send Message
+                  </button>
+                </form>
+              </BlurFade>
+            )}
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+interface FormFieldProps {
+  label: string;
+  id: string;
+  name: string;
+  type: string;
+  placeholder: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
+}
+
+function FormField({
+  label,
+  id,
+  name,
+  type,
+  placeholder,
+  value,
+  onChange,
+  required,
+}: FormFieldProps) {
+  return (
+    <div>
+      <label
+        htmlFor={id}
+        className="mb-2 block text-xs font-medium uppercase tracking-widest text-stone-500 dark:text-stone-400"
+      >
+        {label}
+      </label>
+      <input
+        id={id}
+        name={name}
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        required={required}
+        className="w-full rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-900 placeholder-stone-400 outline-none transition-all duration-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 dark:border-stone-600 dark:bg-stone-700/50 dark:text-white dark:placeholder-stone-500"
+      />
+    </div>
+  );
+}

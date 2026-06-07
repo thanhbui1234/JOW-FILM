@@ -68,7 +68,6 @@ export function TraditionalFilmSection() {
           <BlurFade delay={0.15} inView>
             <h2
               className="text-5xl font-light tracking-wide text-amber-50 md:text-7xl"
-              style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
               <Highlighter
                 action="underline"
@@ -147,7 +146,6 @@ function TraditionalFilmCard({ film, delay }: TraditionalFilmCardProps) {
           <h3
             className="mb-2 text-xl font-light text-amber-50 sm:text-2xl"
             style={{
-              fontFamily: "'Cormorant Garamond', serif",
               fontWeight: 500,
             }}
           >

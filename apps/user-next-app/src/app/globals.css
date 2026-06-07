@@ -9,40 +9,53 @@
   font-weight: 100;
   font-display: swap;
 }
+
 @font-face {
   font-family: "Geomanist";
   src: url("/fonts/Geomanist-Light.otf") format("opentype");
   font-weight: 300;
   font-display: swap;
 }
+
 @font-face {
   font-family: "Geomanist";
   src: url("/fonts/Geomanist-Book.otf") format("opentype");
   font-weight: 400;
   font-display: swap;
 }
+
 @font-face {
   font-family: "Geomanist";
   src: url("/fonts/Geomanist-Medium.otf") format("opentype");
   font-weight: 500;
   font-display: swap;
 }
+
 @font-face {
   font-family: "Geomanist";
   src: url("/fonts/Geomanist-Bold.otf") format("opentype");
   font-weight: 700;
   font-display: swap;
 }
+
 @font-face {
   font-family: "Geomanist";
   src: url("/fonts/Geomanist-Black.otf") format("opentype");
   font-weight: 900;
   font-display: swap;
 }
+
 @font-face {
   font-family: "Geomanist";
   src: url("/fonts/Geomanist-Ultra.otf") format("opentype");
   font-weight: 950;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "San de More";
+  src: url("/fonts/SANDEMORE-REGULAR.OTF") format("opentype");
+  font-weight: 400;
   font-display: swap;
 }
 
@@ -56,6 +69,10 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
+/* body {
   font-family: "Geomanist", system-ui, sans-serif;
+} */
+
+body {
+  font-family: "San de More", serif;
 }
