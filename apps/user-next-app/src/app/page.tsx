@@ -1,8 +1,7 @@
 import dynamic from "next/dynamic";
-import { VideoBannerLocal } from "@/components/VideoBannerLocal";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { generateMetadata } from "./metadata";
-
+import { VideoBannerOriginal } from "@/components/VideoBannerOriginal";
 const WeddingHighlightSection = dynamic(
   () => import("@/components/sections/WeddingHighlightSection").then((m) => m.WeddingHighlightSection),
   { ssr: true }
@@ -30,11 +29,11 @@ export const metadata = generateMetadata({
 export default function Home() {
   return (
     <main>
-      <VideoBannerLocal />
+      <VideoBannerOriginal />
       <AboutSection />
       <WeddingHighlightSection />
       <WeddingReelsSection />
-      <TraditionalFilmSection />
+      {/* <TraditionalFilmSection /> */}
       <ContactPreview />
     </main>
   );
