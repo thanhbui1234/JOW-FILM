@@ -9,6 +9,7 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 
 const NAV_ITEMS = [
   { label: "Dashboard", path: "/", icon: LayoutDashboard },
@@ -32,21 +33,33 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
         collapsed ? "w-16" : "w-64"
       )}
     >
-      <div className="flex h-14 items-center justify-between border-b px-4">
+      {/* Logo area */}
+      <div className="flex h-16 items-center gap-2 px-4">
         {!collapsed && (
-          <span className="text-lg font-bold tracking-wide">JOW Admin</span>
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <Film className="h-4 w-4" />
+            </div>
+            <div>
+              <span className="text-sm font-bold tracking-wide">JOW Film</span>
+              <p className="text-[10px] text-muted-foreground">Admin Panel</p>
+            </div>
+          </div>
         )}
-        <button
-          onClick={onToggle}
-          className="ml-auto rounded-md p-1.5 hover:bg-sidebar-accent"
-        >
-          <ChevronLeft
-            className={cn("h-5 w-5 transition-transform", collapsed && "rotate-180")}
-          />
-        </button>
+        {collapsed && (
+          <div className="mx-auto flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <Film className="h-4 w-4" />
+          </div>
+        )}
       </div>
 
-      <nav className="flex-1 space-y-1 p-2">
+      <Separator />
+
+      {/* Navigation */}
+      <nav className="flex-1 space-y-1 p-3">
+        <p className={cn("mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground", collapsed && "sr-only")}>
+          Menu
+        </p>
         {NAV_ITEMS.map((item) => (
           <NavLink
             key={item.path}
@@ -54,18 +67,33 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
             end={item.path === "/"}
             className={({ isActive }) =>
               cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
                 isActive
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                  : "text-sidebar-foreground hover:bg-sidebar-accent"
+                  ? "bg-primary/10 text-primary shadow-sm"
+                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
               )
             }
           >
-            <item.icon className="h-5 w-5 shrink-0" />
+            <item.icon className={cn("h-4 w-4 shrink-0")} />
             {!collapsed && <span>{item.label}</span>}
           </NavLink>
         ))}
       </nav>
+
+      <Separator />
+
+      {/* Collapse toggle */}
+      <div className="p-3">
+        <button
+          onClick={onToggle}
+          className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+        >
+          <ChevronLeft
+            className={cn("h-4 w-4 transition-transform duration-300", collapsed && "rotate-180")}
+          />
+          {!collapsed && <span>Collapse</span>}
+        </button>
+      </div>
     </aside>
   );
 }
