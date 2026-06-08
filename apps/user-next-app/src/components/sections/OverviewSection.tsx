@@ -56,7 +56,7 @@ export function OverviewSection() {
           }}
         >
           <BlurFade delay={0.05} inView>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-400 dark:text-amber-400">
               Our Services
             </p>
           </BlurFade>
@@ -65,7 +65,7 @@ export function OverviewSection() {
               className="font-title text-5xl font-light tracking-wide text-stone-900 md:text-6xl dark:text-stone-100"
             >
               What we{" "}
-              <Highlighter action="underline" color="#d97706" strokeWidth={2} animationDuration={800} isView>
+              <Highlighter action="underline" color="#ffb900" strokeWidth={2} animationDuration={800} isView>
                 <em className="not-italic font-normal italic">offer</em>
               </Highlighter>
             </h2>
@@ -132,11 +132,11 @@ function OverviewRow({ item, index }: OverviewRowProps) {
 
         {/* View all link */}
         <div className="mt-4 flex items-center gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <span className="text-xs font-semibold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+          <span className="text-xs font-semibold uppercase tracking-widest text-amber-400 dark:text-amber-400">
             View all
           </span>
           <svg
-            className="h-3.5 w-3.5 translate-x-0 text-amber-600 transition-transform duration-200 group-hover:translate-x-1 dark:text-amber-400"
+            className="h-3.5 w-3.5 translate-x-0 text-amber-400 transition-transform duration-200 group-hover:translate-x-1 dark:text-amber-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

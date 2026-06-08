@@ -20,7 +20,7 @@ export function PageTitleBar({
     >
       <div className="mx-auto max-w-6xl text-center">
         <BlurFade delay={0.05} inView>
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400 md:text-xs">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-amber-400 dark:text-amber-400 md:text-xs">
             {label}
           </p>
         </BlurFade>

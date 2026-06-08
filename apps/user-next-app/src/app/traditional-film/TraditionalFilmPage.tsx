@@ -13,68 +13,65 @@ export function TraditionalFilmPage() {
     if (hash) {
       // Small delay to let the page render
       setTimeout(() => {
-        const el = document.querySelector(hash);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (hash === "#film-0") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          const el = document.querySelector(hash);
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
         }
       }, 300);
     }
   }, []);
 
   const handleScrollDown = () => {
-    window.scrollTo({
-      top: window.innerHeight,
-      behavior: "smooth",
-    });
+    const nextEl = document.querySelector("#film-1");
+    if (nextEl) {
+      nextEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   return (
-    <main>
-      {/* First viewport — title + description + first video + scroll chevron */}
-      <div className="relative flex min-h-screen flex-col">
-        <PageTitleBar
-          label="Heritage & Culture"
-          title="Traditional"
-          highlightWord="Films"
-        />
+    <main className="bg-white dark:bg-stone-950 pb-16 md:pb-24">
+      <PageTitleBar
+        label="Heritage & Culture"
+        title="Traditional"
+        highlightWord="Films"
+      />
 
-
-        {/* First video */}
-        <section
-          data-header-theme="light"
-          className="flex-1 bg-white px-5 pt-5 md:px-12 md:pt-6 lg:px-20 dark:bg-stone-950"
-        >
-          <div className="mx-auto max-w-5xl">
+      <section
+        data-header-theme="light"
+        className="px-5 md:px-12 lg:px-20"
+      >
+        <div className="mx-auto max-w-5xl">
+          {/* Film 1 (First Video) */}
+          <div id="film-0" className="scroll-mt-24">
             <BlurFade delay={0.05} inView>
-              <FilmCard film={FILMS[0]} index={0} />
+              <FilmCard film={FILMS[0]} />
             </BlurFade>
+
+            {/* Scroll Down button placed inside film 1's flow */}
+            {FILMS.length > 1 && (
+              <div className="mt-8 flex justify-center">
+                <button
+                  onClick={handleScrollDown}
+                  className="cursor-pointer text-stone-300 transition-colors hover:text-amber-600 dark:text-stone-700 dark:hover:text-amber-400"
+                  aria-label="Scroll to next film"
+                >
+                  <ChevronDown className="h-6 w-6 animate-bounce" />
+                </button>
+              </div>
+            )}
           </div>
-        </section>
 
-        {/* Scroll chevron at bottom of 100vh */}
-        <div className="bg-white pb-5 dark:bg-stone-950">
-          <button
-            onClick={handleScrollDown}
-            className="mx-auto flex items-center justify-center text-stone-300 transition-colors hover:text-amber-600 dark:text-stone-700 dark:hover:text-amber-400"
-            aria-label="Scroll to more films"
-          >
-            <ChevronDown className="h-6 w-6 animate-bounce" />
-          </button>
-        </div>
-      </div>
-
-      {/* Remaining videos */}
-      {FILMS.length > 1 && (
-        <section
-          data-header-theme="light"
-          className="bg-white px-5 pb-16 md:px-12 md:pb-20 lg:px-20 dark:bg-stone-950"
-        >
-          <div className="mx-auto max-w-5xl">
-            <div className="flex flex-col">
+          {/* Remaining content: other films */}
+          {FILMS.length > 1 && (
+            <div className="flex flex-col gap-16 md:gap-24 mt-16 md:mt-24">
               {FILMS.slice(1).map((film, index) => (
-                <div key={film.id + (index + 1)}>
+                <div key={film.id + (index + 1)} id={`film-${index + 1}`} className="scroll-mt-24">
                   {/* Divider */}
-                  <div className="my-12 flex items-center gap-4 md:my-16">
+                  <div className="mb-12 flex items-center gap-4 md:mb-16">
                     <span className="h-px flex-1 bg-stone-200 dark:bg-stone-800" />
                     <span className="text-[10px] uppercase tracking-widest text-stone-300 dark:text-stone-700">
                       {String(index + 2).padStart(2, "0")} /{" "}
@@ -84,26 +81,25 @@ export function TraditionalFilmPage() {
                   </div>
 
                   <BlurFade delay={0.05} inView>
-                    <FilmCard film={film} index={index + 1} />
+                    <FilmCard film={film} />
                   </BlurFade>
                 </div>
               ))}
             </div>
-          </div>
-        </section>
-      )}
+          )}
+        </div>
+      </section>
     </main>
   );
 }
 
 interface FilmCardProps {
   film: (typeof FILMS)[number];
-  index: number;
 }
 
-function FilmCard({ film, index }: FilmCardProps) {
+function FilmCard({ film }: FilmCardProps) {
   return (
-    <article id={`film-${index}`} className="scroll-mt-24">
+    <article>
       <div className="relative w-full overflow-hidden rounded-xl shadow-lg md:rounded-2xl">
         <div className="relative aspect-video">
           <iframe
@@ -117,30 +113,36 @@ function FilmCard({ film, index }: FilmCardProps) {
         </div>
       </div>
 
-      <div className="mt-4 md:mt-5">
-        <p className="text-[10px] uppercase tracking-[0.25em] text-amber-600 dark:text-amber-400">
-          {film.subtitle}
-        </p>
-        <h3
-          className="mt-1.5 text-xl font-medium tracking-wide text-stone-900 md:text-2xl dark:text-stone-100"
-          style={{ fontFamily: "'Cormorant Garamond', serif" }}
-        >
-          {film.title}
-        </h3>
-        <p className="mt-2 max-w-xl text-sm leading-relaxed text-stone-500 dark:text-stone-400">
-          {film.description}
-        </p>
-        <div className="mt-2.5 flex flex-wrap gap-1.5">
-          {film.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full border border-stone-200 px-3 py-1 text-[10px] uppercase tracking-wider text-stone-500 dark:border-stone-700 dark:text-stone-400"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
+      <FilmDetails film={film} />
     </article>
+  );
+}
+
+function FilmDetails({ film }: { film: (typeof FILMS)[number] }) {
+  return (
+    <div className="mt-4 md:mt-5">
+      <p className="text-[10px] uppercase tracking-[0.25em] text-amber-400 dark:text-amber-400">
+        {film.subtitle}
+      </p>
+      <h3
+        className="mt-1.5 text-xl font-medium tracking-wide text-stone-900 md:text-2xl dark:text-stone-100"
+        style={{ fontFamily: "'Cormorant Garamond', serif" }}
+      >
+        {film.title}
+      </h3>
+      <p className="mt-2 max-w-xl text-sm leading-relaxed text-stone-500 dark:text-stone-400">
+        {film.description}
+      </p>
+      <div className="mt-2.5 flex flex-wrap gap-1.5">
+        {film.tags.map((tag) => (
+          <span
+            key={tag}
+            className="rounded-full border border-stone-200 px-3 py-1 text-[10px] uppercase tracking-wider text-stone-500 dark:border-stone-700 dark:text-stone-400"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }

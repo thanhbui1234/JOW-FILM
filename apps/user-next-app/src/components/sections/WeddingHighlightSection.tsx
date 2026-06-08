@@ -102,7 +102,7 @@ export function WeddingHighlightSection() {
           }}
         >
           <BlurFade delay={0.05} inView>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-400 dark:text-amber-400">
               Featured Works
             </p>
           </BlurFade>
@@ -112,7 +112,7 @@ export function WeddingHighlightSection() {
                 className="font-title text-5xl font-light tracking-wide text-stone-900 md:text-7xl dark:text-stone-100"
               >
                 Wedding{" "}
-                <Highlighter action="underline" color="#d97706" strokeWidth={2} animationDuration={800} isView>
+                <Highlighter action="underline" color="#ffb900" strokeWidth={2} animationDuration={800} isView>
                   <em className="not-italic font-normal italic">Highlights</em>
                 </Highlighter>
               </h2>

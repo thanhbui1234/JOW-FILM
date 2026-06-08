@@ -55,20 +55,20 @@ export function TraditionalFilmSection() {
           </BlurFade>
         </div>
 
-        {/* 3-column image card grid — original layout */}
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Mobile: horizontal scroll | Desktop: 3-column grid */}
+        <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 scrollbar-hide sm:grid sm:snap-none sm:grid-cols-2 sm:gap-5 sm:overflow-x-visible sm:pb-0 lg:grid-cols-3">
           {FILMS.map((film, index) => (
             <BlurFade key={film.title + index} delay={0.1 + index * 0.1} inView>
               <Link
                 href={`/traditional-film#film-${index}`}
-                className="group relative block overflow-hidden rounded-2xl"
+                className="group relative block w-[75vw] shrink-0 snap-center overflow-hidden rounded-2xl sm:w-auto"
               >
                 <div className="relative aspect-[3/4] overflow-hidden sm:aspect-[4/5]">
                   <Image
                     src={film.image}
                     alt={film.title}
                     fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    sizes="(max-width: 640px) 75vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
                   />
@@ -95,7 +95,7 @@ export function TraditionalFilmSection() {
                     {film.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full border border-amber-600/30 bg-amber-900/30 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-amber-400/80 backdrop-blur-sm"
+                        className="rounded-full border border-amber-600/30 bg-amber-900/30 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-amber-400 backdrop-blur-sm"
                       >
                         {tag}
                       </span>

@@ -58,7 +58,7 @@ export function WeddingReelsSection() {
                   className="font-title text-5xl font-light tracking-wide text-white md:text-7xl"
                 >
                   Wedding{" "}
-                  <Highlighter action="underline" color="#fbbf24" strokeWidth={2} animationDuration={800} isView>
+                  <Highlighter action="underline" color="#ffb900" strokeWidth={2} animationDuration={800} isView>
                     <em className="not-italic font-normal italic">Reels</em>
                   </Highlighter>
                 </h2>

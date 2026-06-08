@@ -66,7 +66,7 @@ export function ContactPreview() {
           <div className="mt-10">
             <Link
               href="/contact"
-              className="group inline-flex items-center gap-3 rounded-full bg-amber-500 px-8 py-4 text-sm font-medium uppercase tracking-widest text-stone-900 transition-all duration-300 hover:bg-amber-400 hover:shadow-lg hover:shadow-amber-500/20"
+              className="group cusor:pointer inline-flex items-center gap-3 rounded-full bg-amber-400 px-8 py-4 text-sm font-medium uppercase tracking-widest text-stone-900 transition-all duration-300 hover:bg-amber-600 hover:shadow-lg hover:shadow-amber-500/20"
             >
               Get in Touch
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
