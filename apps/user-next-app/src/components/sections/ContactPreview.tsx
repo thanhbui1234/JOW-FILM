@@ -45,7 +45,7 @@ export function ContactPreview() {
             Begin your legacy{" "}
             <Highlighter
               action="underline"
-              color="#d97706"
+              color="#ffb900"
               strokeWidth={2}
               animationDuration={800}
               isView
