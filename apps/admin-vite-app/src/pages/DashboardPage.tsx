@@ -1,119 +1,201 @@
-import { Film, Video, Clapperboard, Users, TrendingUp, Calendar } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { useAdmin } from "@/context/admin-context";
+import { NavLink } from "react-router-dom";
+import { motion } from "motion/react";
+import {
+  ArrowUpRight,
+  Clapperboard,
+  Film,
+  Heart,
+  Image as ImageIcon,
+  Mail,
+  Palette,
+  Sparkles,
+  Video,
+} from "lucide-react";
+import { useAdminState } from "@/context/admin-context";
+import { PageContainer } from "@/components/composite/PageContainer";
+import { cn } from "@/lib/utils";
 
 export function DashboardPage() {
-  const { state } = useAdmin();
+  const state = useAdminState();
 
-  const stats = [
+  const happyCouples =
+    state.about.stats.find((s) => s.label === "Happy Couples")?.value ?? "0";
+
+  const metrics = [
     {
       label: "Wedding Highlights",
       value: state.highlights.items.length,
+      hint: "Cinematic highlight reels in rotation",
       icon: Film,
-      description: "Total highlight videos",
-      color: "text-blue-600 bg-blue-50",
+      tone: "from-amber-400/30 to-amber-500/0",
     },
     {
       label: "Wedding Reels",
       value: state.reels.items.length,
+      hint: "Short-form reels for social",
       icon: Clapperboard,
-      description: "Short-form reels",
-      color: "text-purple-600 bg-purple-50",
+      tone: "from-rose-400/25 to-rose-500/0",
     },
     {
       label: "Traditional Films",
       value: state.films.items.length,
+      hint: "Long-form heritage films",
       icon: Video,
-      description: "Long-form films",
-      color: "text-amber-600 bg-amber-50",
+      tone: "from-emerald-400/25 to-emerald-500/0",
     },
     {
       label: "Happy Couples",
-      value: state.about.stats.find((s) => s.label === "Happy Couples")?.value || "0",
-      icon: Users,
-      description: "Satisfied clients",
-      color: "text-emerald-600 bg-emerald-50",
+      value: happyCouples,
+      hint: "Sourced from About → Stats",
+      icon: Heart,
+      tone: "from-sky-400/25 to-sky-500/0",
     },
   ];
 
-  return (
-    <div className="space-y-8">
-      {/* Welcome */}
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">Welcome back</h2>
-        <p className="text-muted-foreground">Here's an overview of your content.</p>
-      </div>
+  const recent = [
+    {
+      label: "Banner video updated",
+      to: "/banner",
+      preview: state.banner.videoSrc,
+      icon: ImageIcon,
+    },
+    {
+      label: "About story",
+      to: "/about",
+      preview: `${state.about.titlePrefix} ${state.about.titleHighlight}`,
+      icon: Sparkles,
+    },
+    {
+      label: "Highlights heading",
+      to: "/wedding-highlights",
+      preview: `${state.highlights.config.titlePrefix} ${state.highlights.config.titleHighlight}`,
+      icon: Film,
+    },
+    {
+      label: "Footer contact",
+      to: "/footer",
+      preview: state.footer.phone,
+      icon: Mail,
+    },
+  ];
 
-      {/* Stats grid */}
+  const shortcuts = [
+    { label: "Update hero banner", to: "/banner", icon: ImageIcon },
+    { label: "Edit About story", to: "/about", icon: Sparkles },
+    { label: "Adjust contact CTA", to: "/contact-cta", icon: Mail },
+    { label: "Recolour a section", to: "/wedding-highlights", icon: Palette },
+  ];
+
+  return (
+    <PageContainer
+      title="Welcome back"
+      description="A snapshot of what's currently published across jowfilm.vn."
+      badge="Studio admin"
+    >
+      {/* Metric strip */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <Card key={stat.label} className="relative overflow-hidden">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {stat.label}
-              </CardTitle>
-              <div className={`rounded-lg p-2 ${stat.color}`}>
-                <stat.icon className="h-4 w-4" />
+        {metrics.map((metric, i) => (
+          <motion.div
+            key={metric.label}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
+            className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card p-5 shadow-[0_1px_0_oklch(1_0_0/0.5)_inset,0_8px_24px_-16px_oklch(0_0_0/0.12)] transition-all hover:-translate-y-0.5 hover:border-amber-500/40 dark:shadow-[0_1px_0_oklch(1_0_0/0.04)_inset]"
+          >
+            <div
+              className={cn(
+                "pointer-events-none absolute inset-0 bg-gradient-to-br opacity-60 transition-opacity group-hover:opacity-100",
+                metric.tone,
+              )}
+            />
+            <div className="relative flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                  {metric.label}
+                </span>
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-amber-500/20 bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
+                  <metric.icon className="h-4 w-4" />
+                </div>
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{stat.value}</div>
-              <p className="mt-1 text-xs text-muted-foreground">{stat.description}</p>
-            </CardContent>
-          </Card>
+              <p className="text-[34px] font-semibold leading-none tracking-tight">
+                {metric.value}
+              </p>
+              <p className="text-xs text-muted-foreground">{metric.hint}</p>
+            </div>
+          </motion.div>
         ))}
       </div>
 
-      {/* Quick info */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-              <CardTitle className="text-base">Content Overview</CardTitle>
+      {/* Two-column: Recent + Quick actions */}
+      <div className="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
+        {/* Recent activity */}
+        <div className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-[0_1px_0_oklch(1_0_0/0.5)_inset,0_8px_24px_-16px_oklch(0_0_0/0.1)] dark:shadow-[0_1px_0_oklch(1_0_0/0.04)_inset]">
+          <header className="flex items-center justify-between border-b border-border/40 px-5 py-4">
+            <div>
+              <p className="text-[15px] font-semibold tracking-tight">
+                Recently edited
+              </p>
+              <p className="text-xs text-muted-foreground">
+                The latest values per section.
+              </p>
             </div>
-            <CardDescription>Manage your website sections from the sidebar</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2">
-                <span className="text-sm">Total videos</span>
-                <span className="text-sm font-semibold">
-                  {state.highlights.items.length + state.reels.items.length + state.films.items.length}
-                </span>
-              </div>
-              <div className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2">
-                <span className="text-sm">Years Experience</span>
-                <span className="text-sm font-semibold">
-                  {state.about.stats.find((s) => s.label === "Years Experience")?.value || "N/A"}
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            <span className="rounded-full border border-border/60 bg-background px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+              {recent.length} sections
+            </span>
+          </header>
+          <ul className="divide-y divide-border/40">
+            {recent.map((row) => (
+              <li key={row.to}>
+                <NavLink
+                  to={row.to}
+                  className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-amber-500/5"
+                >
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-background text-amber-700 dark:text-amber-300">
+                    <row.icon className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{row.label}</p>
+                    <p className="truncate font-mono text-[11px] text-muted-foreground">
+                      {row.preview}
+                    </p>
+                  </div>
+                  <ArrowUpRight className="h-4 w-4 text-muted-foreground/60 transition-transform group-hover:translate-x-0.5" />
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-              <CardTitle className="text-base">Quick Actions</CardTitle>
+        {/* Quick actions */}
+        <div className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-[0_1px_0_oklch(1_0_0/0.5)_inset,0_8px_24px_-16px_oklch(0_0_0/0.1)] dark:shadow-[0_1px_0_oklch(1_0_0/0.04)_inset]">
+          <header className="flex items-center justify-between border-b border-border/40 px-5 py-4">
+            <div>
+              <p className="text-[15px] font-semibold tracking-tight">
+                Quick actions
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Common edits, one click away.
+              </p>
             </div>
-            <CardDescription>Common tasks you can perform</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2">
-                <span className="text-sm">Add new highlight video</span>
-                <span className="text-xs text-muted-foreground">Wedding Highlights →</span>
-              </div>
-              <div className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2">
-                <span className="text-sm">Update footer info</span>
-                <span className="text-xs text-muted-foreground">Footer →</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          </header>
+          <div className="grid grid-cols-2 gap-2 p-3">
+            {shortcuts.map((shortcut) => (
+              <NavLink
+                key={shortcut.to + shortcut.label}
+                to={shortcut.to}
+                className="group relative flex flex-col gap-3 overflow-hidden rounded-xl border border-border/50 bg-background p-4 transition-all hover:-translate-y-0.5 hover:border-amber-500/50 hover:shadow-md"
+              >
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-amber-700 transition-colors group-hover:bg-amber-500 group-hover:text-stone-950 dark:bg-amber-500/10 dark:text-amber-300 dark:group-hover:bg-amber-400 dark:group-hover:text-stone-950">
+                  <shortcut.icon className="h-4 w-4" />
+                </div>
+                <span className="text-sm font-medium leading-snug">
+                  {shortcut.label}
+                </span>
+              </NavLink>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+    </PageContainer>
   );
 }

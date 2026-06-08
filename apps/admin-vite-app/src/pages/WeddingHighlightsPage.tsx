@@ -1,188 +1,143 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Pencil, Trash2, Plus, Palette, Play } from "lucide-react";
-import { useAdmin } from "@/context/admin-context";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Film, Plus } from "lucide-react";
+import { useCollection } from "@/context/admin-context";
+import { PageContainer } from "@/components/composite/PageContainer";
+import { SectionCard } from "@/components/composite/SectionCard";
+import { SectionConfigForm } from "@/components/composite/SectionConfigForm";
+import { EntityList } from "@/components/composite/EntityList";
+import { EntityFormDialog } from "@/components/composite/EntityFormDialog";
+import { ConfirmDialog } from "@/components/composite/ConfirmDialog";
+import { EmptyState } from "@/components/composite/EmptyState";
+import { FormField } from "@/components/composite/FormField";
+import { Input } from "shared-ui";
 import { Button } from "shared-ui";
-import type { HighlightVideo, SectionConfig } from "@/types";
+import type { HighlightVideo } from "@/types";
+
+const BLANK: HighlightVideo = { id: "", title: "", subtitle: "" };
 
 export function WeddingHighlightsPage() {
-  const { state, dispatch } = useAdmin();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<HighlightVideo | null>(null);
+  const { config, items, saveConfig, add, update, remove } =
+    useCollection("highlights");
 
-  const configForm = useForm<SectionConfig>({
-    defaultValues: state.highlights.config,
-  });
-  const configDirty = configForm.formState.isDirty;
+  const [dialog, setDialog] = useState<{
+    mode: "add" | "edit";
+    initial: HighlightVideo;
+  } | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<HighlightVideo | null>(null);
 
-  const itemForm = useForm<HighlightVideo>({
-    defaultValues: { id: "", title: "", subtitle: "" },
-  });
-
-  const onConfigSave = (data: SectionConfig) => {
-    dispatch({ type: "UPDATE_HIGHLIGHTS_CONFIG", payload: data });
-  };
+  const form = useForm<HighlightVideo>({ defaultValues: BLANK });
 
   const openAdd = () => {
-    setEditingItem(null);
-    itemForm.reset({ id: "", title: "", subtitle: "" });
-    setDialogOpen(true);
+    form.reset(BLANK);
+    setDialog({ mode: "add", initial: BLANK });
   };
 
   const openEdit = (item: HighlightVideo) => {
-    setEditingItem(item);
-    itemForm.reset(item);
-    setDialogOpen(true);
+    form.reset(item);
+    setDialog({ mode: "edit", initial: item });
   };
 
-  const onItemSubmit = (data: HighlightVideo) => {
-    if (editingItem) {
-      dispatch({ type: "UPDATE_HIGHLIGHT", payload: data });
+  const submit = form.handleSubmit((values) => {
+    if (!dialog) return;
+    if (dialog.mode === "add") {
+      add(values);
     } else {
-      dispatch({ type: "ADD_HIGHLIGHT", payload: data });
+      update(values);
     }
-    setDialogOpen(false);
-  };
-
-  const onDelete = (id: string) => {
-    dispatch({ type: "DELETE_HIGHLIGHT", payload: id });
-  };
+    setDialog(null);
+  });
 
   return (
-    <div className="space-y-6">
-      {/* Section Config */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Palette className="h-4 w-4 text-muted-foreground" />
-            <CardTitle className="text-base">Section Settings</CardTitle>
-          </div>
-          <CardDescription>Configure how this section appears on the website</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={configForm.handleSubmit(onConfigSave)} className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Title</Label>
-                <Input {...configForm.register("title")} />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Background Color</Label>
-                <div className="flex items-center gap-3">
-                  <div className="relative">
-                    <input
-                      type="color"
-                      className="h-9 w-14 cursor-pointer rounded-lg border-2 border-muted p-0.5"
-                      {...configForm.register("backgroundColor")}
-                    />
-                  </div>
-                  <Input {...configForm.register("backgroundColor")} className="font-mono text-sm" />
-                </div>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Description</Label>
-              <Textarea {...configForm.register("description")} rows={3} />
-            </div>
-            <div className="flex justify-end">
-              <Button type="submit" disabled={!configDirty}>Save Config</Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+    <PageContainer
+      title="Wedding Highlights"
+      description="Featured highlight videos. Card-stack carousel on desktop, grid on mobile."
+    >
+      <SectionConfigForm value={config} onSave={saveConfig} />
 
-      {/* Videos list */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle className="text-base">Videos</CardTitle>
-            <CardDescription>{state.highlights.items.length} highlight videos</CardDescription>
-          </div>
-          <Button onClick={openAdd}>
-            <Plus className="mr-2 h-4 w-4" /> Add Video
+      <SectionCard
+        icon={<Film className="h-4 w-4" />}
+        title="Videos"
+        description={`${items.length} videos in rotation`}
+        actions={
+          <Button size="sm" onClick={openAdd}>
+            <Plus className="h-4 w-4" />
+            Add video
           </Button>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {state.highlights.items.map((item) => (
-              <div
-                key={item.id}
-                className="group flex items-center gap-4 rounded-lg border p-3 transition-colors hover:bg-muted/50"
-              >
-                <div className="relative h-16 w-28 shrink-0 overflow-hidden rounded-md">
-                  <img
-                    src={`https://img.youtube.com/vi/${item.id}/mqdefault.jpg`}
-                    alt={item.title}
-                    className="h-full w-full object-cover"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity group-hover:opacity-100">
-                    <Play className="h-5 w-5 text-white" fill="white" />
-                  </div>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium truncate">{item.title}</p>
-                  <p className="text-sm text-muted-foreground">{item.subtitle}</p>
-                </div>
-                <div className="flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                  <button
-                    onClick={() => openEdit(item)}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent"
-                  >
-                    <Pencil className="h-3.5 w-3.5" />
-                  </button>
-                  <button
-                    onClick={() => onDelete(item.id)}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-md text-destructive hover:bg-destructive/10"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
-                </div>
+        }
+      >
+        <EntityList
+          items={items}
+          getKey={(item) => item.id}
+          onEdit={openEdit}
+          onDelete={(item) => setPendingDelete(item)}
+          emptyState={
+            <EmptyState
+              icon={<Film className="h-4 w-4" />}
+              title="No highlights yet"
+              description="Add a YouTube video to populate the homepage carousel."
+              action={
+                <Button size="sm" onClick={openAdd}>
+                  <Plus className="h-4 w-4" />
+                  Add first video
+                </Button>
+              }
+            />
+          }
+          renderRow={(item) => (
+            <div className="flex items-center gap-3">
+              <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-md bg-muted">
+                <img
+                  src={`https://img.youtube.com/vi/${item.id}/mqdefault.jpg`}
+                  alt={item.title}
+                  className="h-full w-full object-cover"
+                />
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium">{item.title}</p>
+                <p className="truncate text-xs text-muted-foreground">{item.subtitle}</p>
+              </div>
+            </div>
+          )}
+        />
+      </SectionCard>
 
-      {/* Add/Edit Dialog */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{editingItem ? "Edit Video" : "Add Video"}</DialogTitle>
-            <DialogDescription>
-              {editingItem ? "Update the video details below" : "Enter the YouTube video details"}
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={itemForm.handleSubmit(onItemSubmit)} className="space-y-4">
-            <div className="space-y-2">
-              <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">YouTube Video ID</Label>
-              <Input {...itemForm.register("id")} placeholder="e.g. SlQR9iu09bQ" />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Title</Label>
-              <Input {...itemForm.register("title")} />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Subtitle (location)</Label>
-              <Input {...itemForm.register("subtitle")} placeholder="e.g. Đà Lạt · Spring 2024" />
-            </div>
-            <DialogFooter>
-              <Button type="submit">{editingItem ? "Update" : "Add Video"}</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </div>
+      <EntityFormDialog
+        open={dialog !== null}
+        onOpenChange={(open) => !open && setDialog(null)}
+        mode={dialog?.mode ?? "add"}
+        entityLabel="Video"
+        description="YouTube ID, caption shown on the card."
+        onSubmit={submit}
+      >
+        <FormField label="YouTube video ID" htmlFor="hl-id">
+          <Input id="hl-id" placeholder="SlQR9iu09bQ" {...form.register("id")} />
+        </FormField>
+        <FormField label="Title" htmlFor="hl-title">
+          <Input id="hl-title" {...form.register("title")} />
+        </FormField>
+        <FormField label="Subtitle" htmlFor="hl-sub">
+          <Input
+            id="hl-sub"
+            placeholder="Đà Lạt · Spring 2024"
+            {...form.register("subtitle")}
+          />
+        </FormField>
+      </EntityFormDialog>
+
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        onOpenChange={(open) => !open && setPendingDelete(null)}
+        title="Delete this highlight?"
+        description={
+          pendingDelete
+            ? `"${pendingDelete.title}" will be removed from the homepage carousel.`
+            : undefined
+        }
+        confirmLabel="Delete"
+        destructive
+        onConfirm={() => pendingDelete && remove(pendingDelete.id)}
+      />
+    </PageContainer>
   );
 }

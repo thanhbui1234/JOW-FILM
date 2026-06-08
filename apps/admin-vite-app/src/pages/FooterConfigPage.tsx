@@ -1,67 +1,118 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useAdmin } from "@/context/admin-context";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "shared-ui";
+import { Globe, Phone, Share2 } from "lucide-react";
+import { useFooter } from "@/context/admin-context";
+import { PageContainer } from "@/components/composite/PageContainer";
+import { SectionCard } from "@/components/composite/SectionCard";
+import { FormField } from "@/components/composite/FormField";
+import { SaveBar } from "@/components/composite/SaveBar";
+import { Input } from "shared-ui";
+import { Textarea } from "shared-ui";
 import type { FooterData } from "@/types";
 
 export function FooterConfigPage() {
-  const { state, dispatch } = useAdmin();
+  const { data, save } = useFooter();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isDirty },
+  } = useForm<FooterData>({ defaultValues: data });
 
-  const { register, handleSubmit, formState: { isDirty } } = useForm<FooterData>({
-    defaultValues: state.footer,
+  useEffect(() => reset(data), [data, reset]);
+
+  const submit = handleSubmit((values) => {
+    save(values);
+    reset(values);
   });
 
-  const onSubmit = (data: FooterData) => {
-    dispatch({ type: "UPDATE_FOOTER", payload: data });
-  };
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Get in Touch</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label>Phone</Label>
-              <Input {...register("phone")} />
+    <form onSubmit={submit}>
+      <PageContainer
+        title="Footer"
+        description="Tagline, contact details, social links and the bottom credit row."
+      >
+        <SectionCard
+          icon={<Globe className="h-4 w-4" />}
+          title="Identity"
+          description="Tagline below the logo and the bottom-bar credit text."
+        >
+          <div className="space-y-4">
+            <FormField label="Tagline" htmlFor="ft-tagline">
+              <Textarea
+                id="ft-tagline"
+                rows={2}
+                {...register("tagline")}
+              />
+            </FormField>
+            <div className="grid gap-4 md:grid-cols-2">
+              <FormField
+                label="Copyright"
+                htmlFor="ft-copy"
+                hint="Use {year} as a placeholder for the current year."
+              >
+                <Input id="ft-copy" {...register("copyright")} />
+              </FormField>
+              <FormField label="Credit line" htmlFor="ft-credit">
+                <Input id="ft-credit" {...register("credit")} />
+              </FormField>
             </div>
-            <div className="space-y-2">
-              <Label>Email</Label>
-              <Input type="email" {...register("email")} />
+          </div>
+        </SectionCard>
+
+        <SectionCard
+          icon={<Phone className="h-4 w-4" />}
+          title="Get in touch"
+          description="Contact column on the left side of the footer."
+        >
+          <div className="space-y-4">
+            <FormField label="Heading" htmlFor="ft-contact-heading">
+              <Input id="ft-contact-heading" {...register("contactHeading")} />
+            </FormField>
+            <div className="grid gap-4 md:grid-cols-2">
+              <FormField label="Phone" htmlFor="ft-phone">
+                <Input id="ft-phone" {...register("phone")} />
+              </FormField>
+              <FormField label="Email" htmlFor="ft-email">
+                <Input id="ft-email" type="email" {...register("email")} />
+              </FormField>
+              <FormField label="Address" htmlFor="ft-address" className="md:col-span-2">
+                <Input id="ft-address" {...register("address")} />
+              </FormField>
             </div>
           </div>
-          <div className="space-y-2">
-            <Label>Address</Label>
-            <Input {...register("address")} />
-          </div>
-        </CardContent>
-      </Card>
+        </SectionCard>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Social Links</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Facebook</Label>
-            <Input {...register("facebook")} placeholder="https://facebook.com/..." />
+        <SectionCard
+          icon={<Share2 className="h-4 w-4" />}
+          title="Follow us"
+          description="Social column on the right side of the footer."
+        >
+          <div className="space-y-4">
+            <FormField label="Heading" htmlFor="ft-social-heading">
+              <Input id="ft-social-heading" {...register("socialHeading")} />
+            </FormField>
+            <div className="grid gap-4 md:grid-cols-3">
+              <FormField label="Facebook" htmlFor="ft-fb">
+                <Input id="ft-fb" {...register("facebookUrl")} />
+              </FormField>
+              <FormField label="Instagram" htmlFor="ft-ig">
+                <Input id="ft-ig" {...register("instagramUrl")} />
+              </FormField>
+              <FormField label="YouTube" htmlFor="ft-yt">
+                <Input id="ft-yt" {...register("youtubeUrl")} />
+              </FormField>
+            </div>
           </div>
-          <div className="space-y-2">
-            <Label>Instagram</Label>
-            <Input {...register("instagram")} placeholder="https://instagram.com/..." />
-          </div>
-          <div className="space-y-2">
-            <Label>YouTube</Label>
-            <Input {...register("youtube")} placeholder="https://youtube.com/..." />
-          </div>
-        </CardContent>
-      </Card>
+        </SectionCard>
 
-      <Button type="submit" disabled={!isDirty}>Save Changes</Button>
+        <SaveBar
+          isDirty={isDirty}
+          onSave={submit}
+          onReset={() => reset(data)}
+          saveLabel="Save footer"
+        />
+      </PageContainer>
     </form>
   );
 }

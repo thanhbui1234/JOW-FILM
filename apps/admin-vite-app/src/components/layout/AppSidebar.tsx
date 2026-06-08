@@ -1,23 +1,60 @@
 import { NavLink } from "react-router-dom";
+import { motion } from "motion/react";
 import {
-  LayoutDashboard,
-  Info,
-  Film,
+  ChevronsLeft,
   Clapperboard,
+  Film,
+  Image as ImageIcon,
+  Info,
+  LayoutDashboard,
+  LayoutGrid,
+  Mail,
+  PanelsTopLeft,
+  Settings2,
+  Sparkles,
   Video,
-  Settings,
-  ChevronLeft,
 } from "lucide-react";
+import type { ComponentType, SVGProps } from "react";
 import { cn } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
+import { ThemeToggle } from "@/components/composite/ThemeToggle";
 
-const NAV_ITEMS = [
-  { label: "Dashboard", path: "/", icon: LayoutDashboard },
-  { label: "About", path: "/about", icon: Info },
-  { label: "Wedding Highlights", path: "/wedding-highlights", icon: Film },
-  { label: "Wedding Reels", path: "/wedding-reels", icon: Clapperboard },
-  { label: "Traditional Films", path: "/traditional-films", icon: Video },
-  { label: "Footer", path: "/footer", icon: Settings },
+type NavItem = {
+  label: string;
+  path: string;
+  icon: ComponentType<SVGProps<SVGSVGElement> & { className?: string }>;
+};
+
+type NavGroup = {
+  label: string;
+  items: NavItem[];
+};
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: "Overview",
+    items: [
+      { label: "Dashboard", path: "/", icon: LayoutDashboard },
+      { label: "Layout & order", path: "/layout", icon: LayoutGrid },
+    ],
+  },
+  {
+    label: "Site sections",
+    items: [
+      { label: "Banner", path: "/banner", icon: ImageIcon },
+      { label: "About", path: "/about", icon: Info },
+      { label: "Wedding Highlights", path: "/wedding-highlights", icon: Film },
+      { label: "Wedding Reels", path: "/wedding-reels", icon: Clapperboard },
+      { label: "Traditional Films", path: "/traditional-films", icon: Video },
+      { label: "Contact CTA", path: "/contact-cta", icon: Mail },
+    ],
+  },
+  {
+    label: "Chrome",
+    items: [
+      { label: "Header", path: "/header", icon: PanelsTopLeft },
+      { label: "Footer", path: "/footer", icon: Settings2 },
+    ],
+  },
 ];
 
 interface AppSidebarProps {
@@ -29,67 +66,136 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
   return (
     <aside
       className={cn(
-        "fixed left-0 top-0 z-40 flex h-full flex-col border-r bg-sidebar text-sidebar-foreground transition-all duration-300",
-        collapsed ? "w-16" : "w-64"
+        "relative flex h-full flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width] duration-300",
+        collapsed ? "w-[72px]" : "w-[260px]",
       )}
     >
-      {/* Logo area */}
-      <div className="flex h-16 items-center gap-2 px-4">
+      {/* Brand block */}
+      <div className="flex h-[68px] items-center gap-3 px-4">
+        <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-amber-300 via-amber-500 to-amber-700 text-stone-950 shadow-[0_6px_20px_-6px_rgba(217,119,6,0.45)]">
+          <Sparkles
+            className="absolute inset-0 m-auto h-3 w-3 text-white/40 mix-blend-overlay"
+            aria-hidden="true"
+          />
+          <Film className="relative h-5 w-5" />
+        </div>
         {!collapsed && (
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Film className="h-4 w-4" />
-            </div>
-            <div>
-              <span className="text-sm font-bold tracking-wide">JOW Film</span>
-              <p className="text-[10px] text-muted-foreground">Admin Panel</p>
-            </div>
-          </div>
-        )}
-        {collapsed && (
-          <div className="mx-auto flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Film className="h-4 w-4" />
+          <div className="min-w-0">
+            <p className="truncate text-[15px] font-semibold leading-tight tracking-tight">
+              JOW Film
+            </p>
+            <p className="truncate text-[11px] text-muted-foreground">
+              Studio admin · v1.0
+            </p>
           </div>
         )}
       </div>
 
-      <Separator />
-
-      {/* Navigation */}
-      <nav className="flex-1 space-y-1 p-3">
-        <p className={cn("mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground", collapsed && "sr-only")}>
-          Menu
-        </p>
-        {NAV_ITEMS.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            end={item.path === "/"}
-            className={({ isActive }) =>
-              cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
-                isActive
-                  ? "bg-primary/10 text-primary shadow-sm"
-                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
-              )
-            }
-          >
-            <item.icon className={cn("h-4 w-4 shrink-0")} />
-            {!collapsed && <span>{item.label}</span>}
-          </NavLink>
+      {/* Nav */}
+      <nav className="flex-1 space-y-5 overflow-y-auto px-3 pb-4 scrollbar-thin">
+        {NAV_GROUPS.map((group) => (
+          <div key={group.label}>
+            <div
+              className={cn(
+                "mb-1.5 flex items-center gap-2 px-2.5",
+                collapsed && "justify-center px-0",
+              )}
+            >
+              {!collapsed && (
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground/70">
+                  {group.label}
+                </p>
+              )}
+              {!collapsed && <span className="h-px flex-1 bg-sidebar-border/60" />}
+            </div>
+            <ul className="space-y-0.5">
+              {group.items.map((item) => (
+                <li key={item.path}>
+                  <NavLink
+                    to={item.path}
+                    end={item.path === "/"}
+                    title={collapsed ? item.label : undefined}
+                    className={({ isActive }) =>
+                      cn(
+                        "group/nav relative flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm font-medium transition-all",
+                        collapsed && "justify-center px-0",
+                        isActive
+                          ? "text-foreground"
+                          : "text-muted-foreground hover:bg-sidebar-accent/40 hover:text-foreground",
+                      )
+                    }
+                  >
+                    {({ isActive }) => (
+                      <>
+                        {isActive && (
+                          <motion.span
+                            layoutId="sidebar-active"
+                            className="absolute inset-0 rounded-lg bg-sidebar-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.4)]"
+                            transition={{
+                              type: "spring",
+                              stiffness: 380,
+                              damping: 30,
+                            }}
+                          />
+                        )}
+                        {isActive && (
+                          <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-amber-500 dark:bg-amber-400" />
+                        )}
+                        <item.icon
+                          className={cn(
+                            "relative h-4 w-4 shrink-0 transition-colors",
+                            isActive && "text-amber-700 dark:text-amber-300",
+                          )}
+                        />
+                        {!collapsed && (
+                          <span className="relative truncate">{item.label}</span>
+                        )}
+                      </>
+                    )}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
       </nav>
 
-      <Separator />
-
-      {/* Collapse toggle */}
-      <div className="p-3">
-        <button
-          onClick={onToggle}
-          className="flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+      {/* Footer */}
+      <div className="space-y-3 border-t border-sidebar-border p-3">
+        <div
+          className={cn(
+            "flex items-center gap-3 rounded-lg bg-background/60 p-2 shadow-sm",
+            collapsed && "justify-center bg-transparent shadow-none",
+          )}
         >
-          <ChevronLeft
-            className={cn("h-4 w-4 transition-transform duration-300", collapsed && "rotate-180")}
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-500 text-xs font-semibold text-stone-950">
+            A
+          </div>
+          {!collapsed && (
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-xs font-semibold">Admin</p>
+              <p className="truncate text-[10px] text-muted-foreground">
+                jowfilm.vn
+              </p>
+            </div>
+          )}
+          {!collapsed && <ThemeToggle variant="icon" />}
+        </div>
+
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className={cn(
+            "flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent/40 hover:text-foreground",
+            collapsed && "justify-center",
+          )}
+        >
+          <ChevronsLeft
+            className={cn(
+              "h-3.5 w-3.5 transition-transform duration-300",
+              collapsed && "rotate-180",
+            )}
           />
           {!collapsed && <span>Collapse</span>}
         </button>
@@ -97,3 +203,5 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
     </aside>
   );
 }
+
+export { NAV_GROUPS };
