@@ -41,7 +41,7 @@ export function WeddingHighlightPreview() {
           </BlurFade>
           <BlurFade delay={0.15} inView>
             <h2
-              className="text-5xl font-light tracking-wide text-stone-900 md:text-7xl dark:text-stone-100"
+              className="font-title text-5xl font-light tracking-wide text-stone-900 md:text-7xl dark:text-stone-100"
             >
               Wedding{" "}
               <Highlighter
@@ -51,7 +51,7 @@ export function WeddingHighlightPreview() {
                 animationDuration={800}
                 isView
               >
-                <em className="not-italic font-normal italic">Highlight</em>
+                <em className="not-italic font-normal italic">Highlights</em>
               </Highlighter>
             </h2>
           </BlurFade>

@@ -37,7 +37,7 @@ export function WeddingReelsPreview() {
           </BlurFade>
           <BlurFade delay={0.15} inView>
             <h2
-              className="text-5xl font-light tracking-wide text-white md:text-7xl"
+              className="font-title text-5xl font-light tracking-wide text-white md:text-7xl"
             >
               Wedding{" "}
               <Highlighter

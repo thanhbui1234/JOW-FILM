@@ -79,7 +79,7 @@ export function PageHero({
 
         <BlurFade delay={0.15} inView>
           <h1
-            className="text-4xl font-light tracking-wide text-white md:text-6xl lg:text-7xl"
+            className="font-title text-4xl font-light tracking-wide text-white md:text-6xl lg:text-7xl"
           >
             {title}{" "}
             <Highlighter

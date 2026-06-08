@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { BlurFade, HeroVideoDialog, Highlighter } from "shared-ui";
 
@@ -106,14 +107,16 @@ export function WeddingHighlightSection() {
             </p>
           </BlurFade>
           <BlurFade delay={0.15} inView>
-            <h2
-              className="text-5xl font-light tracking-wide text-stone-900 md:text-7xl dark:text-stone-100"
-            >
-              Wedding{" "}
-              <Highlighter action="underline" color="#d97706" strokeWidth={2} animationDuration={800} isView>
-                <em className="not-italic font-normal italic">Highlight</em>
-              </Highlighter>
-            </h2>
+            <Link href="/wedding-highlight">
+              <h2
+                className="font-title text-5xl font-light tracking-wide text-stone-900 md:text-7xl dark:text-stone-100"
+              >
+                Wedding{" "}
+                <Highlighter action="underline" color="#d97706" strokeWidth={2} animationDuration={800} isView>
+                  <em className="not-italic font-normal italic">Highlights</em>
+                </Highlighter>
+              </h2>
+            </Link>
           </BlurFade>
           <BlurFade delay={0.25} inView>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-stone-500 dark:text-stone-400">

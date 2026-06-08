@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Link from "next/link";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { BlurFade, Highlighter, Skeleton } from "shared-ui";
 
@@ -52,14 +53,16 @@ export function WeddingReelsSection() {
               </p>
             </BlurFade>
             <BlurFade delay={0.15} inView>
-              <h2
-                className="text-5xl font-light tracking-wide text-white md:text-7xl"
-              >
-                Wedding{" "}
-                <Highlighter action="underline" color="#fbbf24" strokeWidth={2} animationDuration={800} isView>
-                  <em className="not-italic font-normal italic">Reels</em>
-                </Highlighter>
-              </h2>
+              <Link href="/wedding-reels">
+                <h2
+                  className="font-title text-5xl font-light tracking-wide text-white md:text-7xl"
+                >
+                  Wedding{" "}
+                  <Highlighter action="underline" color="#fbbf24" strokeWidth={2} animationDuration={800} isView>
+                    <em className="not-italic font-normal italic">Reels</em>
+                  </Highlighter>
+                </h2>
+              </Link>
             </BlurFade>
             <BlurFade delay={0.25} inView>
               <p className="mt-4 max-w-md text-sm leading-relaxed text-stone-400">

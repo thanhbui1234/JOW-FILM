@@ -7,8 +7,8 @@ import { ThemeToggle } from "./ThemeToggle";
 
 const NAV_ITEMS = [
   { index: "01", label: "Home", href: "/" },
-  { index: "02", label: "Wedding Highlight", href: "/wedding-highlight" },
-  { index: "03", label: "Traditional Film", href: "/traditional-film" },
+  { index: "02", label: "Wedding Highlights", href: "/wedding-highlight" },
+  { index: "03", label: "Traditional Films", href: "/traditional-film" },
   { index: "04", label: "Wedding Reels", href: "/wedding-reels" },
   { index: "05", label: "Contact Us", href: "/contact" },
 ];
@@ -40,18 +40,16 @@ export function SlideMenu({ open, onClose }: SlideMenuProps) {
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm transition-opacity duration-500 ${
-          open ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
+        className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm transition-opacity duration-500 ${open ? "opacity-100" : "pointer-events-none opacity-0"
+          }`}
         onClick={onClose}
         aria-hidden="true"
       />
 
       {/* Panel */}
       <nav
-        className={`fixed top-0 left-0 z-[70] flex h-full w-full flex-col bg-white transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] sm:w-[380px] dark:bg-stone-950 ${
-          open ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 z-[70] flex h-full w-full flex-col bg-white transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] sm:w-[380px] dark:bg-stone-950 ${open ? "translate-x-0" : "-translate-x-full"
+          }`}
         aria-label="Main navigation"
       >
         {/* Top bar */}
@@ -74,11 +72,10 @@ export function SlideMenu({ open, onClose }: SlideMenuProps) {
             <li key={item.href}>
               <button
                 onClick={() => handleNavClick(item.href)}
-                className={`group flex w-full items-center gap-4 rounded-lg px-2 py-4 text-left transition-all duration-200 ${
-                  pathname === item.href
-                    ? "bg-amber-50 dark:bg-amber-900/20"
-                    : "hover:bg-stone-100 dark:hover:bg-stone-800/50"
-                }`}
+                className={`group flex w-full items-center gap-4 rounded-lg px-2 py-4 text-left transition-all duration-200 ${pathname === item.href
+                  ? "bg-amber-50 dark:bg-amber-900/20"
+                  : "hover:bg-stone-100 dark:hover:bg-stone-800/50"
+                  }`}
                 style={{
                   transform: open ? "translateX(0)" : "translateX(-16px)",
                   opacity: open ? 1 : 0,
@@ -89,30 +86,27 @@ export function SlideMenu({ open, onClose }: SlideMenuProps) {
                 }}
               >
                 {/* Number */}
-                <span className={`w-7 shrink-0 text-xs tabular-nums transition-colors duration-200 ${
-                  pathname === item.href
-                    ? "text-amber-600 dark:text-amber-400"
-                    : "text-stone-400 group-hover:text-amber-600 dark:text-stone-600 dark:group-hover:text-amber-500"
-                }`}>
+                <span className={`w-7 shrink-0 text-xs tabular-nums transition-colors duration-200 ${pathname === item.href
+                  ? "text-amber-600 dark:text-amber-400"
+                  : "text-stone-400 group-hover:text-amber-600 dark:text-stone-600 dark:group-hover:text-amber-500"
+                  }`}>
                   {item.index}
                 </span>
 
                 {/* Label */}
-                <span className={`text-xl font-light tracking-wide transition-colors duration-200 ${
-                  pathname === item.href
-                    ? "text-amber-700 dark:text-amber-300 font-normal"
-                    : "text-stone-800 group-hover:text-stone-950 dark:text-stone-200 dark:group-hover:text-white"
-                }`}>
+                <span className={`text-xl font-light tracking-wide transition-colors duration-200 ${pathname === item.href
+                  ? "text-amber-700 dark:text-amber-400 font-normal"
+                  : "text-stone-800 group-hover:text-stone-950 dark:text-stone-200 dark:group-hover:text-white"
+                  }`}>
                   {item.label}
                 </span>
 
                 {/* Arrow */}
                 <svg
-                  className={`ml-auto h-4 w-4 transition-all duration-200 ${
-                    pathname === item.href
-                      ? "translate-x-1 text-amber-600 opacity-100 dark:text-amber-400"
-                      : "translate-x-0 text-stone-300 opacity-0 group-hover:translate-x-1 group-hover:text-amber-600 group-hover:opacity-100 dark:text-stone-700 dark:group-hover:text-amber-400"
-                  }`}
+                  className={`ml-auto h-4 w-4 transition-all duration-200 ${pathname === item.href
+                    ? "translate-x-1 text-amber-600 opacity-100 dark:text-amber-400"
+                    : "translate-x-0 text-stone-300 opacity-0 group-hover:translate-x-1 group-hover:text-amber-600 group-hover:opacity-100 dark:text-stone-700 dark:group-hover:text-amber-400"
+                    }`}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"

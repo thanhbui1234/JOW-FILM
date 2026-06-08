@@ -29,9 +29,9 @@ export const metadata: Metadata = {
   keywords: [
     "wedding film",
     "wedding cinematography",
-    "wedding highlight",
-    "traditional film",
-    "wedding reels Vietnam",
+    "wedding highlights",
+    "traditional films",
+    "wedding reels Vietnams",
     "JOW Film",
     "phim cưới",
   ],
