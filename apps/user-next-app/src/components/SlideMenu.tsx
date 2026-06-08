@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { X, Facebook, Instagram, Mail } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { useLoadingBar } from "./TopLoadingBarProvider";
 
 const NAV_ITEMS = [
   { index: "01", label: "Home", href: "/" },
@@ -21,6 +22,7 @@ interface SlideMenuProps {
 export function SlideMenu({ open, onClose }: SlideMenuProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { start } = useLoadingBar();
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -30,6 +32,11 @@ export function SlideMenu({ open, onClose }: SlideMenuProps) {
   }, [open]);
 
   const handleNavClick = (href: string) => {
+    if (href === pathname) {
+      onClose();
+      return;
+    }
+    start();
     onClose();
     setTimeout(() => {
       router.push(href);
