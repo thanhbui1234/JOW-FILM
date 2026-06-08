@@ -1,187 +1,243 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Pencil, Trash2, Plus, Palette, Clock, MapPin } from "lucide-react";
-import { useAdmin } from "@/context/admin-context";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Clapperboard, Clock, Link2, MapPin, Plus, Youtube } from "lucide-react";
+import { useCollection } from "@/context/admin-context";
+import { PageContainer } from "@/components/composite/PageContainer";
+import { SectionCard } from "@/components/composite/SectionCard";
+import { SectionConfigForm } from "@/components/composite/SectionConfigForm";
+import { EntityList } from "@/components/composite/EntityList";
+import { EntityFormDialog } from "@/components/composite/EntityFormDialog";
+import { ConfirmDialog } from "@/components/composite/ConfirmDialog";
+import { EmptyState } from "@/components/composite/EmptyState";
+import { FormField } from "@/components/composite/FormField";
+import { Input } from "shared-ui";
+import { Textarea } from "shared-ui";
 import { Button } from "shared-ui";
-import type { ReelItem, SectionConfig } from "@/types";
+import type { ReelItem } from "@/types";
+
+const blankReel = (): ReelItem => ({
+  id: `reel-${Date.now().toString(36)}`,
+  youtubeUrl: "",
+  title: "",
+  description: "",
+  duration: "",
+  location: "",
+});
+
+/** Extract a YouTube video id from a watch / shorts / youtu.be / embed URL, or return the bare id. */
+function extractYoutubeId(input: string): string | null {
+  const value = input.trim();
+  if (!value) return null;
+  if (/^[A-Za-z0-9_-]{11}$/.test(value)) return value;
+  const patterns = [
+    /(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/|v\/))([A-Za-z0-9_-]{11})/,
+    /youtu\.be\/([A-Za-z0-9_-]{11})/,
+  ];
+  for (const re of patterns) {
+    const match = value.match(re);
+    if (match) return match[1];
+  }
+  return null;
+}
 
 export function WeddingReelsPage() {
-  const { state, dispatch } = useAdmin();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<ReelItem | null>(null);
+  const { config, items, saveConfig, add, update, remove } = useCollection("reels");
 
-  const configForm = useForm<SectionConfig>({
-    defaultValues: state.reels.config,
-  });
-  const configDirty = configForm.formState.isDirty;
+  const [dialog, setDialog] = useState<{ mode: "add" | "edit" } | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<ReelItem | null>(null);
 
-  const itemForm = useForm<ReelItem>({
-    defaultValues: { id: "", title: "", duration: "", location: "" },
-  });
-
-  const onConfigSave = (data: SectionConfig) => {
-    dispatch({ type: "UPDATE_REELS_CONFIG", payload: data });
-  };
+  const form = useForm<ReelItem>({ defaultValues: blankReel() });
+  const watchedYoutubeUrl = form.watch("youtubeUrl");
 
   const openAdd = () => {
-    setEditingItem(null);
-    itemForm.reset({ id: `reel-${Date.now()}`, title: "", duration: "", location: "" });
-    setDialogOpen(true);
+    form.reset(blankReel());
+    setDialog({ mode: "add" });
   };
 
   const openEdit = (item: ReelItem) => {
-    setEditingItem(item);
-    itemForm.reset(item);
-    setDialogOpen(true);
+    form.reset(item);
+    setDialog({ mode: "edit" });
   };
 
-  const onItemSubmit = (data: ReelItem) => {
-    if (editingItem) {
-      dispatch({ type: "UPDATE_REEL", payload: data });
-    } else {
-      dispatch({ type: "ADD_REEL", payload: data });
-    }
-    setDialogOpen(false);
-  };
-
-  const onDelete = (id: string) => {
-    dispatch({ type: "DELETE_REEL", payload: id });
-  };
+  const submit = form.handleSubmit((values) => {
+    if (!dialog) return;
+    if (dialog.mode === "add") add(values);
+    else update(values);
+    setDialog(null);
+  });
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Palette className="h-4 w-4 text-muted-foreground" />
-            <CardTitle className="text-base">Section Settings</CardTitle>
-          </div>
-          <CardDescription>Configure how this section appears on the website</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={configForm.handleSubmit(onConfigSave)} className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Title</Label>
-                <Input {...configForm.register("title")} />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Background Color</Label>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="color"
-                    className="h-9 w-14 cursor-pointer rounded-lg border-2 border-muted p-0.5"
-                    {...configForm.register("backgroundColor")}
-                  />
-                  <Input {...configForm.register("backgroundColor")} className="font-mono text-sm" />
-                </div>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Description</Label>
-              <Textarea {...configForm.register("description")} rows={3} />
-            </div>
-            <div className="flex justify-end">
-              <Button type="submit" disabled={!configDirty}>Save Config</Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+    <PageContainer
+      title="Wedding Reels"
+      description="Short-form vertical reels rendered as a horizontal scroller."
+    >
+      <SectionConfigForm value={config} onSave={saveConfig} />
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle className="text-base">Reels</CardTitle>
-            <CardDescription>{state.reels.items.length} short-form reels</CardDescription>
-          </div>
-          <Button onClick={openAdd}>
-            <Plus className="mr-2 h-4 w-4" /> Add Reel
+      <SectionCard
+        icon={<Clapperboard className="h-4 w-4" />}
+        title="Reels"
+        description={`${items.length} reels in rotation`}
+        actions={
+          <Button size="sm" onClick={openAdd}>
+            <Plus className="h-4 w-4" />
+            Add reel
           </Button>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {state.reels.items.map((item) => (
-              <div
-                key={item.id}
-                className="group flex items-center gap-4 rounded-lg border p-3 transition-colors hover:bg-muted/50"
-              >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600">
-                  <Clock className="h-4 w-4" />
+        }
+      >
+        <EntityList
+          items={items}
+          getKey={(item) => item.id}
+          onEdit={openEdit}
+          onDelete={(item) => setPendingDelete(item)}
+          emptyState={
+            <EmptyState
+              icon={<Clapperboard className="h-4 w-4" />}
+              title="No reels yet"
+              description="Add a short reel to start the rotation."
+              action={
+                <Button size="sm" onClick={openAdd}>
+                  <Plus className="h-4 w-4" />
+                  Add first reel
+                </Button>
+              }
+            />
+          }
+          renderRow={(item) => {
+            const ytId = extractYoutubeId(item.youtubeUrl);
+            return (
+              <div className="flex items-center gap-3">
+                <div className="relative flex h-14 w-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted">
+                  {ytId ? (
+                    <img
+                      src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`}
+                      alt={item.title}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <Clapperboard className="h-4 w-4 text-muted-foreground" />
+                  )}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium">{item.title}</p>
-                  <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium">{item.title}</p>
+                  {item.description && (
+                    <p className="truncate text-xs text-muted-foreground">
+                      {item.description}
+                    </p>
+                  )}
+                  <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                    <span className="inline-flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       {item.duration}
                     </span>
-                    <span className="flex items-center gap-1">
+                    <span className="inline-flex items-center gap-1">
                       <MapPin className="h-3 w-3" />
                       {item.location}
                     </span>
+                    {item.youtubeUrl && (
+                      <a
+                        href={item.youtubeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center gap-1 text-amber-700 hover:text-amber-600 dark:text-amber-300 dark:hover:text-amber-200"
+                      >
+                        <Youtube className="h-3 w-3" />
+                        YouTube
+                      </a>
+                    )}
                   </div>
                 </div>
-                <div className="flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                  <button
-                    onClick={() => openEdit(item)}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent"
-                  >
-                    <Pencil className="h-3.5 w-3.5" />
-                  </button>
-                  <button
-                    onClick={() => onDelete(item.id)}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-md text-destructive hover:bg-destructive/10"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
-                </div>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            );
+          }}
+        />
+      </SectionCard>
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{editingItem ? "Edit Reel" : "Add Reel"}</DialogTitle>
-            <DialogDescription>
-              {editingItem ? "Update the reel details below" : "Enter the reel details"}
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={itemForm.handleSubmit(onItemSubmit)} className="space-y-4">
-            <div className="space-y-2">
-              <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Title</Label>
-              <Input {...itemForm.register("title")} />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Duration</Label>
-                <Input {...itemForm.register("duration")} placeholder="0:45" />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Location</Label>
-                <Input {...itemForm.register("location")} placeholder="Đà Lạt" />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="submit">{editingItem ? "Update" : "Add Reel"}</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <EntityFormDialog
+        open={dialog !== null}
+        onOpenChange={(open) => !open && setDialog(null)}
+        mode={dialog?.mode ?? "add"}
+        entityLabel="Reel"
+        onSubmit={submit}
+      >
+        <FormField
+          label="YouTube link"
+          htmlFor="reel-youtube"
+          hint="Paste a full YouTube URL (watch, shorts, or youtu.be) or the bare 11-character video ID."
+        >
+          <div className="relative">
+            <Link2 className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              id="reel-youtube"
+              className="pl-9"
+              placeholder="https://www.youtube.com/shorts/..."
+              {...form.register("youtubeUrl")}
+            />
+          </div>
+          <YoutubePreview url={watchedYoutubeUrl} />
+        </FormField>
+        <FormField label="Title" htmlFor="reel-title">
+          <Input id="reel-title" {...form.register("title")} />
+        </FormField>
+        <FormField label="Description" htmlFor="reel-desc">
+          <Textarea
+            id="reel-desc"
+            rows={3}
+            placeholder="One or two lines about this reel."
+            {...form.register("description")}
+          />
+        </FormField>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FormField label="Duration" htmlFor="reel-duration">
+            <Input id="reel-duration" placeholder="0:45" {...form.register("duration")} />
+          </FormField>
+          <FormField label="Location" htmlFor="reel-location">
+            <Input id="reel-location" placeholder="Đà Lạt" {...form.register("location")} />
+          </FormField>
+        </div>
+      </EntityFormDialog>
+
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        onOpenChange={(open) => !open && setPendingDelete(null)}
+        title="Delete this reel?"
+        description={
+          pendingDelete
+            ? `"${pendingDelete.title}" will be removed from the reels scroller.`
+            : undefined
+        }
+        confirmLabel="Delete"
+        destructive
+        onConfirm={() => pendingDelete && remove(pendingDelete.id)}
+      />
+    </PageContainer>
+  );
+}
+
+function YoutubePreview({ url }: { url: string }) {
+  if (!url?.trim()) return null;
+  const id = extractYoutubeId(url);
+  if (!id) {
+    return (
+      <p className="mt-2 inline-flex items-center gap-1.5 text-xs text-destructive">
+        <span className="h-1.5 w-1.5 rounded-full bg-destructive" />
+        Couldn't read a video ID from that link.
+      </p>
+    );
+  }
+  return (
+    <div className="mt-2 flex items-center gap-3 rounded-md border border-border/60 bg-muted/40 p-2">
+      <img
+        src={`https://img.youtube.com/vi/${id}/mqdefault.jpg`}
+        alt="YouTube thumbnail preview"
+        className="h-12 w-20 shrink-0 rounded object-cover"
+      />
+      <div className="min-w-0">
+        <p className="text-xs font-medium">Detected video</p>
+        <p className="truncate font-mono text-[11px] text-muted-foreground">
+          {id}
+        </p>
+      </div>
     </div>
   );
 }

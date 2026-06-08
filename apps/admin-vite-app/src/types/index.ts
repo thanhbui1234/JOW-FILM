@@ -1,3 +1,8 @@
+/**
+ * Single source of truth for every field the user-facing site renders.
+ * Each interface mirrors a concrete visible region of apps/user-next-app.
+ */
+
 export interface HighlightVideo {
   id: string;
   title: string;
@@ -6,9 +11,19 @@ export interface HighlightVideo {
 
 export interface ReelItem {
   id: string;
+  youtubeUrl: string;
   title: string;
+  description: string;
   duration: string;
   location: string;
+}
+
+export interface FilmPreviewImage {
+  src: string;
+  title: string;
+  topic: string;
+  description: string;
+  attribute: string;
 }
 
 export interface FilmItem {
@@ -18,10 +33,7 @@ export interface FilmItem {
   description: string;
   tags: string[];
   image: string;
-  imageTitle?: string;
-  imageTopic?: string;
-  imageDescription?: string;
-  imageAttributes?: string;
+  previewImages: FilmPreviewImage[];
 }
 
 export interface AboutImage {
@@ -35,31 +47,95 @@ export interface AboutStat {
 }
 
 export interface AboutData {
-  title: string;
-  description: string;
-  images: AboutImage[];
+  eyebrow: string;
+  titlePrefix: string;
+  titleHighlight: string;
+  descriptionEn: string;
+  descriptionVi: string;
+  pillars: string[];
+  legacyLabel: string;
   stats: AboutStat[];
+  images: AboutImage[];
+  backgroundColor: string;
 }
 
-export interface SectionConfig {
-  title: string;
+export interface BannerData {
+  videoSrc: string;
+  logoSrc: string;
+  logoAlt: string;
+  scrollLabel: string;
+}
+
+export interface HeaderData {
+  facebookUrl: string;
+  instagramUrl: string;
+  emailHref: string;
+}
+
+export interface ThemedSection {
+  eyebrow: string;
+  titlePrefix: string;
+  titleHighlight: string;
   description: string;
   backgroundColor: string;
 }
 
+export interface ContactCtaData {
+  eyebrow: string;
+  titlePrefix: string;
+  titleHighlight: string;
+  description: string;
+  ctaLabel: string;
+  ctaHref: string;
+  backgroundColor: string;
+}
+
 export interface FooterData {
+  tagline: string;
+  contactHeading: string;
   phone: string;
   email: string;
   address: string;
-  facebook: string;
-  instagram: string;
-  youtube: string;
+  socialHeading: string;
+  facebookUrl: string;
+  instagramUrl: string;
+  youtubeUrl: string;
+  copyright: string;
+  credit: string;
+}
+
+export interface Collection<TConfig, TItem> {
+  config: TConfig;
+  items: TItem[];
+}
+
+/**
+ * Sections that can be reordered + toggled on the homepage.
+ * Banner, header, footer and contactCta are fixed and intentionally NOT here.
+ */
+export type LayoutSectionKey = "about" | "highlights" | "reels" | "films";
+
+export interface LayoutSection {
+  key: LayoutSectionKey;
+  visible: boolean;
 }
 
 export interface AdminState {
+  banner: BannerData;
+  header: HeaderData;
   about: AboutData;
-  highlights: { config: SectionConfig; items: HighlightVideo[] };
-  reels: { config: SectionConfig; items: ReelItem[] };
-  films: { config: SectionConfig; items: FilmItem[] };
+  highlights: Collection<ThemedSection, HighlightVideo>;
+  reels: Collection<ThemedSection, ReelItem>;
+  films: Collection<ThemedSection, FilmItem>;
+  contactCta: ContactCtaData;
   footer: FooterData;
+  layout: LayoutSection[];
 }
+
+export type CollectionKey = "highlights" | "reels" | "films";
+
+export type CollectionItemMap = {
+  highlights: HighlightVideo;
+  reels: ReelItem;
+  films: FilmItem;
+};
