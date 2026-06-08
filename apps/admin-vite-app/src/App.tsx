@@ -1,14 +1,23 @@
-import { Button, Spinner } from "shared-ui";
+import { Routes, Route } from "react-router-dom";
+import { AdminLayout } from "./components/layout/AdminLayout";
+import { DashboardPage } from "./pages/DashboardPage";
+import { AboutPage } from "./pages/AboutPage";
+import { WeddingHighlightsPage } from "./pages/WeddingHighlightsPage";
+import { WeddingReelsPage } from "./pages/WeddingReelsPage";
+import { TraditionalFilmsPage } from "./pages/TraditionalFilmsPage";
+import { FooterConfigPage } from "./pages/FooterConfigPage";
+
 export function App() {
   return (
-    <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold">Admin Dashboard</h1>
-        <p className="text-muted-foreground text-red-500">
-          Admin Vite app — ready to build.
-        </p>
-        <Button>Button</Button>
-      </div>
-    </div>
+    <Routes>
+      <Route element={<AdminLayout />}>
+        <Route index element={<DashboardPage />} />
+        <Route path="about" element={<AboutPage />} />
+        <Route path="wedding-highlights" element={<WeddingHighlightsPage />} />
+        <Route path="wedding-reels" element={<WeddingReelsPage />} />
+        <Route path="traditional-films" element={<TraditionalFilmsPage />} />
+        <Route path="footer" element={<FooterConfigPage />} />
+      </Route>
+    </Routes>
   );
 }
