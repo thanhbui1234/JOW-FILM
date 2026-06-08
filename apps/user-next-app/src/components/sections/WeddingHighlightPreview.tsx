@@ -35,7 +35,7 @@ export function WeddingHighlightPreview() {
           }}
         >
           <BlurFade delay={0.05} inView>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-400 dark:text-amber-400">
               Featured Works
             </p>
           </BlurFade>

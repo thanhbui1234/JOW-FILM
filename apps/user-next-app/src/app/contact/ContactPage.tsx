@@ -56,7 +56,7 @@ export function ContactPage() {
               <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-stone-200 bg-white p-10 text-center dark:border-stone-700 dark:bg-stone-800/50 dark:backdrop-blur-sm">
                 <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-500/10">
                   <svg
-                    className="h-7 w-7 text-amber-600 dark:text-amber-400"
+                    className="h-7 w-7 text-amber-400 dark:text-amber-400"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"

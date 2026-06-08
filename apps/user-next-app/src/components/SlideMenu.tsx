@@ -54,7 +54,7 @@ export function SlideMenu({ open, onClose }: SlideMenuProps) {
       >
         {/* Top bar */}
         <div className="flex items-center justify-between border-b border-stone-200 px-8 py-6 dark:border-stone-800/60">
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400 dark:text-amber-400">
             JOW Film
           </span>
           <button
@@ -87,7 +87,7 @@ export function SlideMenu({ open, onClose }: SlideMenuProps) {
               >
                 {/* Number */}
                 <span className={`w-7 shrink-0 text-xs tabular-nums transition-colors duration-200 ${pathname === item.href
-                  ? "text-amber-600 dark:text-amber-400"
+                  ? "text-amber-400 dark:text-amber-400"
                   : "text-stone-400 group-hover:text-amber-600 dark:text-stone-600 dark:group-hover:text-amber-500"
                   }`}>
                   {item.index}
@@ -95,7 +95,7 @@ export function SlideMenu({ open, onClose }: SlideMenuProps) {
 
                 {/* Label */}
                 <span className={`text-xl font-light tracking-wide transition-colors duration-200 ${pathname === item.href
-                  ? "text-amber-700 dark:text-amber-400 font-normal"
+                  ? "text-amber-400 dark:text-amber-400 font-normal"
                   : "text-stone-800 group-hover:text-stone-950 dark:text-stone-200 dark:group-hover:text-white"
                   }`}>
                   {item.label}
@@ -104,7 +104,7 @@ export function SlideMenu({ open, onClose }: SlideMenuProps) {
                 {/* Arrow */}
                 <svg
                   className={`ml-auto h-4 w-4 transition-all duration-200 ${pathname === item.href
-                    ? "translate-x-1 text-amber-600 opacity-100 dark:text-amber-400"
+                    ? "translate-x-1 text-amber-400 opacity-100 dark:text-amber-400"
                     : "translate-x-0 text-stone-300 opacity-0 group-hover:translate-x-1 group-hover:text-amber-600 group-hover:opacity-100 dark:text-stone-700 dark:group-hover:text-amber-400"
                     }`}
                   fill="none"

@@ -49,7 +49,7 @@ export function AboutSection() {
               className="font-title mb-8 text-5xl font-light leading-snug tracking-wide text-white md:text-6xl"
             >
               At JOW Film, we go beyond{" "}
-              <Highlighter action="underline" color="#fbbf24" strokeWidth={2} animationDuration={800} isView>
+              <Highlighter action="underline" color="#ffb900" strokeWidth={2} animationDuration={800} isView>
                 <em className="not-italic font-normal italic text-amber-400">filming.</em>
               </Highlighter>
             </h2>
