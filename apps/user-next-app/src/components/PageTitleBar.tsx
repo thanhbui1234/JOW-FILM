@@ -16,7 +16,7 @@ export function PageTitleBar({
   return (
     <section
       data-header-theme="light"
-      className="px-6 pb-10 pt-28 md:px-16 md:pb-14 md:pt-32 lg:px-24 dark:bg-stone-900"
+      className="px-6 pb-6 pt-24 md:px-16 md:pb-8 md:pt-28 lg:px-24 dark:bg-stone-900"
     >
       <div className="mx-auto max-w-6xl text-center">
         <BlurFade delay={0.05} inView>
@@ -26,7 +26,7 @@ export function PageTitleBar({
         </BlurFade>
         <BlurFade delay={0.15} inView>
           <h1
-            className="text-3xl font-light tracking-wide text-foreground md:text-5xl lg:text-6xl"
+            className="font-title text-3xl font-light tracking-wide text-foreground md:text-5xl lg:text-6xl"
           >
             {title}{" "}
             <em className="italic font-normal">{highlightWord}</em>

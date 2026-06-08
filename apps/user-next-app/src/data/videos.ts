@@ -7,6 +7,7 @@ export interface HighlightVideo {
 }
 
 export interface FilmItem {
+  id: string;
   title: string;
   subtitle: string;
   description: string;
@@ -55,6 +56,7 @@ export const HIGHLIGHT_VIDEOS: HighlightVideo[] = [
 
 export const FILMS: FilmItem[] = [
   {
+    id: "MoN9ql6Yymw",
     title: "Cưới Truyền Thống",
     subtitle: "Hà Nội · 2024",
     description:
@@ -63,6 +65,7 @@ export const FILMS: FilmItem[] = [
     image: "/images/demo/a7.jpg",
   },
   {
+    id: "MoN9ql6Yymw",
     title: "Hương Vị Quê Hương",
     subtitle: "Huế · 2023",
     description:
@@ -71,6 +74,7 @@ export const FILMS: FilmItem[] = [
     image: "/images/demo/a8.jpg",
   },
   {
+    id: "MoN9ql6Yymw",
     title: "Nam Bộ Rực Rỡ",
     subtitle: "Cần Thơ · 2024",
     description:

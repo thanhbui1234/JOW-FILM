@@ -38,21 +38,21 @@ export function Footer() {
             </h4>
             <a
               href="tel:+84944229875"
-              className="flex items-center gap-2.5 text-sm text-stone-500 transition-colors hover:text-amber-600 dark:text-stone-400 dark:hover:text-amber-400"
+              className="font-title flex items-center gap-2.5 text-sm text-stone-500 transition-colors hover:text-amber-600 dark:text-stone-400 dark:hover:text-amber-400"
             >
               <Phone className="h-4 w-4" />
               0944 229 875
             </a>
             <a
               href="mailto:jowfilm.vn@gmail.com"
-              className="flex items-center gap-2.5 text-sm text-stone-500 transition-colors hover:text-amber-600 dark:text-stone-400 dark:hover:text-amber-400"
+              className="font-title flex items-center gap-2.5 text-sm text-stone-500 transition-colors hover:text-amber-600 dark:text-stone-400 dark:hover:text-amber-400"
             >
               <Mail className="h-4 w-4" />
               jowfilm.vn@gmail.com
             </a>
-            <div className="flex items-center gap-2.5 text-sm text-stone-500 dark:text-stone-400">
+            <div className="font-title flex items-center gap-2.5 text-sm text-stone-500 dark:text-stone-400">
               <MapPin className="h-4 w-4 flex-shrink-0" />
-              Hà Nội, Việt Nam
+              Ha Noi, Viet Nam
             </div>
           </div>
 

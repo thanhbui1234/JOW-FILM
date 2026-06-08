@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { FILMS, getYouTubeThumbnail } from "@/data/videos";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { FILMS } from "@/data/videos";
 import { BlurFade, Highlighter } from "shared-ui";
 import { ArrowRight } from "lucide-react";
 
-/** Show first 2 films as a compact preview */
 const PREVIEW_FILMS = FILMS.slice(0, 2);
 
 export function TraditionalFilmPreview() {
@@ -37,9 +36,7 @@ export function TraditionalFilmPreview() {
             </p>
           </BlurFade>
           <BlurFade delay={0.15} inView>
-            <h2
-              className="text-5xl font-light tracking-wide text-amber-50 md:text-7xl"
-            >
+            <h2 className="font-title text-5xl font-light tracking-wide text-amber-50 md:text-7xl">
               <Highlighter
                 action="underline"
                 color="#fbbf24"
@@ -48,7 +45,7 @@ export function TraditionalFilmPreview() {
                 isView
               >
                 Traditional{" "}
-                <em className="not-italic font-normal italic">Film</em>
+                <em className="not-italic font-normal italic">Films</em>
               </Highlighter>
             </h2>
           </BlurFade>
@@ -60,49 +57,33 @@ export function TraditionalFilmPreview() {
           </BlurFade>
         </div>
 
-        {/* 2-column preview grid */}
+        {/* 2-column video grid */}
         <div className="grid gap-5 sm:grid-cols-2">
           {PREVIEW_FILMS.map((film, index) => (
-            <BlurFade key={film.title} delay={0.1 + index * 0.12} inView>
-              <div className="group relative overflow-hidden rounded-2xl">
-                <div className="relative aspect-[3/4] overflow-hidden sm:aspect-[4/5]">
+            <BlurFade key={film.id + index} delay={0.1 + index * 0.12} inView>
+              <Link
+                href={`/traditional-film#film-${index}`}
+                className="group block overflow-hidden rounded-2xl bg-black/20 backdrop-blur-sm"
+              >
+                <div className="relative aspect-video overflow-hidden">
                   <Image
-                    src={film.image}
+                    src={getYouTubeThumbnail(film.id)}
                     alt={film.title}
                     fill
                     sizes="(max-width: 640px) 100vw, 50vw"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-black/20" />
                 </div>
-                <div className="absolute inset-x-0 bottom-0 flex flex-col p-5 sm:p-6">
-                  <p className="mb-1.5 text-[10px] uppercase tracking-[0.25em] text-amber-400/80">
+                <div className="p-4 md:p-5">
+                  <p className="mb-1 text-[10px] uppercase tracking-[0.25em] text-amber-400/80">
                     {film.subtitle}
                   </p>
-                  <h3
-                    className="mb-2 text-xl font-light text-amber-50 sm:text-2xl"
-                    style={{
-                      fontWeight: 500,
-                    }}
-                  >
+                  <h3 className="text-lg font-medium text-amber-50 sm:text-xl">
                     {film.title}
                   </h3>
-                  <p className="mb-3 text-xs leading-relaxed text-amber-100/50 line-clamp-2">
-                    {film.description}
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {film.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full border border-amber-600/30 bg-amber-900/30 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-amber-300/80 backdrop-blur-sm"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
                 </div>
-              </div>
+              </Link>
             </BlurFade>
           ))}
         </div>

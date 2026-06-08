@@ -17,7 +17,7 @@ export function Section({ id, title, description, className }: SectionProps) {
     >
       <div className="max-w-2xl text-center">
         <BlurFade delay={0.1} inView>
-          <h2 className="mb-6 text-4xl font-light tracking-wide text-gray-900 dark:text-stone-100">
+          <h2 className="font-title mb-6 text-4xl font-light tracking-wide text-gray-900 dark:text-stone-100">
             {title}
           </h2>
         </BlurFade>

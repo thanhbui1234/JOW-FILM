@@ -14,7 +14,7 @@ export function WeddingHighlightPage() {
       <PageTitleBar
         label="Featured Works"
         title="Wedding"
-        highlightWord="Highlight"
+        highlightWord="Highlights"
       />
 
       <section

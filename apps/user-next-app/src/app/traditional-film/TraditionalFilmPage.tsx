@@ -1,104 +1,146 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect } from "react";
 import { PageTitleBar } from "@/components/PageTitleBar";
-import { FILMS } from "@/data/videos";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { FILMS, getYouTubeEmbedUrl } from "@/data/videos";
 import { BlurFade } from "shared-ui";
+import { ChevronDown } from "lucide-react";
 
 export function TraditionalFilmPage() {
+  // Scroll to anchor on mount (e.g. /traditional-film#film-1)
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      // Small delay to let the page render
+      setTimeout(() => {
+        const el = document.querySelector(hash);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 300);
+    }
+  }, []);
+
+  const handleScrollDown = () => {
+    window.scrollTo({
+      top: window.innerHeight,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <main>
-      <PageTitleBar
-        label="Heritage & Culture"
-        title="Traditional"
-        highlightWord="Film"
-      />
+      {/* First viewport — title + description + first video + scroll chevron */}
+      <div className="relative flex min-h-screen flex-col">
+        <PageTitleBar
+          label="Heritage & Culture"
+          title="Traditional"
+          highlightWord="Films"
+        />
 
-      <section
-        data-header-theme="dark"
-        className="bg-[#293629] px-6 py-10 md:px-16 md:py-14 lg:px-24"
-      >
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {FILMS.map((film, index) => (
-              <TraditionalFilmCard
-                key={film.title}
-                film={film}
-                delay={index * 0.1}
-              />
-            ))}
+
+        {/* First video */}
+        <section
+          data-header-theme="light"
+          className="flex-1 bg-white px-5 pt-5 md:px-12 md:pt-6 lg:px-20 dark:bg-stone-950"
+        >
+          <div className="mx-auto max-w-5xl">
+            <BlurFade delay={0.05} inView>
+              <FilmCard film={FILMS[0]} index={0} />
+            </BlurFade>
           </div>
+        </section>
+
+        {/* Scroll chevron at bottom of 100vh */}
+        <div className="bg-white pb-5 dark:bg-stone-950">
+          <button
+            onClick={handleScrollDown}
+            className="mx-auto flex items-center justify-center text-stone-300 transition-colors hover:text-amber-600 dark:text-stone-700 dark:hover:text-amber-400"
+            aria-label="Scroll to more films"
+          >
+            <ChevronDown className="h-6 w-6 animate-bounce" />
+          </button>
         </div>
-      </section>
+      </div>
+
+      {/* Remaining videos */}
+      {FILMS.length > 1 && (
+        <section
+          data-header-theme="light"
+          className="bg-white px-5 pb-16 md:px-12 md:pb-20 lg:px-20 dark:bg-stone-950"
+        >
+          <div className="mx-auto max-w-5xl">
+            <div className="flex flex-col">
+              {FILMS.slice(1).map((film, index) => (
+                <div key={film.id + (index + 1)}>
+                  {/* Divider */}
+                  <div className="my-12 flex items-center gap-4 md:my-16">
+                    <span className="h-px flex-1 bg-stone-200 dark:bg-stone-800" />
+                    <span className="text-[10px] uppercase tracking-widest text-stone-300 dark:text-stone-700">
+                      {String(index + 2).padStart(2, "0")} /{" "}
+                      {String(FILMS.length).padStart(2, "0")}
+                    </span>
+                    <span className="h-px flex-1 bg-stone-200 dark:bg-stone-800" />
+                  </div>
+
+                  <BlurFade delay={0.05} inView>
+                    <FilmCard film={film} index={index + 1} />
+                  </BlurFade>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   );
 }
 
-interface TraditionalFilmCardProps {
+interface FilmCardProps {
   film: (typeof FILMS)[number];
-  delay: number;
+  index: number;
 }
 
-function TraditionalFilmCard({ film, delay }: TraditionalFilmCardProps) {
-  const [cardRef, cardVisible] = useScrollAnimation({ threshold: 0.15 });
-
+function FilmCard({ film, index }: FilmCardProps) {
   return (
-    <div
-      ref={cardRef as React.RefObject<HTMLDivElement>}
-      className="group relative overflow-hidden rounded-2xl"
-      style={{
-        transform: cardVisible ? "translateY(0)" : "translateY(40px)",
-        opacity: cardVisible ? 1 : 0,
-        transition: `transform 800ms cubic-bezier(0.25,0.46,0.45,0.94) ${delay * 1000}ms, opacity 800ms ease ${delay * 1000}ms`,
-      }}
-    >
-      <div className="relative aspect-[3/4] overflow-hidden sm:aspect-[4/5]">
-        <Image
-          src={film.image}
-          alt={film.title}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+    <article id={`film-${index}`} className="scroll-mt-24">
+      <div className="relative w-full overflow-hidden rounded-xl shadow-lg md:rounded-2xl">
+        <div className="relative aspect-video">
+          <iframe
+            src={getYouTubeEmbedUrl(film.id).replace("?autoplay=1", "")}
+            title={film.title}
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            loading="lazy"
+            className="absolute inset-0 h-full w-full border-0"
+          />
+        </div>
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 flex flex-col p-5 sm:p-6">
-        <BlurFade delay={delay + 0.05} inView>
-          <p className="mb-1.5 text-[10px] uppercase tracking-[0.25em] text-amber-400/80">
-            {film.subtitle}
-          </p>
-        </BlurFade>
-        <BlurFade delay={delay + 0.1} inView>
-          <h3
-            className="mb-2 text-xl font-light text-amber-50 sm:text-2xl"
-            style={{
-              fontWeight: 500,
-            }}
-          >
-            {film.title}
-          </h3>
-        </BlurFade>
-        <BlurFade delay={delay + 0.15} inView>
-          <p className="mb-3 text-xs leading-relaxed text-amber-100/50 line-clamp-2">
-            {film.description}
-          </p>
-        </BlurFade>
-        <BlurFade delay={delay + 0.2} inView>
-          <div className="flex flex-wrap gap-1.5">
-            {film.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-amber-600/30 bg-amber-900/30 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-amber-300/80 backdrop-blur-sm"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </BlurFade>
+      <div className="mt-4 md:mt-5">
+        <p className="text-[10px] uppercase tracking-[0.25em] text-amber-600 dark:text-amber-400">
+          {film.subtitle}
+        </p>
+        <h3
+          className="mt-1.5 text-xl font-medium tracking-wide text-stone-900 md:text-2xl dark:text-stone-100"
+          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+        >
+          {film.title}
+        </h3>
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-stone-500 dark:text-stone-400">
+          {film.description}
+        </p>
+        <div className="mt-2.5 flex flex-wrap gap-1.5">
+          {film.tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full border border-stone-200 px-3 py-1 text-[10px] uppercase tracking-wider text-stone-500 dark:border-stone-700 dark:text-stone-400"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
-    </div>
+    </article>
   );
 }

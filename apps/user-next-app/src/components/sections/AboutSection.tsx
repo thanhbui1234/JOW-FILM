@@ -46,11 +46,11 @@ export function AboutSection() {
 
           <BlurFade delay={0.2} inView>
             <h2
-              className="mb-8 text-5xl font-light leading-snug tracking-wide text-white md:text-6xl"
+              className="font-title mb-8 text-5xl font-light leading-snug tracking-wide text-white md:text-6xl"
             >
               At JOW Film, we go beyond{" "}
               <Highlighter action="underline" color="#fbbf24" strokeWidth={2} animationDuration={800} isView>
-                <em className="not-italic font-normal italic text-amber-300">filming.</em>
+                <em className="not-italic font-normal italic text-amber-400">filming.</em>
               </Highlighter>
             </h2>
           </BlurFade>
@@ -71,7 +71,7 @@ export function AboutSection() {
               </span>{" "}
               , we strive to preserve your most precious moments as a timeless{" "}
               <span color="#FFD700" >
-                <span className="italic text-amber-300">&ldquo;Legacy of Love.&rdquo;</span>
+                <span className="italic text-amber-400">&ldquo;Legacy of Love.&rdquo;</span>
               </span>
             </p>
             <p className="mb-6 text-sm italic leading-relaxed text-stone-500 border-l border-stone-800 pl-4">
@@ -92,7 +92,7 @@ export function AboutSection() {
                 }}
               >
                 <HyperText
-                  className="text-3xl font-light text-amber-300"
+                  className="text-3xl font-light text-amber-400"
                   countUp
                   startOnView
                   duration={1200}

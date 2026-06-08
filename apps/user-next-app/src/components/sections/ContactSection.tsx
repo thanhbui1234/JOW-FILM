@@ -55,7 +55,7 @@ export function ContactSection() {
             </BlurFade>
             <BlurFade delay={0.15} inView>
               <h2
-                className="text-5xl font-light tracking-wide text-stone-900 md:text-6xl dark:text-white"
+                className="font-title text-5xl font-light tracking-wide text-stone-900 md:text-6xl dark:text-white"
               >
                 Begin your legacy{" "}
                 <Highlighter action="underline" color="#d97706" strokeWidth={2} animationDuration={800} isView>

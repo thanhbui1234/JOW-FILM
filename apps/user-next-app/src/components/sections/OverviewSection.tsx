@@ -7,7 +7,7 @@ import Image from "next/image";
 const OVERVIEW_ITEMS = [
   {
     index: "01",
-    title: "Wedding Highlight",
+    title: "Wedding Highlights",
     subtitle: "Your love story, condensed into a cinematic masterpiece.",
     description:
       "Thường là bản dựng từ 3–5 phút, chắt lọc những khoảnh khắc đặt giá và cảm xúc nhất của buổi lễ.",
@@ -16,7 +16,7 @@ const OVERVIEW_ITEMS = [
   },
   {
     index: "02",
-    title: "Traditional Film",
+    title: "Traditional Films",
     subtitle: "Preserving every precious second of your big day.",
     description:
       "Bản dựng đầy đủ, trình bày chi tiết toàn bộ quá trình diễn ra lễ cưới theo trình tự thời gian.",
@@ -62,7 +62,7 @@ export function OverviewSection() {
           </BlurFade>
           <BlurFade delay={0.15} inView>
             <h2
-              className="text-5xl font-light tracking-wide text-stone-900 md:text-6xl dark:text-stone-100"
+              className="font-title text-5xl font-light tracking-wide text-stone-900 md:text-6xl dark:text-stone-100"
             >
               What we{" "}
               <Highlighter action="underline" color="#d97706" strokeWidth={2} animationDuration={800} isView>
