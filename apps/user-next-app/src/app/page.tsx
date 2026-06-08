@@ -33,7 +33,7 @@ export default function Home() {
       <AboutSection />
       <WeddingHighlightSection />
       <WeddingReelsSection />
-      <TraditionalFilmSection />
+      {/* <TraditionalFilmSection /> */}
       <ContactPreview />
     </main>
   );
