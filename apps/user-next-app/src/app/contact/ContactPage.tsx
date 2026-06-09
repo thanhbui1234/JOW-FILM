@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PageTitleBar } from "@/components/PageTitleBar";
+import { PageTitleBar } from "@/components/ui/PageTitleBar";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { BlurFade } from "shared-ui";
 

@@ -2,15 +2,33 @@
 
 import Image from "next/image";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { BlurFade, Highlighter, HyperText, SparklesText } from "shared-ui";
+import { BlurFade, Highlighter, HyperText } from "shared-ui";
+import type { StatItem, AboutImage } from "@/types/content";
 
-const ABOUT_STATS = [
+const DEFAULT_STATS: StatItem[] = [
   { value: "200+", label: "Wedding Films" },
   { value: "5+", label: "Years Experience" },
   { value: "98%", label: "Happy Couples" },
 ];
 
-export function AboutSection() {
+const DEFAULT_HERO_IMAGE: AboutImage = { src: "/images/demo/a1.jpg", label: "Behind the lens" };
+
+const DEFAULT_IMAGES: AboutImage[] = [
+  { src: "/images/demo/a2.jpg", label: "Studio life" },
+  { src: "/images/demo/a3.jpg", label: "On location" },
+];
+
+interface AboutSectionProps {
+  stats?: StatItem[];
+  heroImage?: AboutImage;
+  images?: AboutImage[];
+}
+
+export function AboutSection({
+  stats = DEFAULT_STATS,
+  heroImage = DEFAULT_HERO_IMAGE,
+  images = DEFAULT_IMAGES,
+}: AboutSectionProps) {
   const [titleRef, titleVisible] = useScrollAnimation({ threshold: 0.1 });
   const [imageRef, imageVisible] = useScrollAnimation({ threshold: 0.1 });
 
@@ -20,7 +38,6 @@ export function AboutSection() {
       data-header-theme="dark"
       className="relative min-h-screen overflow-hidden bg-stone-950 px-6 py-24 md:px-16 lg:px-24"
     >
-      {/* Decorative grain overlay */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.03]"
         style={{
@@ -29,7 +46,6 @@ export function AboutSection() {
       />
 
       <div className="relative mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-2">
-        {/* Left — Text */}
         <div
           ref={titleRef as React.RefObject<HTMLDivElement>}
           style={{
@@ -45,9 +61,7 @@ export function AboutSection() {
           </BlurFade>
 
           <BlurFade delay={0.2} inView>
-            <h2
-              className="font-title mb-8 text-5xl font-light leading-snug tracking-wide text-white md:text-6xl"
-            >
+            <h2 className="font-title mb-8 text-5xl font-light leading-snug tracking-wide text-white md:text-6xl">
               At JOW Film, we go beyond{" "}
               <Highlighter action="underline" color="#ffb900" strokeWidth={2} animationDuration={800} isView>
                 <em className="not-italic font-normal italic text-amber-400">filming.</em>
@@ -59,57 +73,39 @@ export function AboutSection() {
             <p className="mb-4 text-base leading-relaxed text-stone-200">
               We translate your love story into a cinematic masterpiece. Driven by
               our three core pillars:{" "}
-              <span color="#FFD700">
-                <span className="font-medium text-stone-100">Dedication</span>,{" "}
-              </span>{" "}
-              <span color="#FFD700">
-                <span className="font-medium text-stone-100">Creativity</span>,{" "}
-              </span>{" "}
-              <span>and</span>{" "}
-              <span color="#FFD700">
-                <span className="font-medium text-stone-100">Authenticity</span>
-              </span>{" "}
+              <span className="font-medium text-stone-100">Dedication</span>,{" "}
+              <span className="font-medium text-stone-100">Creativity</span>,{" "}
+              and{" "}
+              <span className="font-medium text-stone-100">Authenticity</span>
               , we strive to preserve your most precious moments as a timeless{" "}
-              <span color="#FFD700" >
-                <span className="italic text-amber-400">&ldquo;Legacy of Love.&rdquo;</span>
-              </span>
+              <span className="italic text-amber-400">&ldquo;Legacy of Love.&rdquo;</span>
             </p>
             <p className="mb-6 text-sm italic leading-relaxed text-stone-500 border-l border-stone-800 pl-4">
               Chúng mình kể lại câu chuyện tình yêu của bạn bằng ngôn ngữ điện ảnh. Với ba giá trị cốt lõi Tận tâm, Sáng tạo và Chân thực, mỗi thước phim được tạo nên không chỉ để lưu giữ khoảnh khắc, mà còn để trở thành một &ldquo;Di sản tình yêu&rdquo; trường tồn theo năm tháng.
             </p>
           </BlurFade>
-          {/* Stats */}
+
           <div className="grid grid-cols-3 gap-6 border-t border-stone-800 pt-10">
-            {ABOUT_STATS.map((stat, i) => (
+            {stats.map((stat, i) => (
               <div
                 key={stat.label}
                 style={{
-                  transform: titleVisible
-                    ? "translateY(0)"
-                    : "translateY(30px)",
+                  transform: titleVisible ? "translateY(0)" : "translateY(30px)",
                   opacity: titleVisible ? 1 : 0,
                   transition: `transform 700ms cubic-bezier(0.25,0.46,0.45,0.94) ${200 + i * 100}ms, opacity 700ms ease ${200 + i * 100}ms`,
                 }}
               >
-                <HyperText
-                  className="text-3xl font-light text-amber-400"
-                  countUp
-                  startOnView
-                  duration={1200}
-                >
+                <HyperText className="text-3xl font-light text-amber-400" countUp startOnView duration={1200}>
                   {stat.value}
                 </HyperText>
                 <BlurFade delay={0.6 + i * 0.1} inView>
-                  <p className="mt-1 text-xs uppercase tracking-widest text-stone-500">
-                    {stat.label}
-                  </p>
+                  <p className="mt-1 text-xs uppercase tracking-widest text-stone-500">{stat.label}</p>
                 </BlurFade>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Right — Image grid */}
         <div
           ref={imageRef as React.RefObject<HTMLDivElement>}
           className="grid grid-cols-2 gap-3"
@@ -119,11 +115,10 @@ export function AboutSection() {
             transition: "transform 800ms cubic-bezier(0.25,0.46,0.45,0.94) 150ms, opacity 800ms ease 150ms",
           }}
         >
-          {/* Large image */}
           <div className="relative col-span-2 h-64 overflow-hidden rounded-xl">
             <Image
-              src="/images/demo/a1.jpg"
-              alt="Behind the lens"
+              src={heroImage.src}
+              alt={heroImage.label}
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover"
@@ -131,19 +126,12 @@ export function AboutSection() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
             <span className="absolute bottom-3 left-3 text-xs uppercase tracking-widest text-white/80">
-              Behind the lens
+              {heroImage.label}
             </span>
           </div>
 
-          {/* Two small images */}
-          {[
-            { src: "/images/demo/a2.jpg", label: "Studio life" },
-            { src: "/images/demo/a3.jpg", label: "On location" },
-          ].map((item) => (
-            <div
-              key={item.label}
-              className="relative h-36 overflow-hidden rounded-xl"
-            >
+          {images.map((item) => (
+            <div key={item.label} className="relative h-36 overflow-hidden rounded-xl">
               <Image
                 src={item.src}
                 alt={item.label}

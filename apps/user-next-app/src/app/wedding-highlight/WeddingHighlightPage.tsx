@@ -1,6 +1,6 @@
 "use client";
 
-import { PageTitleBar } from "@/components/PageTitleBar";
+import { PageTitleBar } from "@/components/ui/PageTitleBar";
 import {
   HIGHLIGHT_VIDEOS,
   getYouTubeThumbnail,

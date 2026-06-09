@@ -4,8 +4,9 @@ import { useRef } from "react";
 import Link from "next/link";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { BlurFade, Highlighter, Skeleton } from "shared-ui";
+import type { ReelItem } from "@/types/content";
 
-const REELS = [
+const DEFAULT_REELS: ReelItem[] = [
   { title: "First Look", duration: "0:45", location: "Đà Lạt" },
   { title: "The Kiss", duration: "0:30", location: "Hội An" },
   { title: "Golden Hour Portraits", duration: "1:02", location: "Phú Quốc" },
@@ -16,7 +17,11 @@ const REELS = [
   { title: "Late Night Magic", duration: "1:15", location: "Nha Trang" },
 ];
 
-export function WeddingReelsSection() {
+interface WeddingReelsSectionProps {
+  reels?: ReelItem[];
+}
+
+export function WeddingReelsSection({ reels = DEFAULT_REELS }: WeddingReelsSectionProps) {
   const [headerRef, headerVisible] = useScrollAnimation({ threshold: 0.1 });
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -35,15 +40,13 @@ export function WeddingReelsSection() {
       className="min-h-screen overflow-hidden bg-stone-950 px-6 py-24"
     >
       <div className="mx-auto max-w-6xl">
-        {/* Header */}
         <div
           ref={headerRef as React.RefObject<HTMLDivElement>}
           className="mb-12 flex items-end justify-between"
           style={{
             transform: headerVisible ? "translateY(0)" : "translateY(-40px)",
             opacity: headerVisible ? 1 : 0,
-            transition:
-              "transform 700ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 700ms ease",
+            transition: "transform 700ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 700ms ease",
           }}
         >
           <div>
@@ -54,9 +57,7 @@ export function WeddingReelsSection() {
             </BlurFade>
             <BlurFade delay={0.15} inView>
               <Link href="/wedding-reels">
-                <h2
-                  className="font-title text-5xl font-light tracking-wide text-white md:text-7xl"
-                >
+                <h2 className="font-title text-5xl font-light tracking-wide text-white md:text-7xl">
                   Wedding{" "}
                   <Highlighter action="underline" color="#ffb900" strokeWidth={2} animationDuration={800} isView>
                     <em className="not-italic font-normal italic">Reels</em>
@@ -71,7 +72,6 @@ export function WeddingReelsSection() {
             </BlurFade>
           </div>
 
-          {/* Scroll controls */}
           <div className="flex gap-3">
             <button
               onClick={() => scroll("left")}
@@ -94,24 +94,19 @@ export function WeddingReelsSection() {
           </div>
         </div>
 
-        {/* Horizontal scroll container */}
         <div
           ref={scrollRef}
           className="flex gap-4 overflow-x-auto pb-4"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {REELS.map((reel, index) => (
+          {reels.map((reel, index) => (
             <ReelCard key={reel.title} reel={reel} index={index} />
           ))}
         </div>
 
-        {/* Scroll indicator */}
         <div
           className="mt-6 flex justify-center gap-1.5"
-          style={{
-            opacity: headerVisible ? 1 : 0,
-            transition: "opacity 700ms ease 300ms",
-          }}
+          style={{ opacity: headerVisible ? 1 : 0, transition: "opacity 700ms ease 300ms" }}
         >
           {Array.from({ length: 4 }).map((_, i) => (
             <div
@@ -126,7 +121,7 @@ export function WeddingReelsSection() {
 }
 
 interface ReelCardProps {
-  reel: (typeof REELS)[number];
+  reel: ReelItem;
   index: number;
 }
 
@@ -145,42 +140,25 @@ function ReelCard({ reel, index }: ReelCardProps) {
         transition: `transform 700ms cubic-bezier(0.25,0.46,0.45,0.94) ${index * 60}ms, opacity 700ms ease ${index * 60}ms`,
       }}
     >
-      {/* Skeleton background */}
       <Skeleton className="absolute inset-0 rounded-2xl" />
 
-      {/* Placeholder icon */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <svg
-          className="h-10 w-10 text-stone-600/60"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={0.8}
-            d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M4 8h11a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z"
-          />
+        <svg className="h-10 w-10 text-stone-600/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.8} d="M15 10l4.553-2.069A1 1 0 0121 8.87v6.26a1 1 0 01-1.447.894L15 14M4 8h11a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z" />
         </svg>
       </div>
 
-      {/* Always visible bottom info */}
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 to-transparent p-4">
         <BlurFade delay={0.05 + index * 0.04} inView>
-          <p className="text-xs uppercase tracking-widest text-stone-400">
-            {reel.location}
-          </p>
+          <p className="text-xs uppercase tracking-widest text-stone-400">{reel.location}</p>
           <p className="mt-1 text-sm font-light text-white">{reel.title}</p>
         </BlurFade>
       </div>
 
-      {/* Duration badge */}
       <div className="absolute right-3 top-3 rounded-full bg-black/50 px-2 py-0.5 text-xs text-stone-300 backdrop-blur-sm">
         {reel.duration}
       </div>
 
-      {/* Play button on hover */}
       <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
           <svg className="h-6 w-6 translate-x-0.5 text-white" fill="currentColor" viewBox="0 0 24 24">

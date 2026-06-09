@@ -4,8 +4,21 @@ import Link from "next/link";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { BlurFade, Highlighter } from "shared-ui";
 import { ArrowRight } from "lucide-react";
+import type { ContactConfig } from "@/types/content";
 
-export function ContactPreview() {
+const DEFAULTS: ContactConfig = {
+  subtitle: "Let's Create Together",
+  heading: "Begin your legacy",
+  description: "Tell us about your special day and we'll craft a cinematic story that lasts forever.",
+  buttonText: "Get in Touch",
+  buttonLink: "/contact",
+  accentColor: "#ffb900",
+};
+
+interface ContactPreviewProps extends Partial<ContactConfig> {}
+
+export function ContactPreview(props: ContactPreviewProps) {
+  const config = { ...DEFAULTS, ...props };
   const [ref, visible] = useScrollAnimation({ threshold: 0.1 });
 
   return (
@@ -14,7 +27,6 @@ export function ContactPreview() {
       data-header-theme="dark"
       className="relative overflow-hidden bg-stone-950 px-6 py-24 md:py-32"
     >
-      {/* Decorative grain overlay */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.03]"
         style={{
@@ -28,28 +40,19 @@ export function ContactPreview() {
         style={{
           transform: visible ? "translateY(0)" : "translateY(40px)",
           opacity: visible ? 1 : 0,
-          transition:
-            "transform 800ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 800ms ease",
+          transition: "transform 800ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 800ms ease",
         }}
       >
         <BlurFade delay={0.05} inView>
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
-            Let&apos;s Create Together
+            {config.subtitle}
           </p>
         </BlurFade>
 
         <BlurFade delay={0.15} inView>
-          <h2
-            className="font-title text-5xl font-light tracking-wide text-white md:text-6xl lg:text-7xl"
-          >
-            Begin your legacy{" "}
-            <Highlighter
-              action="underline"
-              color="#ffb900"
-              strokeWidth={2}
-              animationDuration={800}
-              isView
-            >
+          <h2 className="font-title text-5xl font-light tracking-wide text-white md:text-6xl lg:text-7xl">
+            {config.heading}{" "}
+            <Highlighter action="underline" color={config.accentColor} strokeWidth={2} animationDuration={800} isView>
               <em className="not-italic font-normal italic">with us</em>
             </Highlighter>
           </h2>
@@ -57,18 +60,17 @@ export function ContactPreview() {
 
         <BlurFade delay={0.25} inView>
           <p className="mx-auto mt-6 max-w-lg text-sm leading-relaxed text-stone-400 md:text-base">
-            Tell us about your special day and we&apos;ll craft a cinematic
-            story that lasts forever.
+            {config.description}
           </p>
         </BlurFade>
 
         <BlurFade delay={0.35} inView>
           <div className="mt-10">
             <Link
-              href="/contact"
-              className="group cusor:pointer inline-flex items-center gap-3 rounded-full bg-amber-400 px-8 py-4 text-sm font-medium uppercase tracking-widest text-stone-900 transition-all duration-300 hover:bg-amber-600 hover:shadow-lg hover:shadow-amber-500/20"
+              href={config.buttonLink}
+              className="group inline-flex items-center gap-3 rounded-full bg-amber-400 px-8 py-4 text-sm font-medium uppercase tracking-widest text-stone-900 transition-all duration-300 hover:bg-amber-600 hover:shadow-lg hover:shadow-amber-500/20"
             >
-              Get in Touch
+              {config.buttonText}
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </div>
