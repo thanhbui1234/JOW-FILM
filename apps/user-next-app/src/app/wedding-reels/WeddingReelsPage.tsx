@@ -1,6 +1,6 @@
 "use client";
 
-import { PageTitleBar } from "@/components/PageTitleBar";
+import { PageTitleBar } from "@/components/ui/PageTitleBar";
 import { REELS } from "@/data/videos";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { BlurFade, Skeleton } from "shared-ui";

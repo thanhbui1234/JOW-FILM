@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["shared-ui"],
+  transpilePackages: ["shared-ui", "shared-api"],
 
   images: {
     formats: ["image/avif", "image/webp"],

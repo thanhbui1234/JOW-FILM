@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { X, Facebook, Instagram, Mail } from "lucide-react";
-import { ThemeToggle } from "./ThemeToggle";
-import { useLoadingBar } from "./TopLoadingBarProvider";
+import { ThemeToggle } from "../ui/ThemeToggle";
+import { useLoadingBar } from "../providers/TopLoadingBarProvider";
 
 const NAV_ITEMS = [
   { index: "01", label: "Home", href: "/" },

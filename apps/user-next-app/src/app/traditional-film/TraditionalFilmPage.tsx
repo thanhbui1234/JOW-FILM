@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { PageTitleBar } from "@/components/PageTitleBar";
+import { PageTitleBar } from "@/components/ui/PageTitleBar";
 import { FILMS, getYouTubeEmbedUrl } from "@/data/videos";
 import { BlurFade } from "shared-ui";
 import { ChevronDown } from "lucide-react";

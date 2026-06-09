@@ -4,44 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { BlurFade, HeroVideoDialog, Highlighter } from "shared-ui";
+import type { HighlightVideo } from "@/types/content";
 
-interface HighlightVideo {
-  id: string;
-  title: string;
-  subtitle: string;
-}
-
-const HIGHLIGHT_VIDEOS: HighlightVideo[] = [
-  {
-    id: "SlQR9iu09bQ",
-    title: "Eternal Vows",
-    subtitle: "Đà Lạt · Spring 2024",
-  },
-  {
-    id: "abPmZCZZrFA",
-    title: "Golden Hour",
-    subtitle: "Hội An · Summer 2024",
-  },
-  {
-    id: "zoEtcR5EW08",
-    title: "Garden of Love",
-    subtitle: "Hà Nội · Autumn 2023",
-  },
-  {
-    id: "LggaymnzDjc",
-    title: "Into the Wild",
-    subtitle: "Phú Quốc · Winter 2024",
-  },
-  {
-    id: "psZ1g9fMfeo",
-    title: "Blossom",
-    subtitle: "Đà Nẵng · Spring 2023",
-  },
-  {
-    id: "32sYGCOYJUM",
-    title: "Midnight Blue",
-    subtitle: "TP.HCM · Summer 2023",
-  },
+const DEFAULT_VIDEOS: HighlightVideo[] = [
+  { id: "SlQR9iu09bQ", title: "Eternal Vows", subtitle: "Đà Lạt · Spring 2024" },
+  { id: "abPmZCZZrFA", title: "Golden Hour", subtitle: "Hội An · Summer 2024" },
+  { id: "zoEtcR5EW08", title: "Garden of Love", subtitle: "Hà Nội · Autumn 2023" },
+  { id: "LggaymnzDjc", title: "Into the Wild", subtitle: "Phú Quốc · Winter 2024" },
+  { id: "psZ1g9fMfeo", title: "Blossom", subtitle: "Đà Nẵng · Spring 2023" },
+  { id: "32sYGCOYJUM", title: "Midnight Blue", subtitle: "TP.HCM · Summer 2023" },
 ];
 
 function getYouTubeThumbnail(videoId: string): string {
@@ -52,14 +23,17 @@ function getYouTubeEmbedUrl(videoId: string): string {
   return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
 }
 
-export function WeddingHighlightSection() {
+interface WeddingHighlightSectionProps {
+  videos?: HighlightVideo[];
+}
+
+export function WeddingHighlightSection({ videos = DEFAULT_VIDEOS }: WeddingHighlightSectionProps) {
   const [headerRef, headerVisible] = useScrollAnimation({ threshold: 0.1 });
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const isPausedRef = useRef(false);
-  const totalSlides = HIGHLIGHT_VIDEOS.length;
+  const totalSlides = videos.length;
 
-  // Desktop autoplay
   useEffect(() => {
     isPausedRef.current = isPaused;
   }, [isPaused]);
@@ -97,8 +71,7 @@ export function WeddingHighlightSection() {
           style={{
             transform: headerVisible ? "translateY(0)" : "translateY(-30px)",
             opacity: headerVisible ? 1 : 0,
-            transition:
-              "transform 700ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 700ms ease",
+            transition: "transform 700ms cubic-bezier(0.25,0.46,0.45,0.94), opacity 700ms ease",
           }}
         >
           <BlurFade delay={0.05} inView>
@@ -108,9 +81,7 @@ export function WeddingHighlightSection() {
           </BlurFade>
           <BlurFade delay={0.15} inView>
             <Link href="/wedding-highlight">
-              <h2
-                className="font-title text-5xl font-light tracking-wide text-stone-900 md:text-7xl dark:text-stone-100"
-              >
+              <h2 className="font-title text-5xl font-light tracking-wide text-stone-900 md:text-7xl dark:text-stone-100">
                 Wedding{" "}
                 <Highlighter action="underline" color="#ffb900" strokeWidth={2} animationDuration={800} isView>
                   <em className="not-italic font-normal italic">Highlights</em>
@@ -125,10 +96,9 @@ export function WeddingHighlightSection() {
           </BlurFade>
         </div>
 
-        {/* Desktop: Card Stack Carousel */}
         <div className="hidden md:block">
           <div className="relative mx-auto" style={{ maxWidth: "900px", height: "560px" }}>
-            {HIGHLIGHT_VIDEOS.map((video, index) => {
+            {videos.map((video, index) => {
               const diff = getDiff(index);
               const absDiff = Math.abs(diff);
               const scale = 1 - absDiff * 0.05;
@@ -140,10 +110,7 @@ export function WeddingHighlightSection() {
                 <div
                   key={video.id}
                   className="absolute inset-0 flex items-center justify-center"
-                  style={{
-                    zIndex,
-                    pointerEvents: absDiff < 0.5 ? "auto" : "none",
-                  }}
+                  style={{ zIndex, pointerEvents: absDiff < 0.5 ? "auto" : "none" }}
                 >
                   <div
                     className="group relative w-full overflow-hidden rounded-2xl shadow-2xl"
@@ -165,9 +132,7 @@ export function WeddingHighlightSection() {
                       className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-6 md:p-8"
                       style={{ opacity: absDiff < 0.5 ? 1 : 0, transition: "opacity 0.4s ease" }}
                     >
-                      <h3 className="text-lg font-medium text-white lg:text-2xl">
-                        {video.title}
-                      </h3>
+                      <h3 className="text-lg font-medium text-white lg:text-2xl">{video.title}</h3>
                       <p className="text-sm text-white/70">{video.subtitle}</p>
                     </div>
                   </div>
@@ -175,7 +140,6 @@ export function WeddingHighlightSection() {
               );
             })}
 
-            {/* Navigation arrows */}
             <button
               onClick={() => goTo(activeIndex - 1)}
               className="absolute left-4 top-1/2 z-30 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-sm transition-transform hover:scale-110 dark:bg-stone-800/80"
@@ -196,25 +160,20 @@ export function WeddingHighlightSection() {
             </button>
           </div>
 
-          {/* Dots */}
           <div className="mt-8 flex justify-center gap-2">
-            {HIGHLIGHT_VIDEOS.map((_, index) => (
+            {videos.map((_, index) => (
               <button
                 key={index}
                 aria-label={`Go to slide ${index + 1}`}
                 onClick={() => goTo(index)}
-                className={`h-1.5 rounded-full transition-all duration-500 ${index === activeIndex
-                  ? "w-8 bg-amber-500"
-                  : "w-1.5 bg-stone-300 dark:bg-stone-600"
-                  }`}
+                className={`h-1.5 rounded-full transition-all duration-500 ${index === activeIndex ? "w-8 bg-amber-500" : "w-1.5 bg-stone-300 dark:bg-stone-600"}`}
               />
             ))}
           </div>
         </div>
 
-        {/* Mobile: Grid */}
         <div className="grid grid-cols-2 gap-3 md:hidden">
-          {HIGHLIGHT_VIDEOS.map((video) => (
+          {videos.map((video) => (
             <div key={video.id} className="group relative overflow-hidden rounded-xl">
               <HeroVideoDialog
                 videoSrc={getYouTubeEmbedUrl(video.id)}
@@ -224,9 +183,7 @@ export function WeddingHighlightSection() {
                 className="[&>button]:w-full [&_img]:aspect-[4/5] [&_img]:w-full [&_img]:object-cover [&_img]:rounded-xl [&_img]:border-0 [&_img]:shadow-none [&>button>div]:scale-75 [&>button>div_div:first-child]:size-16 [&>button>div_div:first-child_div]:size-10 [&>button>div_div:first-child_div_svg]:size-5"
               />
               <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
-                <h3 className="text-sm font-medium text-white">
-                  {video.title}
-                </h3>
+                <h3 className="text-sm font-medium text-white">{video.title}</h3>
                 <p className="text-xs text-white/60">{video.subtitle}</p>
               </div>
             </div>
