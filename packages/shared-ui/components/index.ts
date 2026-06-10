@@ -21,3 +21,4 @@ export * from "./ui/hyper-text";
 export * from "./ui/sparkles-text";
 export * from "./ui/bento-grid";
 export * from "./ui/hero-video-dialog";
+export * from "./ui/media-upload";

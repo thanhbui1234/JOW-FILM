@@ -5,6 +5,7 @@
 
 export interface HighlightVideo {
   id: string;
+  videoUrl: string;
   title: string;
   subtitle: string;
 }
@@ -12,6 +13,7 @@ export interface HighlightVideo {
 export interface ReelItem {
   id: string;
   youtubeUrl: string;
+  videoUrl: string;
   title: string;
   description: string;
   duration: string;
@@ -28,6 +30,8 @@ export interface FilmPreviewImage {
 
 export interface FilmItem {
   id: string;
+  youtubeUrl: string;
+  videoUrl: string;
   title: string;
   subtitle: string;
   description: string;

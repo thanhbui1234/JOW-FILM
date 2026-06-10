@@ -10,11 +10,12 @@ import { EntityFormDialog } from "@/components/composite/EntityFormDialog";
 import { ConfirmDialog } from "@/components/composite/ConfirmDialog";
 import { EmptyState } from "@/components/composite/EmptyState";
 import { FormField } from "@/components/composite/FormField";
+import { FormMediaField } from "@/components/composite/FormMediaField";
 import { Input } from "shared-ui";
 import { Button } from "shared-ui";
 import type { HighlightVideo } from "@/types";
 
-const BLANK: HighlightVideo = { id: "", title: "", subtitle: "" };
+const BLANK: HighlightVideo = { id: "", videoUrl: "", title: "", subtitle: "" };
 
 export function WeddingHighlightsPage() {
   const { config, items, saveConfig, add, update, remove } =
@@ -25,16 +26,19 @@ export function WeddingHighlightsPage() {
     initial: HighlightVideo;
   } | null>(null);
   const [pendingDelete, setPendingDelete] = useState<HighlightVideo | null>(null);
+  const [videoSourceType, setVideoSourceType] = useState<"upload" | "youtube">("upload");
 
   const form = useForm<HighlightVideo>({ defaultValues: BLANK });
 
   const openAdd = () => {
     form.reset(BLANK);
+    setVideoSourceType("upload");
     setDialog({ mode: "add", initial: BLANK });
   };
 
   const openEdit = (item: HighlightVideo) => {
     form.reset(item);
+    setVideoSourceType(item.id ? "youtube" : "upload");
     setDialog({ mode: "edit", initial: item });
   };
 
@@ -86,12 +90,21 @@ export function WeddingHighlightsPage() {
           }
           renderRow={(item) => (
             <div className="flex items-center gap-3">
-              <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-md bg-muted">
-                <img
-                  src={`https://img.youtube.com/vi/${item.id}/mqdefault.jpg`}
-                  alt={item.title}
-                  className="h-full w-full object-cover"
-                />
+              <div className="relative flex h-14 w-24 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted">
+                {item.id ? (
+                  <img
+                    src={`https://img.youtube.com/vi/${item.id}/mqdefault.jpg`}
+                    alt={item.title}
+                    className="h-full w-full object-cover"
+                  />
+                ) : item.videoUrl ? (
+                  <video
+                    src={item.videoUrl}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <Film className="h-4 w-4 text-muted-foreground" />
+                )}
               </div>
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium">{item.title}</p>
@@ -110,9 +123,43 @@ export function WeddingHighlightsPage() {
         description="YouTube ID, caption shown on the card."
         onSubmit={submit}
       >
-        <FormField label="YouTube video ID" htmlFor="hl-id">
-          <Input id="hl-id" placeholder="SlQR9iu09bQ" {...form.register("id")} />
-        </FormField>
+        <div className="space-y-4 rounded-lg border border-border/60 bg-muted/30 p-4">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-medium">Video Source</p>
+            <div className="flex items-center rounded-md border border-border/60 bg-background p-1">
+              <button
+                type="button"
+                className={`rounded-sm px-3 py-1 text-xs font-medium transition-colors ${videoSourceType === "upload" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                onClick={() => setVideoSourceType("upload")}
+              >
+                Upload File
+              </button>
+              <button
+                type="button"
+                className={`rounded-sm px-3 py-1 text-xs font-medium transition-colors ${videoSourceType === "youtube" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                onClick={() => setVideoSourceType("youtube")}
+              >
+                YouTube Link
+              </button>
+            </div>
+          </div>
+
+          {videoSourceType === "upload" ? (
+            <FormField label="Upload Video" htmlFor="hl-video">
+              <FormMediaField
+                control={form.control}
+                name="videoUrl"
+                label=""
+                accept="video/*"
+                placeholder="Drag & drop or click to upload video file"
+              />
+            </FormField>
+          ) : (
+            <FormField label="YouTube video ID" htmlFor="hl-id" hint="Only video ID (e.g. SlQR9iu09bQ)">
+              <Input id="hl-id" placeholder="SlQR9iu09bQ" {...form.register("id")} />
+            </FormField>
+          )}
+        </div>
         <FormField label="Title" htmlFor="hl-title">
           <Input id="hl-title" {...form.register("title")} />
         </FormField>
