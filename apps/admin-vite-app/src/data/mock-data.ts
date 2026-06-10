@@ -43,12 +43,12 @@ export const INITIAL_STATE: AdminState = {
       backgroundColor: "#fafaf9",
     },
     items: [
-      { id: "SlQR9iu09bQ", title: "Eternal Vows", subtitle: "Đà Lạt · Spring 2024" },
-      { id: "abPmZCZZrFA", title: "Golden Hour", subtitle: "Hội An · Summer 2024" },
-      { id: "zoEtcR5EW08", title: "Garden of Love", subtitle: "Hà Nội · Autumn 2023" },
-      { id: "LggaymnzDjc", title: "Into the Wild", subtitle: "Phú Quốc · Winter 2024" },
-      { id: "psZ1g9fMfeo", title: "Blossom", subtitle: "Đà Nẵng · Spring 2023" },
-      { id: "32sYGCOYJUM", title: "Midnight Blue", subtitle: "TP.HCM · Summer 2023" },
+      { id: "SlQR9iu09bQ", videoUrl: "", title: "Eternal Vows", subtitle: "Đà Lạt · Spring 2024" },
+      { id: "abPmZCZZrFA", videoUrl: "", title: "Golden Hour", subtitle: "Hội An · Summer 2024" },
+      { id: "zoEtcR5EW08", videoUrl: "", title: "Garden of Love", subtitle: "Hà Nội · Autumn 2023" },
+      { id: "LggaymnzDjc", videoUrl: "", title: "Into the Wild", subtitle: "Phú Quốc · Winter 2024" },
+      { id: "psZ1g9fMfeo", videoUrl: "", title: "Blossom", subtitle: "Đà Nẵng · Spring 2023" },
+      { id: "32sYGCOYJUM", videoUrl: "", title: "Midnight Blue", subtitle: "TP.HCM · Summer 2023" },
     ],
   },
   reels: {
@@ -60,14 +60,14 @@ export const INITIAL_STATE: AdminState = {
       backgroundColor: "#0c0a09",
     },
     items: [
-      { id: "reel-1", youtubeUrl: "https://www.youtube.com/shorts/SlQR9iu09bQ", title: "First Look", description: "The very first glance between bride and groom.", duration: "0:45", location: "Đà Lạt" },
-      { id: "reel-2", youtubeUrl: "https://www.youtube.com/shorts/abPmZCZZrFA", title: "The Kiss", description: "A quiet, candid kiss caught in afternoon light.", duration: "0:30", location: "Hội An" },
-      { id: "reel-3", youtubeUrl: "https://www.youtube.com/shorts/zoEtcR5EW08", title: "Golden Hour Portraits", description: "Slow portraits at the magic hour by the ocean.", duration: "1:02", location: "Phú Quốc" },
-      { id: "reel-4", youtubeUrl: "https://www.youtube.com/shorts/LggaymnzDjc", title: "Reception Dance", description: "The first dance, framed in warm tungsten.", duration: "0:58", location: "TP.HCM" },
-      { id: "reel-5", youtubeUrl: "https://www.youtube.com/shorts/psZ1g9fMfeo", title: "Flower Girl Moments", description: "Small details in the calm before the ceremony.", duration: "0:37", location: "Hà Nội" },
-      { id: "reel-6", youtubeUrl: "https://www.youtube.com/shorts/32sYGCOYJUM", title: "Candid Tears", description: "Honest emotion as the vows are read.", duration: "0:50", location: "Đà Nẵng" },
-      { id: "reel-7", youtubeUrl: "", title: "Ring Exchange", description: "An intimate frame at the moment of exchange.", duration: "0:28", location: "Huế" },
-      { id: "reel-8", youtubeUrl: "", title: "Late Night Magic", description: "After-party energy in soft neon.", duration: "1:15", location: "Nha Trang" },
+      { id: "reel-1", youtubeUrl: "https://www.youtube.com/shorts/SlQR9iu09bQ", videoUrl: "", title: "First Look", description: "The very first glance between bride and groom.", duration: "0:45", location: "Đà Lạt" },
+      { id: "reel-2", youtubeUrl: "https://www.youtube.com/shorts/abPmZCZZrFA", videoUrl: "", title: "The Kiss", description: "A quiet, candid kiss caught in afternoon light.", duration: "0:30", location: "Hội An" },
+      { id: "reel-3", youtubeUrl: "https://www.youtube.com/shorts/zoEtcR5EW08", videoUrl: "", title: "Golden Hour Portraits", description: "Slow portraits at the magic hour by the ocean.", duration: "1:02", location: "Phú Quốc" },
+      { id: "reel-4", youtubeUrl: "https://www.youtube.com/shorts/LggaymnzDjc", videoUrl: "", title: "Reception Dance", description: "The first dance, framed in warm tungsten.", duration: "0:58", location: "TP.HCM" },
+      { id: "reel-5", youtubeUrl: "https://www.youtube.com/shorts/psZ1g9fMfeo", videoUrl: "", title: "Flower Girl Moments", description: "Small details in the calm before the ceremony.", duration: "0:37", location: "Hà Nội" },
+      { id: "reel-6", youtubeUrl: "https://www.youtube.com/shorts/32sYGCOYJUM", videoUrl: "", title: "Candid Tears", description: "Honest emotion as the vows are read.", duration: "0:50", location: "Đà Nẵng" },
+      { id: "reel-7", youtubeUrl: "", videoUrl: "", title: "Ring Exchange", description: "An intimate frame at the moment of exchange.", duration: "0:28", location: "Huế" },
+      { id: "reel-8", youtubeUrl: "", videoUrl: "", title: "Late Night Magic", description: "After-party energy in soft neon.", duration: "1:15", location: "Nha Trang" },
     ],
   },
   films: {
@@ -81,6 +81,8 @@ export const INITIAL_STATE: AdminState = {
     items: [
       {
         id: "film-1",
+        youtubeUrl: "https://www.youtube.com/watch?v=MoN9ql6Yymw",
+        videoUrl: "",
         title: "Cưới Truyền Thống",
         subtitle: "Hà Nội · 2024",
         description:
@@ -99,6 +101,8 @@ export const INITIAL_STATE: AdminState = {
       },
       {
         id: "film-2",
+        youtubeUrl: "https://www.youtube.com/watch?v=MoN9ql6Yymw",
+        videoUrl: "",
         title: "Hương Vị Quê Hương",
         subtitle: "Huế · 2023",
         description:
@@ -117,6 +121,8 @@ export const INITIAL_STATE: AdminState = {
       },
       {
         id: "film-3",
+        youtubeUrl: "",
+        videoUrl: "",
         title: "Nam Bộ Rực Rỡ",
         subtitle: "Cần Thơ · 2024",
         description:

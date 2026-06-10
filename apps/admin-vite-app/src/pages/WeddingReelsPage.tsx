@@ -10,6 +10,7 @@ import { EntityFormDialog } from "@/components/composite/EntityFormDialog";
 import { ConfirmDialog } from "@/components/composite/ConfirmDialog";
 import { EmptyState } from "@/components/composite/EmptyState";
 import { FormField } from "@/components/composite/FormField";
+import { FormMediaField } from "@/components/composite/FormMediaField";
 import { Input } from "shared-ui";
 import { Textarea } from "shared-ui";
 import { Button } from "shared-ui";
@@ -18,6 +19,7 @@ import type { ReelItem } from "@/types";
 const blankReel = (): ReelItem => ({
   id: `reel-${Date.now().toString(36)}`,
   youtubeUrl: "",
+  videoUrl: "",
   title: "",
   description: "",
   duration: "",
@@ -45,17 +47,20 @@ export function WeddingReelsPage() {
 
   const [dialog, setDialog] = useState<{ mode: "add" | "edit" } | null>(null);
   const [pendingDelete, setPendingDelete] = useState<ReelItem | null>(null);
+  const [videoSourceType, setVideoSourceType] = useState<"upload" | "youtube">("upload");
 
   const form = useForm<ReelItem>({ defaultValues: blankReel() });
   const watchedYoutubeUrl = form.watch("youtubeUrl");
 
   const openAdd = () => {
     form.reset(blankReel());
+    setVideoSourceType("upload");
     setDialog({ mode: "add" });
   };
 
   const openEdit = (item: ReelItem) => {
     form.reset(item);
+    setVideoSourceType(item.youtubeUrl ? "youtube" : "upload");
     setDialog({ mode: "edit" });
   };
 
@@ -113,6 +118,11 @@ export function WeddingReelsPage() {
                       alt={item.title}
                       className="h-full w-full object-cover"
                     />
+                  ) : item.videoUrl ? (
+                    <video
+                      src={item.videoUrl}
+                      className="h-full w-full object-cover"
+                    />
                   ) : (
                     <Clapperboard className="h-4 w-4 text-muted-foreground" />
                   )}
@@ -160,22 +170,56 @@ export function WeddingReelsPage() {
         entityLabel="Reel"
         onSubmit={submit}
       >
-        <FormField
-          label="YouTube link"
-          htmlFor="reel-youtube"
-          hint="Paste a full YouTube URL (watch, shorts, or youtu.be) or the bare 11-character video ID."
-        >
-          <div className="relative">
-            <Link2 className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              id="reel-youtube"
-              className="pl-9"
-              placeholder="https://www.youtube.com/shorts/..."
-              {...form.register("youtubeUrl")}
-            />
+        <div className="space-y-4 rounded-lg border border-border/60 bg-muted/30 p-4">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-medium">Video Source</p>
+            <div className="flex items-center rounded-md border border-border/60 bg-background p-1">
+              <button
+                type="button"
+                className={`rounded-sm px-3 py-1 text-xs font-medium transition-colors ${videoSourceType === "upload" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                onClick={() => setVideoSourceType("upload")}
+              >
+                Upload File
+              </button>
+              <button
+                type="button"
+                className={`rounded-sm px-3 py-1 text-xs font-medium transition-colors ${videoSourceType === "youtube" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                onClick={() => setVideoSourceType("youtube")}
+              >
+                YouTube Link
+              </button>
+            </div>
           </div>
-          <YoutubePreview url={watchedYoutubeUrl} />
-        </FormField>
+          
+          {videoSourceType === "upload" ? (
+            <FormField label="Upload Video" htmlFor="reel-video">
+              <FormMediaField
+                control={form.control}
+                name="videoUrl"
+                label=""
+                accept="video/*"
+                placeholder="Drag & drop or click to upload video file"
+              />
+            </FormField>
+          ) : (
+            <FormField
+              label="YouTube link"
+              htmlFor="reel-youtube"
+              hint="Paste a full YouTube URL (watch, shorts, or youtu.be) or the bare 11-character video ID."
+            >
+              <div className="relative">
+                <Link2 className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id="reel-youtube"
+                  className="pl-9"
+                  placeholder="https://www.youtube.com/shorts/..."
+                  {...form.register("youtubeUrl")}
+                />
+              </div>
+              <YoutubePreview url={watchedYoutubeUrl} />
+            </FormField>
+          )}
+        </div>
         <FormField label="Title" htmlFor="reel-title">
           <Input id="reel-title" {...form.register("title")} />
         </FormField>
