@@ -10,10 +10,13 @@ import type {
   AboutData,
   AdminState,
   BannerData,
+  CanvasElement,
   Collection,
   CollectionItemMap,
   CollectionKey,
   ContactCtaData,
+  ContentBlock,
+  CustomSection,
   FooterData,
   HeaderData,
   LayoutSection,
@@ -41,7 +44,18 @@ type Action =
     }
   | { type: "DELETE_ITEM"; section: CollectionKey; id: string }
   | { type: "SET_LAYOUT"; payload: LayoutSection[] }
-  | { type: "TOGGLE_SECTION"; key: LayoutSectionKey };
+  | { type: "TOGGLE_SECTION"; key: LayoutSectionKey }
+  | { type: "ADD_CUSTOM_SECTION"; payload: CustomSection }
+  | { type: "UPDATE_CUSTOM_SECTION"; payload: CustomSection }
+  | { type: "DELETE_CUSTOM_SECTION"; id: string }
+  | { type: "REORDER_CUSTOM_SECTIONS"; payload: CustomSection[] }
+  | { type: "TOGGLE_CUSTOM_SECTION"; id: string }
+  | { type: "ADD_BLOCK"; sectionId: string; payload: ContentBlock }
+  | { type: "UPDATE_BLOCK"; sectionId: string; payload: ContentBlock }
+  | { type: "DELETE_BLOCK"; sectionId: string; blockId: string }
+  | { type: "REORDER_BLOCKS"; sectionId: string; payload: ContentBlock[] }
+  | { type: "SET_CANVAS_ELEMENTS"; sectionId: string; payload: CanvasElement[] }
+  | { type: "SET_CANVAS_HEIGHT"; sectionId: string; height: number };
 
 function reducer(state: AdminState, action: Action): AdminState {
   switch (action.type) {
@@ -95,6 +109,93 @@ function reducer(state: AdminState, action: Action): AdminState {
           entry.key === action.key
             ? { ...entry, visible: !entry.visible }
             : entry,
+        ),
+      };
+    case "ADD_CUSTOM_SECTION":
+      return { ...state, customSections: [...state.customSections, action.payload] };
+    case "UPDATE_CUSTOM_SECTION":
+      return {
+        ...state,
+        customSections: state.customSections.map((s) =>
+          s.id === action.payload.id ? action.payload : s,
+        ),
+      };
+    case "DELETE_CUSTOM_SECTION":
+      return {
+        ...state,
+        customSections: state.customSections.filter((s) => s.id !== action.id),
+      };
+    case "REORDER_CUSTOM_SECTIONS":
+      return { ...state, customSections: action.payload };
+    case "TOGGLE_CUSTOM_SECTION":
+      return {
+        ...state,
+        customSections: state.customSections.map((s) =>
+          s.id === action.id ? { ...s, visible: !s.visible } : s,
+        ),
+      };
+    case "ADD_BLOCK":
+      return {
+        ...state,
+        customSections: state.customSections.map((s) =>
+          s.id === action.sectionId
+            ? { ...s, blocks: [...s.blocks, action.payload], updatedAt: Date.now() }
+            : s,
+        ),
+      };
+    case "UPDATE_BLOCK":
+      return {
+        ...state,
+        customSections: state.customSections.map((s) =>
+          s.id === action.sectionId
+            ? {
+                ...s,
+                blocks: s.blocks.map((b) =>
+                  b.id === action.payload.id ? action.payload : b,
+                ),
+                updatedAt: Date.now(),
+              }
+            : s,
+        ),
+      };
+    case "DELETE_BLOCK":
+      return {
+        ...state,
+        customSections: state.customSections.map((s) =>
+          s.id === action.sectionId
+            ? {
+                ...s,
+                blocks: s.blocks.filter((b) => b.id !== action.blockId),
+                updatedAt: Date.now(),
+              }
+            : s,
+        ),
+      };
+    case "REORDER_BLOCKS":
+      return {
+        ...state,
+        customSections: state.customSections.map((s) =>
+          s.id === action.sectionId
+            ? { ...s, blocks: action.payload, updatedAt: Date.now() }
+            : s,
+        ),
+      };
+    case "SET_CANVAS_ELEMENTS":
+      return {
+        ...state,
+        customSections: state.customSections.map((s) =>
+          s.id === action.sectionId
+            ? { ...s, canvasElements: action.payload, updatedAt: Date.now() }
+            : s,
+        ),
+      };
+    case "SET_CANVAS_HEIGHT":
+      return {
+        ...state,
+        customSections: state.customSections.map((s) =>
+          s.id === action.sectionId
+            ? { ...s, canvasHeight: action.height, updatedAt: Date.now() }
+            : s,
         ),
       };
     default:
@@ -228,4 +329,77 @@ export function useCollection<K extends CollectionKey>(section: K): CollectionAp
 
 export function useAdminState(): AdminState {
   return useAdminContext().state;
+}
+
+export function useCustomSections() {
+  const { state, dispatch } = useAdminContext();
+
+  const add = useCallback(
+    (section: CustomSection) =>
+      dispatch({ type: "ADD_CUSTOM_SECTION", payload: section }),
+    [dispatch],
+  );
+  const update = useCallback(
+    (section: CustomSection) =>
+      dispatch({ type: "UPDATE_CUSTOM_SECTION", payload: section }),
+    [dispatch],
+  );
+  const remove = useCallback(
+    (id: string) => dispatch({ type: "DELETE_CUSTOM_SECTION", id }),
+    [dispatch],
+  );
+  const reorder = useCallback(
+    (sections: CustomSection[]) =>
+      dispatch({ type: "REORDER_CUSTOM_SECTIONS", payload: sections }),
+    [dispatch],
+  );
+  const toggle = useCallback(
+    (id: string) => dispatch({ type: "TOGGLE_CUSTOM_SECTION", id }),
+    [dispatch],
+  );
+  const addBlock = useCallback(
+    (sectionId: string, block: ContentBlock) =>
+      dispatch({ type: "ADD_BLOCK", sectionId, payload: block }),
+    [dispatch],
+  );
+  const updateBlock = useCallback(
+    (sectionId: string, block: ContentBlock) =>
+      dispatch({ type: "UPDATE_BLOCK", sectionId, payload: block }),
+    [dispatch],
+  );
+  const deleteBlock = useCallback(
+    (sectionId: string, blockId: string) =>
+      dispatch({ type: "DELETE_BLOCK", sectionId, blockId }),
+    [dispatch],
+  );
+  const reorderBlocks = useCallback(
+    (sectionId: string, blocks: ContentBlock[]) =>
+      dispatch({ type: "REORDER_BLOCKS", sectionId, payload: blocks }),
+    [dispatch],
+  );
+  const setCanvasElements = useCallback(
+    (sectionId: string, elements: CanvasElement[]) =>
+      dispatch({ type: "SET_CANVAS_ELEMENTS", sectionId, payload: elements }),
+    [dispatch],
+  );
+  const setCanvasHeight = useCallback(
+    (sectionId: string, height: number) =>
+      dispatch({ type: "SET_CANVAS_HEIGHT", sectionId, height }),
+    [dispatch],
+  );
+
+  return {
+    sections: state.customSections,
+    add,
+    update,
+    remove,
+    reorder,
+    toggle,
+    addBlock,
+    updateBlock,
+    deleteBlock,
+    reorderBlocks,
+    setCanvasElements,
+    setCanvasHeight,
+  };
 }

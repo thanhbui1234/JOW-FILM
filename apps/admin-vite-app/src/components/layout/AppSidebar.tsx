@@ -8,6 +8,7 @@ import {
   Info,
   LayoutDashboard,
   LayoutGrid,
+  LayoutTemplate,
   Mail,
   PanelsTopLeft,
   Settings2,
@@ -46,6 +47,7 @@ const NAV_GROUPS: NavGroup[] = [
       { label: "Wedding Reels", path: "/wedding-reels", icon: Clapperboard },
       { label: "Traditional Films", path: "/traditional-films", icon: Video },
       { label: "Contact CTA", path: "/contact-cta", icon: Mail },
+      { label: "Custom sections", path: "/custom-sections", icon: LayoutTemplate },
     ],
   },
   {
