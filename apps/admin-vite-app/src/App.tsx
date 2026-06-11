@@ -12,6 +12,7 @@ import { HeaderPage } from "./pages/HeaderPage";
 import { FooterConfigPage } from "./pages/FooterConfigPage";
 import { CustomSectionsPage } from "./pages/CustomSectionsPage";
 import { CustomSectionEditorPage } from "./pages/CustomSectionEditorPage";
+import { ContactInboxPage } from "./pages/ContactInboxPage";
 
 export function App() {
   return (
@@ -29,6 +30,7 @@ export function App() {
         <Route path="footer" element={<FooterConfigPage />} />
         <Route path="custom-sections" element={<CustomSectionsPage />} />
         <Route path="custom-sections/:id" element={<CustomSectionEditorPage />} />
+        <Route path="contact-inbox" element={<ContactInboxPage />} />
       </Route>
     </Routes>
   );

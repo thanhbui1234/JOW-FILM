@@ -15,6 +15,8 @@ import type {
   CollectionItemMap,
   CollectionKey,
   ContactCtaData,
+  ContactStatus,
+  ContactSubmission,
   ContentBlock,
   CustomSection,
   FooterData,
@@ -55,7 +57,9 @@ type Action =
   | { type: "DELETE_BLOCK"; sectionId: string; blockId: string }
   | { type: "REORDER_BLOCKS"; sectionId: string; payload: ContentBlock[] }
   | { type: "SET_CANVAS_ELEMENTS"; sectionId: string; payload: CanvasElement[] }
-  | { type: "SET_CANVAS_HEIGHT"; sectionId: string; height: number };
+  | { type: "SET_CANVAS_HEIGHT"; sectionId: string; height: number }
+  | { type: "SET_CONTACT_STATUS"; id: string; status: ContactStatus }
+  | { type: "DELETE_CONTACT"; id: string };
 
 function reducer(state: AdminState, action: Action): AdminState {
   switch (action.type) {
@@ -197,6 +201,18 @@ function reducer(state: AdminState, action: Action): AdminState {
             ? { ...s, canvasHeight: action.height, updatedAt: Date.now() }
             : s,
         ),
+      };
+    case "SET_CONTACT_STATUS":
+      return {
+        ...state,
+        contactSubmissions: state.contactSubmissions.map((s) =>
+          s.id === action.id ? { ...s, status: action.status } : s,
+        ),
+      };
+    case "DELETE_CONTACT":
+      return {
+        ...state,
+        contactSubmissions: state.contactSubmissions.filter((s) => s.id !== action.id),
       };
     default:
       return state;
@@ -401,5 +417,29 @@ export function useCustomSections() {
     reorderBlocks,
     setCanvasElements,
     setCanvasHeight,
+  };
+}
+
+export function useContactSubmissions() {
+  const { state, dispatch } = useAdminContext();
+
+  const setStatus = useCallback(
+    (id: string, status: ContactStatus) =>
+      dispatch({ type: "SET_CONTACT_STATUS", id, status }),
+    [dispatch],
+  );
+
+  const remove = useCallback(
+    (id: string) => dispatch({ type: "DELETE_CONTACT", id }),
+    [dispatch],
+  );
+
+  const unreadCount = state.contactSubmissions.filter((s) => s.status === "new").length;
+
+  return {
+    submissions: state.contactSubmissions,
+    unreadCount,
+    setStatus,
+    remove,
   };
 }

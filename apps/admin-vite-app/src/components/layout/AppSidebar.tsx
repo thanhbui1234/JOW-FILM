@@ -5,6 +5,7 @@ import {
   Clapperboard,
   Film,
   Image as ImageIcon,
+  Inbox,
   Info,
   LayoutDashboard,
   LayoutGrid,
@@ -18,11 +19,13 @@ import {
 import type { ComponentType, SVGProps } from "react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/composite/ThemeToggle";
+import { useContactSubmissions } from "@/context/admin-context";
 
 type NavItem = {
   label: string;
   path: string;
   icon: ComponentType<SVGProps<SVGSVGElement> & { className?: string }>;
+  badge?: number;
 };
 
 type NavGroup = {
@@ -51,6 +54,12 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
+    label: "CRM",
+    items: [
+      { label: "Contact Inbox", path: "/contact-inbox", icon: Inbox },
+    ],
+  },
+  {
     label: "Chrome",
     items: [
       { label: "Header", path: "/header", icon: PanelsTopLeft },
@@ -65,6 +74,16 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
+  const { unreadCount } = useContactSubmissions();
+
+  // Inject unread badge count into nav
+  const navGroupsWithBadges = NAV_GROUPS.map((group) => ({
+    ...group,
+    items: group.items.map((item) =>
+      item.path === "/contact-inbox" ? { ...item, badge: unreadCount } : item,
+    ),
+  }));
+
   return (
     <aside
       className={cn(
@@ -95,7 +114,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
 
       {/* Nav */}
       <nav className="flex-1 space-y-5 overflow-y-auto px-3 pb-4 scrollbar-thin">
-        {NAV_GROUPS.map((group) => (
+        {navGroupsWithBadges.map((group) => (
           <div key={group.label}>
             <div
               className={cn(
@@ -150,7 +169,14 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
                           )}
                         />
                         {!collapsed && (
-                          <span className="relative truncate">{item.label}</span>
+                          <span className="relative flex flex-1 items-center justify-between truncate">
+                            <span className="truncate">{item.label}</span>
+                            {item.badge != null && item.badge > 0 && (
+                              <span className="ml-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-[9px] font-bold text-stone-950">
+                                {item.badge > 99 ? "99+" : item.badge}
+                              </span>
+                            )}
+                          </span>
                         )}
                       </>
                     )}
