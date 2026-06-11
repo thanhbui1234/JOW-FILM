@@ -171,4 +171,5 @@ export const INITIAL_STATE: AdminState = {
     { key: "reels", visible: true },
     { key: "films", visible: true },
   ],
+  customSections: [],
 };

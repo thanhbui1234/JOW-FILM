@@ -2,6 +2,7 @@
  * Single source of truth for every field the user-facing site renders.
  * Each interface mirrors a concrete visible region of apps/user-next-app.
  */
+import type { CustomSection } from "shared-ui";
 
 export interface HighlightVideo {
   id: string;
@@ -134,6 +135,7 @@ export interface AdminState {
   contactCta: ContactCtaData;
   footer: FooterData;
   layout: LayoutSection[];
+  customSections: CustomSection[];
 }
 
 export type CollectionKey = "highlights" | "reels" | "films";
@@ -143,3 +145,18 @@ export type CollectionItemMap = {
   reels: ReelItem;
   films: FilmItem;
 };
+
+
+// Canvas types live in shared-ui — re-exported here for backwards compatibility
+export type {
+  BlockType,
+  CanvasBgType,
+  CanvasElement,
+  TextBlock,
+  ImageItem,
+  ImageGalleryBlock,
+  VideoBlock,
+  CtaButtonBlock,
+  ContentBlock,
+  CustomSection,
+} from "shared-ui";

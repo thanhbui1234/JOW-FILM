@@ -10,6 +10,8 @@ import { TraditionalFilmsPage } from "./pages/TraditionalFilmsPage";
 import { ContactCtaPage } from "./pages/ContactCtaPage";
 import { HeaderPage } from "./pages/HeaderPage";
 import { FooterConfigPage } from "./pages/FooterConfigPage";
+import { CustomSectionsPage } from "./pages/CustomSectionsPage";
+import { CustomSectionEditorPage } from "./pages/CustomSectionEditorPage";
 
 export function App() {
   return (
@@ -25,6 +27,8 @@ export function App() {
         <Route path="contact-cta" element={<ContactCtaPage />} />
         <Route path="header" element={<HeaderPage />} />
         <Route path="footer" element={<FooterConfigPage />} />
+        <Route path="custom-sections" element={<CustomSectionsPage />} />
+        <Route path="custom-sections/:id" element={<CustomSectionEditorPage />} />
       </Route>
     </Routes>
   );
