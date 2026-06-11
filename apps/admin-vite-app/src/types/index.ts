@@ -125,6 +125,18 @@ export interface LayoutSection {
   visible: boolean;
 }
 
+export type ContactStatus = "new" | "read" | "archived";
+
+export interface ContactSubmission {
+  id: string;
+  name: string;
+  email: string;
+  weddingDate: string;
+  message: string;
+  status: ContactStatus;
+  receivedAt: number;
+}
+
 export interface AdminState {
   banner: BannerData;
   header: HeaderData;
@@ -136,6 +148,7 @@ export interface AdminState {
   footer: FooterData;
   layout: LayoutSection[];
   customSections: CustomSection[];
+  contactSubmissions: ContactSubmission[];
 }
 
 export type CollectionKey = "highlights" | "reels" | "films";

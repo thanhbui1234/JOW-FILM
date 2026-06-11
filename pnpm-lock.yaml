@@ -38,12 +38,18 @@ importers:
       '@radix-ui/react-separator':
         specifier: ^1.1.9
         version: 1.1.9(@types/react-dom@19.2.3)(@types/react@19.2.17)(react-dom@19.2.7)(react@19.2.7)
+      '@react-oauth/google':
+        specifier: ^0.13.5
+        version: 0.13.5(react-dom@19.2.7)(react@19.2.7)
       '@tanstack/react-query':
         specifier: ^5.75.0
         version: 5.101.0(react@19.2.7)
       '@tanstack/react-query-devtools':
         specifier: ^5.75.0
         version: 5.101.0(@tanstack/react-query@5.101.0)(react@19.2.7)
+      axios:
+        specifier: ^1.13.6
+        version: 1.17.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -2491,6 +2497,16 @@ packages:
 
   /@radix-ui/rect@1.1.2:
     resolution: {integrity: sha512-xnXE7wG13PI+cxieVssYXlQJuYVRhH9NBoxt3KNwzghDIA69GMm7d4wXRouHIYjE+KvS6U/MsMO73NdS2MH9ZA==}
+    dev: false
+
+  /@react-oauth/google@0.13.5(react-dom@19.2.7)(react@19.2.7):
+    resolution: {integrity: sha512-xQWri2s/3nNekZJ4uuov2aAfQYu83bN3864KcFqw2pK1nNbFurQIjPFDXhWaKH3IjYJ2r/9yyIIpsn5lMqrheQ==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
     dev: false
 
   /@rolldown/pluginutils@1.0.0-beta.27:
