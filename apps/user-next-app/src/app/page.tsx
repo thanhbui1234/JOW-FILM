@@ -2,6 +2,9 @@ import dynamic from "next/dynamic";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { generateMetadata } from "./metadata";
 import { VideoBanner } from "@/components/ui/VideoBanner";
+import { CustomSectionRenderer } from "@/components/sections/custom/CustomSectionRenderer";
+import { CUSTOM_SECTIONS } from "@/data/custom-sections";
+
 const WeddingHighlightSection = dynamic(
   () => import("@/components/sections/WeddingHighlightSection").then((m) => m.WeddingHighlightSection),
   { ssr: true }
@@ -29,6 +32,9 @@ export default function Home() {
       <AboutSection />
       <WeddingHighlightSection />
       <WeddingReelsSection />
+      {CUSTOM_SECTIONS.map((section) => (
+        <CustomSectionRenderer key={section.id} section={section} />
+      ))}
       <ContactPreview />
     </main>
   );
