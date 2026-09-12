@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { BlurFade, HeroVideoDialog, Highlighter } from "shared-ui";
+import { BlurFade, Highlighter } from "shared-ui";
+import { VideoLinkThumbnail } from "@/components/ui/VideoLinkThumbnail";
 import type { HighlightVideo } from "@/types/content";
 import { getThemeFromBgColor } from "@/lib/theme";
 
@@ -18,10 +19,6 @@ const DEFAULT_VIDEOS: HighlightVideo[] = [
 
 function getYouTubeThumbnail(videoId: string): string {
   return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-}
-
-function getYouTubeEmbedUrl(videoId: string): string {
-  return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
 }
 
 interface WeddingHighlightSectionProps {
@@ -149,14 +146,14 @@ export function WeddingHighlightSection({
                       opacity: absDiff > 2.5 ? 0 : 1,
                       transition: "transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.4s ease",
                     }}
+                    onMouseEnter={() => setIsPaused(true)}
+                    onMouseLeave={() => setIsPaused(false)}
                   >
-                    <HeroVideoDialog
-                      videoSrc={getYouTubeEmbedUrl(video.id)}
+                    <VideoLinkThumbnail
+                      href={`/video/${video.videoId ?? video.id}`}
                       thumbnailSrc={getYouTubeThumbnail(video.id)}
                       thumbnailAlt={video.title}
-                      animationStyle="from-center"
-                      onOpenChange={setIsPaused}
-                      className="[&>button]:w-full [&_img]:aspect-[16/10] [&_img]:w-full [&_img]:object-cover [&_img]:rounded-2xl [&_img]:border-0 [&_img]:shadow-none"
+                      imgClassName="aspect-[16/10] rounded-2xl"
                     />
                     <div
                       className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-6 md:p-8"
@@ -205,12 +202,12 @@ export function WeddingHighlightSection({
         <div className="grid grid-cols-2 gap-3 md:hidden">
           {videos.map((video) => (
             <div key={video.id} className="group relative overflow-hidden rounded-xl">
-              <HeroVideoDialog
-                videoSrc={getYouTubeEmbedUrl(video.id)}
+              <VideoLinkThumbnail
+                href={`/video/${video.videoId ?? video.id}`}
                 thumbnailSrc={getYouTubeThumbnail(video.id)}
                 thumbnailAlt={video.title}
-                animationStyle="from-center"
-                className="[&>button]:w-full [&_img]:aspect-[4/5] [&_img]:w-full [&_img]:object-cover [&_img]:rounded-xl [&_img]:border-0 [&_img]:shadow-none [&>button>div]:scale-75 [&>button>div_div:first-child]:size-16 [&>button>div_div:first-child_div]:size-10 [&>button>div_div:first-child_div_svg]:size-5"
+                imgClassName="aspect-[4/5] rounded-xl"
+                playButtonSize="compact"
               />
               <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
                 <h3 className="text-sm font-medium text-white">{video.title}</h3>

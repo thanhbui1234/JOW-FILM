@@ -16,7 +16,7 @@ export function Footer({ footerData }: FooterProps) {
   const socialHeading = footerData?.socialHeading ?? "Follow Us";
   const facebookUrl = footerData?.facebookUrl ?? "https://facebook.com";
   const instagramUrl = footerData?.instagramUrl ?? "https://instagram.com";
-  const youtubeUrl = footerData?.youtubeUrl ?? "https://youtube.com";
+  // const youtubeUrl = footerData?.youtubeUrl ?? "https://youtube.com";
   const copyright = (footerData?.copyright ?? "{year} JOW Film. All rights reserved.").replace("{year}", String(new Date().getFullYear()));
   const credit = footerData?.credit ?? "Crafted with love in Việt Nam";
 
@@ -96,15 +96,15 @@ export function Footer({ footerData }: FooterProps) {
               >
                 <Instagram className="h-4 w-4" />
               </a>
-              <a
-                href={youtubeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="YouTube"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-stone-300 text-stone-500 transition-all hover:border-amber-500 hover:text-amber-600 dark:border-stone-700 dark:text-stone-400 dark:hover:border-amber-500 dark:hover:text-amber-400"
-              >
-                <Youtube className="h-4 w-4" />
-              </a>
+              {/*<a*/}
+              {/*  href={youtubeUrl}*/}
+              {/*  target="_blank"*/}
+              {/*  rel="noopener noreferrer"*/}
+              {/*  aria-label="YouTube"*/}
+              {/*  className="flex h-9 w-9 items-center justify-center rounded-full border border-stone-300 text-stone-500 transition-all hover:border-amber-500 hover:text-amber-600 dark:border-stone-700 dark:text-stone-400 dark:hover:border-amber-500 dark:hover:text-amber-400"*/}
+              {/*>*/}
+              {/*  <Youtube className="h-4 w-4" />*/}
+              {/*</a>*/}
             </div>
           </div>
         </div>

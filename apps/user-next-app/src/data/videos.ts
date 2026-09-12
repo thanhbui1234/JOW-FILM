@@ -2,6 +2,8 @@
 
 export interface HighlightVideo {
   id: string;
+  /** Backend VideoRecord numeric id — used to link to /video/[id] */
+  videoId?: number;
   title: string;
   subtitle: string;
 }

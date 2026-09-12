@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { generateSEO } from "@/app/metadata";
 import { WeddingReelsPage } from "./WeddingReelsPage";
-import { getAppSections } from "@/lib/video.api";
-import { findSection, mapReelSectionToReels } from "@/lib/video.mapper";
+import { getAppSections, getAppVideoList } from "@/lib/video.api";
+import {
+  findSection,
+  mapReelSectionToReels,
+  attachReelVideoIds,
+} from "@/lib/video.mapper";
 import type { WeddingReelsSectionData } from "@/types/video.types";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -22,13 +26,18 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const sections = await getAppSections();
+  const [sections, allVideos] = await Promise.all([
+    getAppSections(),
+    getAppVideoList().catch(() => []),
+  ]);
 
   const reelsData = findSection<WeddingReelsSectionData>(
     sections,
     "wedding-reels",
   );
-  const reels = reelsData ? mapReelSectionToReels(reelsData) : undefined;
+  const reels = reelsData
+    ? attachReelVideoIds(mapReelSectionToReels(reelsData), allVideos)
+    : undefined;
 
   return <WeddingReelsPage reels={reels} config={reelsData?.config} />;
 }

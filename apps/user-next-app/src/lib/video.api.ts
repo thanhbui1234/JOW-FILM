@@ -4,6 +4,7 @@ import type {
   AppApiResponse,
   VideoRecord,
   AppVideoListRequest,
+  AppVideoDetailResponse,
   SectionRecord,
   SectionListResponse,
 } from "@/types/video.types";
@@ -68,3 +69,57 @@ export async function getAppVideoList(
     return [];
   }
 }
+
+/**
+ * Fetch a single video detail by ID from the backend.
+ * Calls /app-api/v1/get-video with payload { videoId: number }.
+ * Revalidates every hour; tagged "videos" for on-demand revalidation.
+ */
+export async function getAppVideo(
+  videoId: number | string,
+): Promise<VideoRecord | null> {
+  try {
+    const numId = Number(videoId);
+    const payload = !isNaN(numId) ? { videoId: numId } : { videoId };
+
+    const response = await serverFetch<AppApiResponse<AppVideoDetailResponse>>(
+      API_ENDPOINTS.GET_VIDEO,
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+        next: {
+          revalidate: process.env.NODE_ENV === "development" ? 0 : 3600,
+          tags: ["videos", `video-${videoId}`],
+        },
+      },
+    );
+
+    if (response.error) {
+      console.error("[video.api] API error fetching video:", response.error.errorMsg);
+      return null;
+    }
+
+    if (response.data?.video) {
+      return response.data.video;
+    }
+
+    // Fallback: If not found by direct videoId, try matching in video list (e.g. YouTube ID)
+    const allVideos = await getAppVideoList();
+    const matched = allVideos.find(
+      (v) => String(v.id) === String(videoId) || v.youtubeVideoId === String(videoId),
+    );
+    return matched ?? null;
+  } catch (error) {
+    console.error(`[video.api] Failed to fetch video ${videoId}:`, error);
+    try {
+      const allVideos = await getAppVideoList();
+      const matched = allVideos.find(
+        (v) => String(v.id) === String(videoId) || v.youtubeVideoId === String(videoId),
+      );
+      return matched ?? null;
+    } catch {
+      return null;
+    }
+  }
+}
+

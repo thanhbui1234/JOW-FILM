@@ -89,6 +89,41 @@ export function mapReelSectionToReels(
   return (data.items ?? []).map(mapReelItemToReel);
 }
 
+// ---------------------------------------------------------------------------
+// videoId resolution (section items only carry a YouTube id — resolve the
+// real backend VideoRecord.id by matching against the video list so links
+// to /video/[id] use the canonical numeric id instead of the YouTube id)
+// ---------------------------------------------------------------------------
+
+function buildYoutubeIdToVideoIdMap(videos: VideoRecord[]): Map<string, number> {
+  const map = new Map<string, number>();
+  for (const v of videos) {
+    if (v.youtubeVideoId) map.set(v.youtubeVideoId, v.id);
+  }
+  return map;
+}
+
+/** Attach the resolved backend `videoId` to each HighlightVideo by matching its YouTube id. */
+export function attachHighlightVideoIds(
+  highlights: HighlightVideo[],
+  allVideos: VideoRecord[],
+): HighlightVideo[] {
+  const map = buildYoutubeIdToVideoIdMap(allVideos);
+  return highlights.map((h) => ({ ...h, videoId: map.get(h.id) }));
+}
+
+/** Attach the resolved backend `videoId` to each ReelItem by matching its YouTube id. */
+export function attachReelVideoIds(
+  reels: ReelItem[],
+  allVideos: VideoRecord[],
+): ReelItem[] {
+  const map = buildYoutubeIdToVideoIdMap(allVideos);
+  return reels.map((r) => {
+    const ytId = r.youtubeUrl ? extractYouTubeId(r.youtubeUrl) : "";
+    return { ...r, videoId: ytId ? map.get(ytId) : undefined };
+  });
+}
+
 /** Map `traditional-films` section item → FilmItem */
 export function mapTraditionalFilmItemToFilm(
   item: TraditionalFilmSectionItem,

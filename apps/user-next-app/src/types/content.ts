@@ -36,6 +36,8 @@ export interface AboutConfig {
 
 export interface HighlightVideo {
   id: string;
+  /** Backend VideoRecord numeric id (resolved by matching YouTube id) — used to link to /video/[id] */
+  videoId?: number;
   title: string;
   subtitle: string;
 }
@@ -45,6 +47,8 @@ export interface ReelItem {
   duration: string;
   location: string;
   youtubeUrl?: string;
+  /** Backend VideoRecord numeric id (resolved by matching YouTube id) — used to link to /video/[id] */
+  videoId?: number;
 }
 
 export interface FilmItem {

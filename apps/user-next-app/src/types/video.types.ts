@@ -37,6 +37,17 @@ export interface AppVideoListRequest {
   statuses?: string[];
 }
 
+/** Request body for /app-api/v1/get-video */
+export interface AppVideoDetailRequest {
+  videoId: number | string;
+}
+
+/** Response data shape for /app-api/v1/get-video */
+export interface AppVideoDetailResponse {
+  videoId: number;
+  video?: VideoRecord;
+}
+
 /** Video category enum matching backend */
 export const VideoCategory = {
   WEDDING: 1,

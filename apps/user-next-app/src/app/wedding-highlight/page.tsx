@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { generateSEO } from "@/app/metadata";
 import { WeddingHighlightPage } from "./WeddingHighlightPage";
-import { getAppSections } from "@/lib/video.api";
-import { findSection, mapHighlightSectionToVideos } from "@/lib/video.mapper";
+import { getAppSections, getAppVideoList } from "@/lib/video.api";
+import {
+  findSection,
+  mapHighlightSectionToVideos,
+  attachHighlightVideoIds,
+} from "@/lib/video.mapper";
 import type { WeddingHighlightsSectionData } from "@/types/video.types";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -22,14 +26,17 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const sections = await getAppSections();
+  const [sections, allVideos] = await Promise.all([
+    getAppSections(),
+    getAppVideoList().catch(() => []),
+  ]);
 
   const highlightData = findSection<WeddingHighlightsSectionData>(
     sections,
     "wedding-highlights",
   );
   const highlights = highlightData
-    ? mapHighlightSectionToVideos(highlightData)
+    ? attachHighlightVideoIds(mapHighlightSectionToVideos(highlightData), allVideos)
     : undefined;
 
   return <WeddingHighlightPage videos={highlights} config={highlightData?.config} />;

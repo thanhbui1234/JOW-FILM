@@ -1,7 +1,7 @@
 import { createServerFetch } from "shared-api";
 import { cookies } from "next/headers";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8686";
 
 export const serverFetch = createServerFetch({
   baseURL: API_URL,

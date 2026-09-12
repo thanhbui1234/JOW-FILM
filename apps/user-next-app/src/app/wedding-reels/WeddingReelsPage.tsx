@@ -3,7 +3,8 @@
 import { PageTitleBar } from "@/components/ui/PageTitleBar";
 import { REELS } from "@/data/videos";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { BlurFade, HeroVideoDialog, Skeleton } from "shared-ui";
+import { BlurFade, Skeleton } from "shared-ui";
+import { VideoLinkThumbnail } from "@/components/ui/VideoLinkThumbnail";
 import type { ReelItem } from "@/types/content";
 import type { SectionConfig } from "@/types/video.types";
 
@@ -54,12 +55,6 @@ function extractYouTubeId(url: string): string {
   return "";
 }
 
-function toEmbedUrl(url: string): string {
-  const id = extractYouTubeId(url);
-  if (!id) return "";
-  return `https://www.youtube.com/embed/${id}?autoplay=1`;
-}
-
 function toThumbnailUrl(url: string): string {
   const id = extractYouTubeId(url);
   if (!id) return "";
@@ -69,9 +64,9 @@ function toThumbnailUrl(url: string): string {
 function ReelCard({ reel, index }: ReelCardProps) {
   const [ref, visible] = useScrollAnimation({ threshold: 0.05 });
 
-  const embedUrl = reel.youtubeUrl ? toEmbedUrl(reel.youtubeUrl) : "";
+  const youtubeId = reel.youtubeUrl ? extractYouTubeId(reel.youtubeUrl) : "";
   const thumbnailSrc = reel.youtubeUrl ? toThumbnailUrl(reel.youtubeUrl) : "";
-  const hasVideo = Boolean(embedUrl && thumbnailSrc);
+  const hasVideo = Boolean(youtubeId && thumbnailSrc);
 
   return (
     <BlurFade delay={0.05 + index * 0.04} inView>
@@ -87,12 +82,13 @@ function ReelCard({ reel, index }: ReelCardProps) {
       >
         {hasVideo ? (
           <div className="absolute inset-0">
-            <HeroVideoDialog
-              videoSrc={embedUrl}
+            <VideoLinkThumbnail
+              href={`/video/${reel.videoId ?? youtubeId}`}
               thumbnailSrc={thumbnailSrc}
               thumbnailAlt={reel.title}
-              animationStyle="from-center"
-              className="h-full [&>button]:w-full [&>button]:h-full [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:object-center [&_img]:rounded-2xl [&_img]:border-0 [&_img]:shadow-none [&>button>div]:scale-75 [&>button>div_div:first-child]:size-14 [&>button>div_div:first-child_div]:size-9 [&>button>div_div:first-child_div_svg]:size-5"
+              className="h-full"
+              imgClassName="h-full object-cover object-center rounded-2xl"
+              playButtonSize="reel"
             />
           </div>
         ) : (

@@ -4,13 +4,15 @@ import { generateSEO } from "./metadata";
 import type { Metadata } from "next";
 import { VideoBanner } from "@/components/ui/VideoBanner";
 import { ContactPreview } from "@/components/sections/ContactPreview";
-import { getAppSections } from "@/lib/video.api";
+  import { getAppSections, getAppVideoList } from "@/lib/video.api";
 import {
   findSection,
   mapCustomSection,
   mapHighlightSectionToVideos,
   mapReelSectionToReels,
   mapTraditionalFilmSectionToFilms,
+  attachHighlightVideoIds,
+  attachReelVideoIds,
 } from "@/lib/video.mapper";
 import { CustomSectionRenderer } from "@/components/sections/custom/CustomSectionRenderer";
 import type {
@@ -54,7 +56,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const sections = await getAppSections();
+  const [sections, allVideos] = await Promise.all([
+    getAppSections(),
+    getAppVideoList().catch(() => []),
+  ]);
 
   // Pre-extract FIXED section data
   const bannerData = findSection<BannerSectionData>(sections, "banner");
@@ -64,8 +69,12 @@ export default async function Home() {
   const traditionalData = findSection<TraditionalFilmsSectionData>(sections, "traditional-films");
   const contactData = findSection<ContactCtaSectionData>(sections, "contact-cta");
 
-  const highlights = highlightData ? mapHighlightSectionToVideos(highlightData) : undefined;
-  const reels = reelsData ? mapReelSectionToReels(reelsData) : undefined;
+  const highlights = highlightData
+    ? attachHighlightVideoIds(mapHighlightSectionToVideos(highlightData), allVideos)
+    : undefined;
+  const reels = reelsData
+    ? attachReelVideoIds(mapReelSectionToReels(reelsData), allVideos)
+    : undefined;
   const traditionalFilms = traditionalData ? mapTraditionalFilmSectionToFilms(traditionalData) : undefined;
 
   // Render ALL active sections in displayOrder — CUSTOM via canvas, FIXED via their component

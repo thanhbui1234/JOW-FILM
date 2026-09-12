@@ -3,7 +3,8 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { BlurFade, Highlighter, Skeleton, HeroVideoDialog } from "shared-ui";
+import { BlurFade, Highlighter, Skeleton } from "shared-ui";
+import { VideoLinkThumbnail } from "@/components/ui/VideoLinkThumbnail";
 import type { ReelItem } from "@/types/content";
 import { getThemeFromBgColor } from "@/lib/theme";
 
@@ -203,12 +204,6 @@ interface ReelCardProps {
 function ReelCard({ reel, index }: ReelCardProps) {
   const [ref, visible] = useScrollAnimation({ threshold: 0.05 });
 
-  const embedUrl = reel.youtubeUrl
-    ? reel.youtubeUrl.includes("embed")
-      ? `${reel.youtubeUrl}${reel.youtubeUrl.includes("?") ? "&" : "?"}autoplay=1`
-      : `https://www.youtube.com/embed/${reel.youtubeUrl.split("v=")[1]?.split("&")[0] ?? ""}?autoplay=1`
-    : "";
-
   const youtubeId = reel.youtubeUrl
     ? (reel.youtubeUrl.match(/embed\/([^?&/]+)/) ??
        reel.youtubeUrl.match(/[?&]v=([^&]+)/) ??
@@ -230,14 +225,15 @@ function ReelCard({ reel, index }: ReelCardProps) {
         transition: `transform 700ms cubic-bezier(0.25,0.46,0.45,0.94) ${index * 60}ms, opacity 700ms ease ${index * 60}ms`,
       }}
     >
-      {embedUrl && thumbnailSrc ? (
+      {youtubeId && thumbnailSrc ? (
         <div className="absolute inset-0">
-          <HeroVideoDialog
-            videoSrc={embedUrl}
+          <VideoLinkThumbnail
+            href={`/video/${reel.videoId ?? youtubeId}`}
             thumbnailSrc={thumbnailSrc}
             thumbnailAlt={reel.title}
-            animationStyle="from-center"
-            className="h-full [&>button]:w-full [&>button]:h-full [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:object-center [&_img]:rounded-2xl [&_img]:border-0 [&_img]:shadow-none [&>button>div]:scale-75 [&>button>div_div:first-child]:size-14 [&>button>div_div:first-child_div]:size-9 [&>button>div_div:first-child_div_svg]:size-5"
+            className="h-full"
+            imgClassName="h-full object-cover object-center rounded-2xl"
+            playButtonSize="reel"
           />
         </div>
       ) : (
