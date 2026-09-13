@@ -7,7 +7,7 @@ interface CmsApiResponse<T> {
   error?: { errorMsg: string; errorCode: number };
 }
 
-interface VideoRecord {
+export interface VideoRecord {
   id: number;
   userId: number;
   youtubeVideoId: string;
@@ -16,13 +16,16 @@ interface VideoRecord {
   youtubeThumbnailUrl: string;
   youtubeMediumThumbnailUrl: string;
   youtubeHighThumbnailUrl: string;
+  youtubeStandardThumbnailUrl?: string;
+  youtubeMaxResolutionThumbnailUrl?: string;
   title: string;
   description: string;
   tags: string[];
   fileSize: number;
   status: string;
   privacyStatus: string;
-  categoryId: number;
+  categoryId?: number;
+  category?: number;
   visible: boolean;
   createdTime: number;
   updatedTime: number;
@@ -37,7 +40,7 @@ export interface UploadVideoResponse {
   youtubeHighThumbnailUrl: string;
 }
 
-interface CreateVideoRequest {
+export interface CreateVideoRequest {
   youtubeVideoId: string;
   title: string;
   description?: string;
@@ -47,6 +50,38 @@ interface CreateVideoRequest {
   categoryId?: number;
   visible?: boolean;
 }
+
+export interface UpdateVideoRequest {
+  videoId: number;
+  youtubeVideoId?: string;
+  title?: string;
+  description?: string;
+  tags?: string[];
+  fileSize?: number;
+  status?: string;
+  privacyStatus?: string;
+  category?: number;
+  visible?: boolean;
+}
+
+export const VIDEO_CATEGORIES = [
+  { value: 1, label: "Đám cưới (WEDDING)", key: "WEDDING" },
+  { value: 2, label: "Lễ tang (FUNERAL)", key: "FUNERAL" },
+  { value: 3, label: "Ăn hỏi (ENGAGEMENT)", key: "ENGAGEMENT" },
+  { value: 4, label: "Dã ngoại (OUTDOOR)", key: "OUTDOOR" },
+] as const;
+
+export const VIDEO_STATUSES = [
+  { value: "UPLOADED", label: "Đã tải lên (UPLOADED)" },
+  { value: "PROCESSING", label: "Đang xử lý (PROCESSING)" },
+  { value: "FAILED", label: "Thất bại (FAILED)" },
+] as const;
+
+export const PRIVACY_STATUSES = [
+  { value: "public", label: "Công khai (Public)" },
+  { value: "unlisted", label: "Không công khai (Unlisted)" },
+  { value: "private", label: "Riêng tư (Private)" },
+] as const;
 
 export const videoApi = {
   /** Upload video file to YouTube (multipart/form-data) */
@@ -81,6 +116,13 @@ export const videoApi = {
     apiClient.post<CmsApiResponse<{ videoId: number; video: VideoRecord }>>(
       API_ENDPOINTS.GET_VIDEO,
       { videoId },
+    ),
+
+  /** Update video metadata in DB */
+  update: (data: UpdateVideoRequest) =>
+    apiClient.post<CmsApiResponse<Partial<UpdateVideoRequest> & { videoId: number }>>(
+      API_ENDPOINTS.UPDATE_VIDEO,
+      data,
     ),
 
   /** Remove video from DB (async delete on YouTube) */

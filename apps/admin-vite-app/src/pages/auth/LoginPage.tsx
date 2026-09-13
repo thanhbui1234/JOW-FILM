@@ -1,4 +1,5 @@
-import { Film, Sparkles } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
+import { AlertCircle, Film, Sparkles } from "lucide-react";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID ?? "";
 
@@ -40,6 +41,9 @@ function handleGoogleLogin() {
 }
 
 export function LoginPage() {
+  const [searchParams] = useSearchParams();
+  const errorParam = searchParams.get("error");
+
   return (
     <div className="relative flex min-h-screen overflow-hidden bg-stone-950">
       <FilmGrain />
@@ -135,6 +139,25 @@ export function LoginPage() {
               </span>
               <span className="h-px flex-1 bg-white/8" />
             </div>
+
+            {/* Auth error notice */}
+            {errorParam && (
+              <div className="mb-6 flex items-start gap-2.5 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-300">
+                <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-red-400" />
+                <div>
+                  <p className="font-semibold">Đăng nhập thất bại</p>
+                  <p className="mt-1 text-[11px] text-red-400/80 leading-relaxed">
+                    {errorParam === "redirect_uri_mismatch"
+                      ? "Lỗi redirect_uri_mismatch: Redirect URI cấu hình trên Google Cloud Console không khớp với URL hiện tại."
+                      : errorParam === "access_denied"
+                        ? "Bạn đã từ chối cấp quyền truy cập tài khoản Google."
+                        : errorParam === "no_code"
+                          ? "Không nhận được mã xác thực (authorization code) từ Google."
+                          : `Lỗi: ${errorParam}`}
+                  </p>
+                </div>
+              </div>
+            )}
 
             {/* Google button */}
             <button

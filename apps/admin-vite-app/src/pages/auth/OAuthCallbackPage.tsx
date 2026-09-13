@@ -5,6 +5,8 @@ import { useAuth, decodeJwt } from "@/features/auth/context/auth-context";
 import type { AuthUser } from "@/features/auth/types/auth.types";
 import { authApi } from "@/features/auth/api/auth.api";
 
+import { extractApiError, getApiErrorMessage } from "@/shared/api";
+
 export function OAuthCallbackPage() {
   const [params] = useSearchParams();
   const { login } = useAuth();
@@ -29,11 +31,17 @@ export function OAuthCallbackPage() {
     authApi
       .loginWithGoogle({ code, redirectUrl })
       .then(({ data }) => {
+        if (data.error) {
+          throw new Error(getApiErrorMessage(data.error.errorCode, data.error.errorMsg));
+        }
+
         const payloadData = data.data;
-        const nestedUser = payloadData.user;
+        if (!payloadData || !payloadData.accessToken) {
+          throw new Error("Không nhận được token xác thực từ máy chủ");
+        }
+
+        const nestedUser = payloadData.user || {};
         const token = payloadData.accessToken;
-        
-        if (!token) throw new Error("no_token");
 
         let user: AuthUser = { name: "", email: "", picture: "", sub: "" };
         try {
@@ -57,7 +65,13 @@ export function OAuthCallbackPage() {
         navigate("/", { replace: true });
       })
       .catch((err: unknown) => {
-        const msg = err instanceof Error ? err.message : "Lỗi không xác định";
+        console.error("Login with Google failed:", err);
+        const { errorCode, errorMsg } = extractApiError(err);
+        const msg = errorMsg
+          ? getApiErrorMessage(errorCode, errorMsg)
+          : err instanceof Error
+            ? err.message
+            : "Lỗi không xác định khi xác thực";
         setErrorMsg(msg);
       });
   }, []);

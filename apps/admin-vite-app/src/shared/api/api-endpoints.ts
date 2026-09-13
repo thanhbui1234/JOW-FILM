@@ -3,6 +3,7 @@ export const API_ENDPOINTS = {
   CREATE_VIDEO: "/cms-api/v1/create-video",
   GET_LIST_VIDEO: "/cms-api/v1/get-list-video",
   GET_VIDEO: "/cms-api/v1/get-video",
+  UPDATE_VIDEO: "/cms-api/v1/update-video",
   REMOVE_VIDEO: "/cms-api/v1/remove-video",
   CREATE_USER: "/cms-api/v1/create-user",
   MENU: "/cms-api/v1/menu",

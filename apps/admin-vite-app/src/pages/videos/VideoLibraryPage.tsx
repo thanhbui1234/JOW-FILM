@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Film, Loader2, Plus, Upload as UploadIcon, Link as LinkIcon, CheckCircle2, Video, Trash2 } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Input, Textarea, Button, MediaUpload, HeroVideoDialog } from "shared-ui";
+import { Film, Loader2, Plus, Upload as UploadIcon, Link as LinkIcon, CheckCircle2, Video, Trash2, Edit3, EyeOff } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Input, Textarea, Button, MediaUpload } from "shared-ui";
 import { PageContainer } from "@/components/composite/PageContainer";
-import { videoApi, getApiErrorMessage, extractApiError } from "@/shared/api";
+import { videoApi, getApiErrorMessage, extractApiError, VIDEO_CATEGORIES } from "@/shared/api";
 import { triggerNextJsRevalidate } from "@/shared/api/revalidate";
 import { useVideoUpload } from "@/shared/hooks/use-video-upload";
 import { cn } from "@/shared/lib/utils";
@@ -220,6 +221,7 @@ function AddVideoModal({ open, onOpenChange, onSuccess }: { open: boolean, onOpe
 }
 
 export function VideoLibraryPage() {
+  const navigate = useNavigate();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [videoToRemove, setVideoToRemove] = useState<number | null>(null);
   const [isRemoving, setIsRemoving] = useState(false);
@@ -259,7 +261,7 @@ export function VideoLibraryPage() {
   return (
     <PageContainer
       title="Thư viện video"
-      description="Quản lý tất cả video đã tải lên hoặc nhập vào CMS."
+      description="Quản lý tất cả video đã tải lên hoặc nhập vào CMS. Nhấp vào video để xem chi tiết và chỉnh sửa."
       actions={
         <Button onClick={() => setIsAddModalOpen(true)} className="gap-2">
           <Plus className="h-4 w-4" /> Thêm video
@@ -279,53 +281,80 @@ export function VideoLibraryPage() {
             <p className="text-xs">Nhấp 'Thêm video' để tải lên hoặc nhập từ YouTube.</p>
           </div>
         ) : (
-          videos.map((video) => (
-            <div
-              key={video.id}
-              className="group relative overflow-hidden rounded-lg border bg-card shadow-sm transition-all hover:shadow-md"
-            >
-              <div className="aspect-video overflow-hidden bg-muted">
-                {video.youtubeHighThumbnailUrl || video.youtubeMediumThumbnailUrl || video.youtubeThumbnailUrl ? (
-                  <HeroVideoDialog
-                    videoSrc={`${video.youtubeEmbedUrl || video.youtubeUrl}?autoplay=1`}
-                    thumbnailSrc={video.youtubeHighThumbnailUrl || video.youtubeMediumThumbnailUrl || video.youtubeThumbnailUrl}
-                    thumbnailAlt={video.title}
-                    className="h-full w-full"
-                    animationStyle="from-center"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-muted/50">
-                    <Video className="h-8 w-8 text-muted-foreground/30" />
+          videos.map((video) => {
+            const categoryObj = VIDEO_CATEGORIES.find(
+              (c) => c.value === (video.category ?? video.categoryId)
+            );
+            return (
+              <div
+                key={video.id}
+                onClick={() => navigate(`/video-library/${video.id}`)}
+                className="group relative flex flex-col cursor-pointer overflow-hidden rounded-xl border border-border/60 bg-card shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-amber-500/50 hover:shadow-[0_8px_24px_-8px_rgba(217,119,6,0.18)]"
+              >
+                <div className="aspect-video relative overflow-hidden bg-muted">
+                  {video.youtubeHighThumbnailUrl || video.youtubeMediumThumbnailUrl || video.youtubeThumbnailUrl ? (
+                    <img
+                      src={video.youtubeHighThumbnailUrl || video.youtubeMediumThumbnailUrl || video.youtubeThumbnailUrl}
+                      alt={video.title}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-muted/50">
+                      <Video className="h-8 w-8 text-muted-foreground/30" />
+                    </div>
+                  )}
+
+                  {/* Overlay hover effect */}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                    <span className="flex items-center gap-1.5 rounded-full bg-background/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-md backdrop-blur-sm">
+                      <Edit3 className="h-3.5 w-3.5 text-amber-500" />
+                      Chi tiết & Chỉnh sửa
+                    </span>
                   </div>
-                )}
-              </div>
-              <div className="p-3">
-                <div className="flex items-start justify-between gap-2">
-                  <p className="line-clamp-1 text-sm font-medium" title={video.title}>
-                    {video.title || "Video không có tiêu đề"}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setVideoToRemove(video.id);
-                    }}
-                    title="Xóa video"
-                    className="shrink-0 rounded text-muted-foreground hover:bg-red-500/10 hover:text-red-500 p-1 transition-colors"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+
+                  {/* Badges on thumbnail */}
+                  <div className="absolute top-2 left-2 flex flex-wrap gap-1.5 pointer-events-none">
+                    {categoryObj && (
+                      <span className="rounded-md bg-black/70 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm shadow-sm">
+                        {categoryObj.key}
+                      </span>
+                    )}
+                    {video.visible === false && (
+                      <span className="flex items-center gap-1 rounded-md bg-stone-900/80 px-2 py-0.5 text-[10px] font-medium text-amber-300 backdrop-blur-sm shadow-sm">
+                        <EyeOff className="h-2.5 w-2.5" /> Ẩn
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <div className="mt-1 flex items-center justify-between text-[11px] text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    <CheckCircle2 className="h-3 w-3 text-emerald-500" />
-                    {video.status}
-                  </span>
-                  <span>{new Date(video.createdTime).toLocaleDateString()}</span>
+
+                <div className="flex flex-1 flex-col p-3.5">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="line-clamp-1 text-sm font-medium transition-colors group-hover:text-amber-600 dark:group-hover:text-amber-400" title={video.title}>
+                      {video.title || "Video không có tiêu đề"}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setVideoToRemove(video.id);
+                      }}
+                      title="Xóa video"
+                      className="shrink-0 rounded text-muted-foreground hover:bg-red-500/10 hover:text-red-500 p-1 transition-colors"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <div className="mt-auto pt-2 flex items-center justify-between text-[11px] text-muted-foreground">
+                    <span className="flex items-center gap-1">
+                      <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+                      {video.status}
+                    </span>
+                    <span>{new Date(video.createdTime).toLocaleDateString()}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
 

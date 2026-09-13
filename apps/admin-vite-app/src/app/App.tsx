@@ -18,6 +18,7 @@ import { SectionsHubPage } from "@/pages/sections-hub/SectionsHubPage";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { OAuthCallbackPage } from "@/pages/auth/OAuthCallbackPage";
 import { VideoLibraryPage } from "@/pages/videos/VideoLibraryPage";
+import { VideoDetailPage } from "@/pages/videos/VideoDetailPage";
 import { useAuth } from "@/features/auth";
 
 function PrivateRoute() {
@@ -50,6 +51,8 @@ export function App() {
           <Route path="og-image" element={<WebPreviewImagePage />} />
           <Route path="contact-inbox" element={<ContactInboxPage />} />
           <Route path="video-library" element={<VideoLibraryPage />} />
+          <Route path="video-library/:id" element={<VideoDetailPage />} />
+          <Route path="videos/:id" element={<VideoDetailPage />} />
         </Route>
       </Route>
     </Routes>
