@@ -37,8 +37,8 @@ export function WeddingHighlightPage({ videos, config }: WeddingHighlightPagePro
         className="bg-stone-50 px-5 py-10 md:px-12 md:py-14 lg:px-24 dark:bg-stone-900"
       >
         <div className="mx-auto max-w-7xl">
-          {/* Grid — 2 cols mobile, 3 cols desktop */}
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5">
+          {/* Grid — 1 col mobile, 2 cols tablet, 3 cols desktop */}
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 md:gap-6">
             {displayVideos.map((video, index) => (
               <BlurFade key={video.id} delay={0.05 + index * 0.06} inView>
                 <div className="group relative overflow-hidden rounded-xl md:rounded-2xl">
@@ -46,11 +46,11 @@ export function WeddingHighlightPage({ videos, config }: WeddingHighlightPagePro
                     href={`/video/${video.videoId ?? video.id}`}
                     thumbnailSrc={toThumbnailUrl(video.id)}
                     thumbnailAlt={video.title}
-                    imgClassName="aspect-[4/5] rounded-xl md:aspect-[16/10] md:rounded-2xl"
+                    imgClassName="aspect-[16/10] rounded-xl md:rounded-2xl"
                     playButtonSize="compact-responsive"
                   />
                   <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-4 md:p-6">
-                    <h3 className="text-sm font-medium text-white md:text-lg lg:text-xl">
+                    <h3 className="text-base font-medium text-white md:text-lg lg:text-xl">
                       {video.title}
                     </h3>
                     <p className="text-xs text-white/60 md:text-sm">

@@ -76,11 +76,58 @@ export function WeddingHighlightSection({
     return diff;
   };
 
+  const touchStartXRef = useRef<number | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
+  const isSwipingRef = useRef(false);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsPaused(true);
+    touchStartXRef.current = e.touches[0].clientX;
+    touchStartYRef.current = e.touches[0].clientY;
+    isSwipingRef.current = false;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === null || touchStartYRef.current === null) return;
+    const deltaX = e.touches[0].clientX - touchStartXRef.current;
+    const deltaY = e.touches[0].clientY - touchStartYRef.current;
+    if (Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      isSwipingRef.current = true;
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    setIsPaused(false);
+    if (touchStartXRef.current === null || touchStartYRef.current === null) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 40) {
+      if (deltaX < 0) {
+        goTo(activeIndex + 1);
+      } else {
+        goTo(activeIndex - 1);
+      }
+    }
+    touchStartXRef.current = null;
+    touchStartYRef.current = null;
+    setTimeout(() => {
+      isSwipingRef.current = false;
+    }, 100);
+  };
+
+  const handleTouchCancel = () => {
+    setIsPaused(false);
+    touchStartXRef.current = null;
+    touchStartYRef.current = null;
+    isSwipingRef.current = false;
+  };
+
   return (
     <section
       id="wedding-highlight"
       data-header-theme={getThemeFromBgColor(backgroundColor, "light")}
-      className="min-h-screen bg-stone-50 px-5 py-20 dark:bg-stone-900"
+      className="overflow-x-clip bg-stone-50 px-5 pt-12 pb-10 md:pt-16 md:pb-14 lg:pt-20 lg:pb-16 dark:bg-stone-900"
       style={{ backgroundColor: backgroundColor || undefined }}
     >
       <div className="mx-auto max-w-7xl">
@@ -123,13 +170,21 @@ export function WeddingHighlightSection({
           </BlurFade>
         </div>
 
-        <div className="hidden md:block">
-          <div className="relative mx-auto" style={{ maxWidth: "900px", height: "560px" }}>
+        {/* 1 column responsive slider running across all screens */}
+        <div
+          className="relative mx-auto w-full max-w-[900px]"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onTouchCancel={handleTouchCancel}
+        >
+          <div
+            className="relative mx-auto w-full aspect-[16/10] max-h-[560px] [--slide-offset:20px] sm:[--slide-offset:70px] md:[--slide-offset:140px]"
+          >
             {videos.map((video, index) => {
               const diff = getDiff(index);
               const absDiff = Math.abs(diff);
               const scale = 1 - absDiff * 0.05;
-              const translateX = diff * 140;
               const zIndex = 20 - Math.round(absDiff * 5);
               const rotate = diff * -1.5;
 
@@ -140,81 +195,72 @@ export function WeddingHighlightSection({
                   style={{ zIndex, pointerEvents: absDiff < 0.5 ? "auto" : "none" }}
                 >
                   <div
-                    className="group relative w-full overflow-hidden rounded-2xl shadow-2xl"
+                    className="group relative w-full overflow-hidden rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl"
                     style={{
-                      transform: `translateX(${translateX}px) scale(${scale}) rotate(${rotate}deg)`,
+                      transform: `translateX(calc(${diff} * var(--slide-offset, 140px))) scale(${scale}) rotate(${rotate}deg)`,
                       opacity: absDiff > 2.5 ? 0 : 1,
                       transition: "transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.4s ease",
                     }}
                     onMouseEnter={() => setIsPaused(true)}
                     onMouseLeave={() => setIsPaused(false)}
+                    onClickCapture={(e) => {
+                      if (isSwipingRef.current) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }
+                    }}
                   >
                     <VideoLinkThumbnail
-                      href={`/video/${video.videoId ?? video.id}`}
+                      href="/wedding-highlight"
                       thumbnailSrc={getYouTubeThumbnail(video.id)}
                       thumbnailAlt={video.title}
-                      imgClassName="aspect-[16/10] rounded-2xl"
+                      imgClassName="aspect-[16/10] rounded-xl sm:rounded-2xl"
+                      playButtonSize="compact-responsive"
                     />
                     <div
-                      className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-6 md:p-8"
+                      className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-4 sm:p-6 md:p-8"
                       style={{ opacity: absDiff < 0.5 ? 1 : 0, transition: "opacity 0.4s ease" }}
                     >
-                      <h3 className="text-lg font-medium text-white lg:text-2xl">{video.title}</h3>
-                      <p className="text-sm text-white/70">{video.subtitle}</p>
+                      <h3 className="text-base font-medium text-white sm:text-lg lg:text-2xl">{video.title}</h3>
+                      <p className="text-xs text-white/70 sm:text-sm">{video.subtitle}</p>
                     </div>
                   </div>
                 </div>
               );
             })}
 
+            {/* Navigation buttons */}
             <button
               onClick={() => goTo(activeIndex - 1)}
-              className="absolute left-4 top-1/2 z-30 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-sm transition-transform hover:scale-110 dark:bg-stone-800/80"
+              className="absolute left-2 md:left-4 top-1/2 z-30 -translate-y-1/2 flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-sm transition-transform hover:scale-110 active:scale-95 dark:bg-stone-800/80"
               aria-label="Previous slide"
             >
-              <svg className="h-5 w-5 text-stone-700 dark:text-stone-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="h-4 w-4 md:h-5 md:w-5 text-stone-700 dark:text-stone-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             <button
               onClick={() => goTo(activeIndex + 1)}
-              className="absolute right-4 top-1/2 z-30 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-sm transition-transform hover:scale-110 dark:bg-stone-800/80"
+              className="absolute right-2 md:right-4 top-1/2 z-30 -translate-y-1/2 flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full bg-white/80 shadow-lg backdrop-blur-sm transition-transform hover:scale-110 active:scale-95 dark:bg-stone-800/80"
               aria-label="Next slide"
             >
-              <svg className="h-5 w-5 text-stone-700 dark:text-stone-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="h-4 w-4 md:h-5 md:w-5 text-stone-700 dark:text-stone-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
           </div>
 
-          <div className="mt-8 flex justify-center gap-2">
+          {/* Dots pagination */}
+          <div className="mt-6 md:mt-8 flex justify-center gap-2">
             {videos.map((_, index) => (
               <button
                 key={index}
                 aria-label={`Go to slide ${index + 1}`}
                 onClick={() => goTo(index)}
-                className={`h-1.5 rounded-full transition-all duration-500 ${index === activeIndex ? "w-8 bg-amber-500" : "w-1.5 bg-stone-300 dark:bg-stone-600"}`}
+                className={`h-1.5 rounded-full transition-all duration-500 ${index === activeIndex ? "w-6 md:w-8 bg-amber-500" : "w-1.5 bg-stone-300 dark:bg-stone-600"}`}
               />
             ))}
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3 md:hidden">
-          {videos.map((video) => (
-            <div key={video.id} className="group relative overflow-hidden rounded-xl">
-              <VideoLinkThumbnail
-                href={`/video/${video.videoId ?? video.id}`}
-                thumbnailSrc={getYouTubeThumbnail(video.id)}
-                thumbnailAlt={video.title}
-                imgClassName="aspect-[4/5] rounded-xl"
-                playButtonSize="compact"
-              />
-              <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
-                <h3 className="text-sm font-medium text-white">{video.title}</h3>
-                <p className="text-xs text-white/60">{video.subtitle}</p>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </section>

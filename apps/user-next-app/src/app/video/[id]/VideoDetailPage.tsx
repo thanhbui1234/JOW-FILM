@@ -4,15 +4,12 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
+  ArrowRight,
   Calendar,
-  Check,
-  ExternalLink,
   Film,
   MapPin,
-  Share2,
   Smartphone,
   Sparkles,
-  Tv,
 } from "lucide-react";
 import { format } from "date-fns";
 import { BlurFade } from "shared-ui";
@@ -75,19 +72,25 @@ export function VideoDetailPage({
   reels = [],
   allVideos = [],
 }: VideoDetailPageProps) {
-  // Check if title or tags imply this is a Reel (9:16)
+  // Check if title, tags, or matching reel section item implies this is a Reel (9:16)
   const isInitiallyReel = useMemo(() => {
     if (!video) return false;
     const lowerTitle = (video.title || "").toLowerCase();
     const hasReelTag = video.tags?.some((t) => t.toLowerCase().includes("reel"));
-    return lowerTitle.includes("reel") || Boolean(hasReelTag);
-  }, [video]);
+    if (lowerTitle.includes("reel") || Boolean(hasReelTag)) return true;
 
-  // Player aspect ratio mode: "reel" (9:16) or "cinema" (16:9)
-  const [aspectMode, setAspectMode] = useState<"reel" | "cinema">(
-    isInitiallyReel ? "reel" : "cinema",
-  );
-  const [copied, setCopied] = useState(false);
+    // Check if matching item in reels list has 'reel' in title or matches by id/url
+    const matchingReel = reels.find(
+      (r) =>
+        (r.videoId && String(r.videoId) === String(video.id)) ||
+        (video.youtubeVideoId && r.youtubeUrl?.includes(video.youtubeVideoId)) ||
+        (r.title && r.title.toLowerCase() === lowerTitle),
+    );
+    if (matchingReel && matchingReel.title.toLowerCase().includes("reel")) {
+      return true;
+    }
+    return false;
+  }, [video, reels]);
 
   // Which related-works tab is active: "highlight" or "reel"
   const [relatedTab, setRelatedTab] = useState<"highlight" | "reel">(
@@ -114,19 +117,6 @@ export function VideoDetailPage({
     if (!video) return "";
     return buildEmbedUrl(video.youtubeEmbedUrl || video.youtubeVideoId);
   }, [video]);
-
-  // Handle link sharing
-  const handleCopyLink = async () => {
-    try {
-      if (typeof window !== "undefined") {
-        await navigator.clipboard.writeText(window.location.href);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2500);
-      }
-    } catch (err) {
-      console.error("Failed to copy link:", err);
-    }
-  };
 
   // Compile related videos — kept as two separate lists (highlights vs reels)
   // so the "Portfolio" section below can show them in independent tabs
@@ -158,10 +148,10 @@ export function VideoDetailPage({
     }
 
     // Fallback or addition from highlights
-    if (highlightItems.length < 8 && highlights.length > 0) {
+    if (highlightItems.length < 9 && highlights.length > 0) {
       for (const h of highlights) {
         if (h.id === video?.youtubeVideoId) continue;
-        if (!highlightItems.some((it) => it.title === h.title)) {
+        if (!highlightItems.some((it) => it.title === h.title || String(it.id) === String(h.videoId ?? h.id))) {
           highlightItems.push({
             id: h.id,
             title: h.title,
@@ -175,10 +165,14 @@ export function VideoDetailPage({
     }
 
     // Fallback or addition from reels
-    if (reelItems.length < 8 && reels.length > 0) {
+    if (reelItems.length < 12 && reels.length > 0) {
       for (const r of reels) {
         if (!reelItems.some((it) => it.title === r.title)) {
-          const ytId = r.youtubeUrl?.match(/embed\/([^?&/]+)/)?.[1] || "";
+          const ytId =
+            r.youtubeUrl?.match(/embed\/([^?&/]+)/)?.[1] ||
+            r.youtubeUrl?.match(/[?&]v=([^&]+)/)?.[1] ||
+            r.youtubeUrl?.match(/youtu\.be\/([^?&/]+)/)?.[1] ||
+            "";
           reelItems.push({
             id: r.title,
             title: r.title,
@@ -196,8 +190,8 @@ export function VideoDetailPage({
     }
 
     return {
-      relatedHighlights: highlightItems.slice(0, 8),
-      relatedReels: reelItems.slice(0, 8),
+      relatedHighlights: highlightItems.slice(0, 9),
+      relatedReels: reelItems.slice(0, 12),
     };
   }, [allVideos, video, highlights, reels]);
 
@@ -286,10 +280,6 @@ export function VideoDetailPage({
                 >
                   {isInitiallyReel ? "Wedding Reels" : "Wedding Highlights"}
                 </Link>
-                <span>/</span>
-                <span className="max-w-[200px] truncate text-stone-900 md:max-w-xs dark:text-stone-100">
-                  {displayTitle}
-                </span>
               </div>
 
               <div className="flex items-center gap-3">
@@ -353,84 +343,17 @@ export function VideoDetailPage({
 
       {/* Main Video Cinema Stage */}
       <section
-        data-header-theme="dark"
-        className="bg-stone-950 px-4 py-8 text-white sm:px-8 md:px-12 md:py-14 lg:px-24"
+        data-header-theme="light"
+        className="px-4 py-6 sm:px-8 md:px-12 md:py-8 lg:px-24"
       >
         <div className="mx-auto max-w-6xl">
-          {/* Controls Bar Above Player */}
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            {/* Aspect Mode Switcher */}
-            <div className="inline-flex rounded-full bg-stone-900/90 p-1 ring-1 ring-stone-800">
-              <button
-                type="button"
-                onClick={() => setAspectMode("cinema")}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
-                  aspectMode === "cinema"
-                    ? "bg-amber-400 text-stone-950 shadow-sm"
-                    : "text-stone-400 hover:text-white"
-                }`}
-              >
-                <Tv className="size-3.5" />
-                Cinema 16:9
-              </button>
-              <button
-                type="button"
-                onClick={() => setAspectMode("reel")}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
-                  aspectMode === "reel"
-                    ? "bg-amber-400 text-stone-950 shadow-sm"
-                    : "text-stone-400 hover:text-white"
-                }`}
-              >
-                <Smartphone className="size-3.5" />
-                Reel 9:16
-              </button>
-            </div>
-
-            {/* Quick Action Buttons */}
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleCopyLink}
-                className="inline-flex items-center gap-1.5 rounded-full bg-stone-900 px-3.5 py-1.5 text-xs font-medium text-stone-300 ring-1 ring-stone-800 transition-all hover:bg-stone-800 hover:text-white"
-              >
-                {copied ? (
-                  <>
-                    <Check className="size-3.5 text-green-400" />
-                    <span className="text-green-400">Copied!</span>
-                  </>
-                ) : (
-                  <>
-                    <Share2 className="size-3.5" />
-                    <span>Share</span>
-                  </>
-                )}
-              </button>
-
-              {video.youtubeUrl && (
-                <a
-                  href={video.youtubeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-stone-900 px-3.5 py-1.5 text-xs font-medium text-stone-300 ring-1 ring-stone-800 transition-all hover:bg-stone-800 hover:text-white"
-                >
-                  <ExternalLink className="size-3.5" />
-                  <span>YouTube</span>
-                </a>
-              )}
-            </div>
-          </div>
-
           {/* Embedded Video Theater Container */}
-          <div className="relative mx-auto overflow-hidden rounded-3xl border border-stone-800/80 bg-stone-900/60 p-3 shadow-2xl backdrop-blur-xl sm:p-6 md:p-8">
-            {/* Ambient Backlight Glow */}
-            <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-500/10 via-stone-900/20 to-transparent blur-2xl" />
-
-            {aspectMode === "reel" ? (
+          <div className="relative mx-auto">
+            {isInitiallyReel ? (
               /* Reel View (9:16 Vertical Phone Showcase) */
-              <div className="flex justify-center py-2">
+              <div className="flex justify-center">
                 <div
-                  className="relative w-full max-w-[340px] sm:max-w-[380px] overflow-hidden rounded-2xl border-2 border-stone-800 shadow-2xl ring-1 ring-white/10"
+                  className="relative w-full max-w-[360px] sm:max-w-[400px] overflow-hidden rounded-2xl bg-black shadow-2xl md:rounded-3xl"
                   style={{ aspectRatio: "9/16" }}
                 >
                   <iframe
@@ -438,14 +361,14 @@ export function VideoDetailPage({
                     title={video.title}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
-                    className="h-full w-full rounded-2xl object-cover"
+                    className="absolute inset-0 h-full w-full border-0"
                   />
                 </div>
               </div>
             ) : (
               /* Cinema View (16:9 Widescreen Theater) */
               <div
-                className="relative w-full overflow-hidden rounded-2xl border border-stone-800 shadow-2xl ring-1 ring-white/10"
+                className="relative w-full overflow-hidden rounded-2xl bg-black shadow-2xl md:rounded-3xl"
                 style={{ aspectRatio: "16/9" }}
               >
                 <iframe
@@ -453,7 +376,7 @@ export function VideoDetailPage({
                   title={video.title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
-                  className="h-full w-full rounded-2xl"
+                  className="absolute inset-0 h-full w-full border-0 scale-[1.08] origin-center"
                 />
               </div>
             )}
@@ -513,32 +436,15 @@ export function VideoDetailPage({
           className="border-t border-stone-200 bg-stone-100/60 px-5 py-14 md:px-12 md:py-20 lg:px-24 dark:border-stone-800 dark:bg-stone-900/60"
         >
           <div className="mx-auto max-w-6xl">
-            <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <BlurFade delay={0.05} inView>
-                  <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-amber-500">
-                    Portfolio
-                  </p>
-                  <h2 className="font-title text-3xl font-light text-stone-900 md:text-4xl dark:text-stone-100">
-                    More <em className="italic font-normal">Highlights & Reels</em>
-                  </h2>
-                </BlurFade>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Link
-                  href="/wedding-highlight"
-                  className="text-xs font-medium uppercase tracking-widest text-stone-600 transition-colors hover:text-amber-500 dark:text-stone-400"
-                >
-                  All Highlights →
-                </Link>
-                <Link
-                  href="/wedding-reels"
-                  className="text-xs font-medium uppercase tracking-widest text-stone-600 transition-colors hover:text-amber-500 dark:text-stone-400"
-                >
-                  All Reels →
-                </Link>
-              </div>
+            <div className="mb-8">
+              <BlurFade delay={0.05} inView>
+                <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-amber-500">
+                  Portfolio
+                </p>
+                <h2 className="font-title text-3xl font-light text-stone-900 md:text-4xl dark:text-stone-100">
+                  More <em className="italic font-normal">Highlights & Reels</em>
+                </h2>
+              </BlurFade>
             </div>
 
             {/* Tabs */}
@@ -571,55 +477,83 @@ export function VideoDetailPage({
               </div>
             )}
 
-            {/* Related Grid */}
+            {/* Related Grid - 3 rows max per device */}
             <div
               className={
                 activeRelatedTab === "reel"
                   ? "grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5"
-                  : "grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6"
+                  : "grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 md:gap-6"
               }
             >
-              {activeRelatedVideos.map((item, idx) => (
-                <BlurFade key={`${item.id}-${idx}`} delay={0.05 + idx * 0.05} inView>
-                  <Link
-                    href={item.url}
-                    className="group relative block overflow-hidden rounded-xl bg-stone-900 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl md:rounded-2xl"
-                  >
-                    <div
-                      className="relative w-full overflow-hidden"
-                      style={{
-                        aspectRatio: item.type === "reel" ? "9/14" : "16/10",
-                      }}
-                    >
-                      <img
-                        src={item.thumbnailUrl}
-                        alt={item.title}
-                        className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                      />
-                      {/* Gradient overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-4 flex flex-col justify-end">
-                        <span className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-amber-400">
-                          {item.type === "reel" ? "Reel" : "Highlight"}
-                        </span>
-                        <h4 className="line-clamp-2 text-xs font-medium text-white md:text-sm">
-                          {item.title}
-                        </h4>
-                        {item.subtitle && (
-                          <p className="mt-0.5 line-clamp-1 text-[11px] text-white/60">
-                            {item.subtitle}
-                          </p>
-                        )}
-                      </div>
+              {activeRelatedVideos
+                .slice(0, activeRelatedTab === "reel" ? 12 : 9)
+                .map((item, idx) => {
+                  const visibilityClass =
+                    activeRelatedTab === "reel"
+                      ? idx >= 6
+                        ? "hidden md:block"
+                        : "block"
+                      : idx >= 6
+                        ? "hidden md:block"
+                        : idx >= 3
+                          ? "hidden sm:block"
+                          : "block";
 
-                      {item.duration && (
-                        <div className="absolute top-2.5 right-2.5 rounded-full bg-black/60 px-2 py-0.5 text-[10px] text-white/90 backdrop-blur-xs">
-                          {item.duration}
-                        </div>
-                      )}
+                  return (
+                    <div key={`${item.id}-${idx}`} className={visibilityClass}>
+                      <BlurFade delay={0.05 + (idx % 4) * 0.05} inView>
+                        <Link
+                          href={item.url}
+                          className="group relative block overflow-hidden rounded-xl bg-stone-900 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl md:rounded-2xl"
+                        >
+                          <div
+                            className="relative w-full overflow-hidden"
+                            style={{
+                              aspectRatio: item.type === "reel" ? "9/14" : "16/10",
+                            }}
+                          >
+                            <img
+                              src={item.thumbnailUrl}
+                              alt={item.title}
+                              className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                            />
+                            {/* Gradient overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-4 flex flex-col justify-end">
+                              <span className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-amber-400">
+                                {item.type === "reel" ? "Reel" : "Highlight"}
+                              </span>
+                              <h4 className="line-clamp-2 text-xs font-medium text-white md:text-sm">
+                                {item.title}
+                              </h4>
+                              {item.subtitle && (
+                                <p className="mt-0.5 line-clamp-1 text-[11px] text-white/60">
+                                  {item.subtitle}
+                                </p>
+                              )}
+                            </div>
+
+                            {item.duration && (
+                              <div className="absolute top-2.5 right-2.5 rounded-full bg-black/60 px-2 py-0.5 text-[10px] text-white/90 backdrop-blur-xs">
+                                {item.duration}
+                              </div>
+                            )}
+                          </div>
+                        </Link>
+                      </BlurFade>
                     </div>
-                  </Link>
-                </BlurFade>
-              ))}
+                  );
+                })}
+            </div>
+
+            {/* Xem thêm Button */}
+            <div className="mt-10 flex justify-center">
+              <Link
+                href={activeRelatedTab === "reel" ? "/wedding-reels" : "/wedding-highlight"}
+                className="group inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-8 py-3 text-xs font-semibold uppercase tracking-widest text-stone-800 shadow-sm transition-all duration-300 hover:border-amber-400 hover:bg-stone-50 hover:text-amber-600 active:scale-95 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200 dark:hover:border-amber-400 dark:hover:bg-stone-800 dark:hover:text-amber-400"
+              >
+                <span>Xem thêm</span>
+                <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
             </div>
           </div>
         </section>

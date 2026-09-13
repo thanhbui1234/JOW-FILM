@@ -100,7 +100,7 @@ export function WeddingReelsSection({
     <section
       id="wedding-reels"
       data-header-theme={getThemeFromBgColor(backgroundColor, "dark")}
-      className="min-h-screen overflow-hidden bg-stone-950 px-6 py-24"
+      className="overflow-hidden bg-stone-950 px-6 pt-12 pb-16 md:pt-16 md:pb-20 lg:pt-20 lg:pb-24"
       style={{ backgroundColor: backgroundColor || undefined }}
     >
       <div className="mx-auto max-w-6xl">
@@ -228,7 +228,7 @@ function ReelCard({ reel, index }: ReelCardProps) {
       {youtubeId && thumbnailSrc ? (
         <div className="absolute inset-0">
           <VideoLinkThumbnail
-            href={`/video/${reel.videoId ?? youtubeId}`}
+            href="/wedding-reels"
             thumbnailSrc={thumbnailSrc}
             thumbnailAlt={reel.title}
             className="h-full"
