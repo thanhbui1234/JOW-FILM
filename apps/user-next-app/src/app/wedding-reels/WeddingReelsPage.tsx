@@ -58,7 +58,7 @@ function extractYouTubeId(url: string): string {
 function toThumbnailUrl(url: string): string {
   const id = extractYouTubeId(url);
   if (!id) return "";
-  return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+  return `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
 }
 
 function ReelCard({ reel, index }: ReelCardProps) {

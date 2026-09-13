@@ -18,7 +18,7 @@ const DEFAULT_VIDEOS: HighlightVideo[] = [
 ];
 
 function getYouTubeThumbnail(videoId: string): string {
-  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+  return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
 }
 
 interface WeddingHighlightSectionProps {

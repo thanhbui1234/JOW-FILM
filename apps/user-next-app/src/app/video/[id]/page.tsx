@@ -41,11 +41,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     video.description ||
     `Watch "${title}" — a cinematic wedding film crafted by JOW Film Vietnam.`;
   const ogImage =
+    video.youtubeMaxResolutionThumbnailUrl ||
+    video.youtubeStandardThumbnailUrl ||
     video.youtubeHighThumbnailUrl ||
     video.youtubeMediumThumbnailUrl ||
     video.youtubeThumbnailUrl ||
     (video.youtubeVideoId
-      ? `https://img.youtube.com/vi/${video.youtubeVideoId}/hqdefault.jpg`
+      ? `https://img.youtube.com/vi/${video.youtubeVideoId}/maxresdefault.jpg`
       : undefined);
 
   return generateSEO({

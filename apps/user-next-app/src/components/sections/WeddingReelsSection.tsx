@@ -210,7 +210,7 @@ function ReelCard({ reel, index }: ReelCardProps) {
        [])[1] ?? ""
     : "";
   const thumbnailSrc = youtubeId
-    ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
+    ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`
     : "";
 
   return (

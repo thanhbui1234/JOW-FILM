@@ -10,11 +10,11 @@ import type { SectionConfig } from "@/types/video.types";
 function toThumbnailUrl(idOrUrl: string): string {
   if (!idOrUrl) return "";
   const embedMatch = idOrUrl.match(/youtube\.com\/embed\/([^?&/]+)/);
-  if (embedMatch) return `https://img.youtube.com/vi/${embedMatch[1]}/hqdefault.jpg`;
+  if (embedMatch) return `https://img.youtube.com/vi/${embedMatch[1]}/maxresdefault.jpg`;
   const watchMatch = idOrUrl.match(/[?&]v=([^&]+)/);
-  if (watchMatch) return `https://img.youtube.com/vi/${watchMatch[1]}/hqdefault.jpg`;
+  if (watchMatch) return `https://img.youtube.com/vi/${watchMatch[1]}/maxresdefault.jpg`;
   // Bare ID
-  return `https://img.youtube.com/vi/${idOrUrl}/hqdefault.jpg`;
+  return `https://img.youtube.com/vi/${idOrUrl}/maxresdefault.jpg`;
 }
 
 interface WeddingHighlightPageProps {

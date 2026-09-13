@@ -67,7 +67,7 @@ export function ElementPreview({ element }: { element: CanvasElement }) {
       return ytId ? (
         <div className="relative h-full w-full overflow-hidden bg-black">
           <img
-            src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`}
+            src={`https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`}
             alt="thumbnail"
             className="h-full w-full object-cover opacity-80"
             draggable={false}

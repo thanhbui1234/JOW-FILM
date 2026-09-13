@@ -201,7 +201,7 @@ export function TraditionalFilmsPage() {
                 <div className="relative flex h-16 w-24 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted">
                   {ytId ? (
                     <img
-                      src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`}
+                      src={`https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`}
                       alt={item.title}
                       className="h-full w-full object-cover"
                     />
@@ -262,7 +262,7 @@ export function TraditionalFilmsPage() {
             <div className="relative overflow-hidden rounded-lg border border-border/60 bg-muted/30">
               <div className="aspect-video">
                 <img
-                  src={`https://img.youtube.com/vi/${ytIdPreview}/mqdefault.jpg`}
+                  src={`https://img.youtube.com/vi/${ytIdPreview}/maxresdefault.jpg`}
                   alt="Thumbnail"
                   className="h-full w-full object-cover"
                 />

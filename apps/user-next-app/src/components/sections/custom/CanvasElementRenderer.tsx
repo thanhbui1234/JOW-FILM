@@ -77,7 +77,7 @@ export function CanvasElementRenderer({ element }: { element: CanvasElement }) {
             className="relative block h-full w-full overflow-hidden bg-black"
           >
             <Image
-              src={`https://img.youtube.com/vi/${ytId}/hqdefault.jpg`}
+              src={`https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`}
               alt={element.videoCaption ?? "video thumbnail"}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"

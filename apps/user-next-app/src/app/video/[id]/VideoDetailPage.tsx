@@ -147,9 +147,9 @@ export function VideoDetailPage({
           title: v.title,
           subtitle: v.description || (isReel ? "Wedding Reel" : "Wedding Highlight"),
           thumbnailUrl:
-            v.youtubeHighThumbnailUrl ||
-            v.youtubeMediumThumbnailUrl ||
-            `https://img.youtube.com/vi/${v.youtubeVideoId}/hqdefault.jpg`,
+            v.youtubeMaxResolutionThumbnailUrl ||
+            v.youtubeStandardThumbnailUrl ||
+            `https://img.youtube.com/vi/${v.youtubeVideoId}/maxresdefault.jpg`,
           type: isReel ? "reel" : "highlight",
           url: `/video/${v.id}`,
         };
@@ -166,7 +166,7 @@ export function VideoDetailPage({
             id: h.id,
             title: h.title,
             subtitle: h.subtitle || "Wedding Highlight",
-            thumbnailUrl: `https://img.youtube.com/vi/${h.id}/hqdefault.jpg`,
+            thumbnailUrl: `https://img.youtube.com/vi/${h.id}/maxresdefault.jpg`,
             type: "highlight",
             url: `/video/${h.videoId ?? h.id}`,
           });
@@ -184,7 +184,7 @@ export function VideoDetailPage({
             title: r.title,
             subtitle: r.location || "Wedding Reel",
             thumbnailUrl: ytId
-              ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`
+              ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`
               : "",
             type: "reel",
             duration: r.duration,

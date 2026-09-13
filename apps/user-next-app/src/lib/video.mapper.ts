@@ -130,7 +130,7 @@ export function mapTraditionalFilmItemToFilm(
 ): FilmItem {
   const embedUrl = item.youtubeUrl || item.videoUrl || "";
   const ytId = extractYouTubeId(embedUrl);
-  const image = item.image || (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : "");
+  const image = item.image || (ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : "");
   return {
     id: ytId,
     title: item.title,

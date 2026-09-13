@@ -19,6 +19,8 @@ export interface VideoRecord {
   youtubeThumbnailUrl: string;
   youtubeMediumThumbnailUrl: string;
   youtubeHighThumbnailUrl: string;
+  youtubeStandardThumbnailUrl: string;
+  youtubeMaxResolutionThumbnailUrl: string;
   title: string;
   description: string;
   tags: string[];

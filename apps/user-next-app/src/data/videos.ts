@@ -99,7 +99,7 @@ export const REELS: ReelItem[] = [
 
 // Helpers
 export function getYouTubeThumbnail(videoId: string): string {
-  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+  return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
 }
 
 export function getYouTubeEmbedUrl(videoId: string): string {
