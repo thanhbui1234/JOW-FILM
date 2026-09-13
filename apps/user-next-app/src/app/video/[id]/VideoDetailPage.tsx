@@ -376,7 +376,7 @@ export function VideoDetailPage({
                   title={video.title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
-                  className="absolute inset-0 h-full w-full border-0 scale-[1.08] origin-center"
+                  className="absolute inset-0 h-full w-full border-0"
                 />
               </div>
             )}
@@ -515,7 +515,7 @@ export function VideoDetailPage({
                             <img
                               src={item.thumbnailUrl}
                               alt={item.title}
-                              className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                              className="h-full w-full object-cover scale-[1.13] transition-transform duration-500 ease-out group-hover:scale-[1.18]"
                             />
                             {/* Gradient overlay */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-4 flex flex-col justify-end">

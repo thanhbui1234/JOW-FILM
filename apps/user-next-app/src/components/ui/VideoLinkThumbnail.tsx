@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Play } from "lucide-react";
 import { cn } from "shared-ui";
@@ -62,18 +63,31 @@ export function VideoLinkThumbnail({
   playButtonSize = "default",
 }: VideoLinkThumbnailProps) {
   const size = PLAY_BUTTON_SIZES[playButtonSize];
+  const [src, setSrc] = useState(thumbnailSrc);
+
+  const handleError = () => {
+    if (src.includes("maxresdefault.jpg")) {
+      setSrc(src.replace("maxresdefault.jpg", "hqdefault.jpg"));
+    } else if (src.includes("hqdefault.jpg")) {
+      setSrc(src.replace("hqdefault.jpg", "mqdefault.jpg"));
+    }
+  };
 
   return (
     <Link
       href={href}
       aria-label={thumbnailAlt}
-      className={cn("group relative block cursor-pointer", className)}
+      className={cn(
+        "group relative block w-full h-full cursor-pointer overflow-hidden",
+        className,
+      )}
     >
       <img
-        src={thumbnailSrc}
+        src={src || thumbnailSrc}
         alt={thumbnailAlt}
+        onError={handleError}
         className={cn(
-          "w-full transition-all duration-200 ease-out group-hover:brightness-[0.8]",
+          "w-full h-full object-cover scale-[1.13] transition-all duration-300 ease-out group-hover:scale-[1.18] group-hover:brightness-[0.85]",
           imgClassName,
         )}
       />
