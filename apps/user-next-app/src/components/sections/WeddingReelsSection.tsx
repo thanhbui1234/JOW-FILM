@@ -207,6 +207,7 @@ function ReelCard({ reel, index }: ReelCardProps) {
   const youtubeId = reel.youtubeUrl
     ? (reel.youtubeUrl.match(/embed\/([^?&/]+)/) ??
        reel.youtubeUrl.match(/[?&]v=([^&]+)/) ??
+       reel.youtubeUrl.match(/youtu\.be\/([^?&/]+)/) ??
        [])[1] ?? ""
     : "";
   const thumbnailSrc = youtubeId
@@ -228,7 +229,7 @@ function ReelCard({ reel, index }: ReelCardProps) {
       {youtubeId && thumbnailSrc ? (
         <div className="absolute inset-0">
           <VideoLinkThumbnail
-            href="/wedding-reels"
+            href={`/video/${reel.videoId ?? youtubeId}`}
             thumbnailSrc={thumbnailSrc}
             thumbnailAlt={reel.title}
             className="h-full"

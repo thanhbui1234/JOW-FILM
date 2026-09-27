@@ -18,7 +18,17 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const video = await getAppVideo(id);
+  let video = await getAppVideo(id);
+
+  if (!video) {
+    const allVideos = await getAppVideoList().catch(() => []);
+    const matched = allVideos.find(
+      (v) => String(v.id) === id || v.youtubeVideoId === id,
+    );
+    if (matched) {
+      video = (await getAppVideo(matched.id).catch(() => matched)) || matched;
+    }
+  }
 
   if (!video) {
     return generateSEO({
@@ -78,6 +88,16 @@ export default async function Page({ params }: PageProps) {
     getAppVideoList().catch(() => []),
   ]);
 
+  let resolvedVideo = video;
+  if (!resolvedVideo && allVideos.length > 0) {
+    const matched = allVideos.find(
+      (v) => String(v.id) === id || v.youtubeVideoId === id,
+    );
+    if (matched) {
+      resolvedVideo = (await getAppVideo(matched.id).catch(() => matched)) || matched;
+    }
+  }
+
   const highlightData = findSection<WeddingHighlightsSectionData>(
     sections,
     "wedding-highlights",
@@ -94,7 +114,7 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <VideoDetailPage
-      video={video}
+      video={resolvedVideo}
       videoId={id}
       highlights={highlights}
       reels={reels}

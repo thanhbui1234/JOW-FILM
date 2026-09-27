@@ -98,7 +98,12 @@ export function mapReelSectionToReels(
 function buildYoutubeIdToVideoIdMap(videos: VideoRecord[]): Map<string, number> {
   const map = new Map<string, number>();
   for (const v of videos) {
-    if (v.youtubeVideoId) map.set(v.youtubeVideoId, v.id);
+    if (v.youtubeVideoId) {
+      map.set(v.youtubeVideoId, v.id);
+    } else if (v.youtubeUrl) {
+      const ytId = extractYouTubeId(v.youtubeUrl);
+      if (ytId) map.set(ytId, v.id);
+    }
   }
   return map;
 }

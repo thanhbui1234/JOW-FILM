@@ -211,7 +211,7 @@ export function WeddingHighlightSection({
                     }}
                   >
                     <VideoLinkThumbnail
-                      href="/wedding-highlight"
+                      href={`/video/${video.videoId ?? video.id}`}
                       thumbnailSrc={getYouTubeThumbnail(video.id)}
                       thumbnailAlt={video.title}
                       imgClassName="aspect-[16/10] rounded-xl sm:rounded-2xl"
